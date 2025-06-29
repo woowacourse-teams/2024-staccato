@@ -5,10 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.network.onException2
-import com.on.staccato.data.network.onServerError
-import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.ExceptionType
 import com.on.staccato.domain.model.Timeline
+import com.on.staccato.domain.onException
+import com.on.staccato.domain.onServerError
+import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
@@ -16,7 +17,6 @@ import com.on.staccato.presentation.mapper.toTimelineUiModel
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
-import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,8 +50,8 @@ class TimelineViewModel
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
 
-        private val _exception = MutableSingleLiveData<ExceptionState2>()
-        val exception: SingleLiveData<ExceptionState2>
+        private val _exception = MutableSingleLiveData<ExceptionType>()
+        val exception: SingleLiveData<ExceptionType>
             get() = _exception
 
         private val coroutineExceptionHandler =
@@ -74,7 +74,7 @@ class TimelineViewModel
                     filter = filterType.value?.name,
                 ).onSuccess(::setTimelineUiModels)
                     .onServerError(::handleServerError)
-                    .onException2(::handleException)
+                    .onException(::handleException)
             }
         }
 
@@ -97,7 +97,7 @@ class TimelineViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(state: ExceptionState2) {
+        private fun handleException(state: ExceptionType) {
             _exception.postValue(state)
         }
     }

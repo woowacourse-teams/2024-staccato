@@ -4,22 +4,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.network.onException2
-import com.on.staccato.data.network.onServerError
-import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.ExceptionType
+import com.on.staccato.domain.UploadFile
 import com.on.staccato.domain.model.MemberProfile
+import com.on.staccato.domain.onException
+import com.on.staccato.domain.onServerError
+import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mypage.MemberProfileHandler
-import com.on.staccato.presentation.util.ExceptionState2
+import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,8 +51,8 @@ class MyPageViewModel
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
 
-        private val _exceptionState = MutableSingleLiveData<ExceptionState2>()
-        val exceptionState: SingleLiveData<ExceptionState2>
+        private val _exceptionState = MutableSingleLiveData<Int>()
+        val exceptionState: SingleLiveData<Int>
             get() = _exceptionState
 
         override fun onCodeCopyClicked() {
@@ -63,14 +64,14 @@ class MyPageViewModel
             }
         }
 
-        fun changeProfileImage(multipart: MultipartBody.Part) {
+        fun changeProfileImage(file: UploadFile) {
             viewModelScope.launch {
-                myPageRepository.changeProfileImage(multipart)
+                myPageRepository.changeProfileImage(file)
                     .onSuccess {
                         _memberProfile.value = memberProfile.value?.copy(profileImageUrl = it)
                         hasProfileUpdated = true
                     }.onServerError(::handleError)
-                    .onException2(::handleException2)
+                    .onException(::handleException2)
             }
         }
 
@@ -79,7 +80,7 @@ class MyPageViewModel
                 myPageRepository.getMemberProfile()
                     .onSuccess { _memberProfile.value = it }
                     .onServerError(::handleError)
-                    .onException2(::handleException2)
+                    .onException(::handleException2)
             }
         }
 
@@ -88,7 +89,7 @@ class MyPageViewModel
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
                     .onServerError(::handleError)
-                    .onException2(::handleException2)
+                    .onException(::handleException2)
             }
         }
 
@@ -100,8 +101,8 @@ class MyPageViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException2(state: ExceptionState2) {
-            _exceptionState.postValue(state)
+        private fun handleException2(state: ExceptionType) {
+            _exceptionState.setValue(state.toMessageId())
         }
 
         companion object {

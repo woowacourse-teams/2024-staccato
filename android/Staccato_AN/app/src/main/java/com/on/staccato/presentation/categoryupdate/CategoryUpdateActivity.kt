@@ -12,6 +12,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityCategoryUpdateBinding
+import com.on.staccato.domain.UploadFile
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
@@ -22,10 +23,8 @@ import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.SELECTED_COLOR_LABEL
 import com.on.staccato.presentation.common.photo.PhotoAttachFragment
-import com.on.staccato.presentation.common.photo.UploadFile
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
-import com.on.staccato.presentation.util.ExceptionState2
-import com.on.staccato.presentation.util.convertCategoryUriToFile
+import com.on.staccato.presentation.util.convertUriToFile
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,7 +78,7 @@ class CategoryUpdateActivity :
     override fun onUrisSelected(vararg uris: Uri) {
         currentSnackBar?.dismiss()
         val uri = uris.first()
-        val file: UploadFile = convertCategoryUriToFile(this, uri)
+        val file: UploadFile = convertUriToFile(this, uri)
         viewModel.createThumbnailUrl(uri, file)
     }
 
@@ -183,15 +182,15 @@ class CategoryUpdateActivity :
 
     private fun handleInitializeFail(error: CategoryUpdateError.CategoryInitialization) {
         finish()
-        showToast(getString(error.state.messageId))
+        showToast(getString(error.messageId))
     }
 
     private fun handleCreatePhotoUrlFail(error: CategoryUpdateError.Thumbnail) {
-        showExceptionSnackBar(error.state) { reCreateThumbnailUrl(error.uri, error.file) }
+        showExceptionSnackBar(error.messageId) { reCreateThumbnailUrl(error.uri, error.file) }
     }
 
     private fun handleCategoryUpdateFail(error: CategoryUpdateError.CategoryUpdate) {
-        showExceptionSnackBar(error.state) { reUpdateCategory() }
+        showExceptionSnackBar(error.messageId) { reUpdateCategory() }
     }
 
     private fun reCreateThumbnailUrl(
@@ -206,12 +205,12 @@ class CategoryUpdateActivity :
     }
 
     private fun showExceptionSnackBar(
-        state: ExceptionState2,
+        state: Int,
         onRetryAction: () -> Unit,
     ) {
         currentSnackBar =
             binding.root.getSnackBarWithAction(
-                message = getString(state.messageId),
+                message = getString(state),
                 actionLabel = R.string.all_retry,
                 onAction = onRetryAction,
                 length = Snackbar.LENGTH_INDEFINITE,

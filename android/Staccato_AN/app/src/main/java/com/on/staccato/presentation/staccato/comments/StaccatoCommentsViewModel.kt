@@ -5,17 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.network.onException
-import com.on.staccato.data.network.onServerError
-import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.ExceptionType
 import com.on.staccato.domain.model.Comment
 import com.on.staccato.domain.model.NewComment
+import com.on.staccato.domain.onException
+import com.on.staccato.domain.onServerError
+import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.CommentRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toCommentUiModel
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,6 +48,10 @@ class StaccatoCommentsViewModel
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
 
+        private val _exceptionMessage = MutableSingleLiveData<Int>()
+        val exceptionMessage: SingleLiveData<Int>
+            get() = _exceptionMessage
+
         private var staccatoId: Long = STACCATO_DEFAULT_ID
 
         private var myMemberId: Long = 0L
@@ -60,7 +65,7 @@ class StaccatoCommentsViewModel
 
         fun deleteComment() {
             viewModelScope.launch {
-                commentRepository.deleteComment(selectedComment?.id ?: return@launch handleException(ExceptionState.UnknownError))
+                commentRepository.deleteComment(selectedComment?.id ?: return@launch handleException(ExceptionType.UNKNOWN))
                     .onSuccess {
                         fetchComments(staccatoId)
                         _isDeleteSuccess.postValue(true)
@@ -105,7 +110,7 @@ class StaccatoCommentsViewModel
                 memberRepository.getMemberId()
                     .onSuccess { myMemberId = it }
                     .onFailure {
-                        handleException(ExceptionState.UnknownError)
+                        handleException(ExceptionType.UNKNOWN)
                     }
             }
         }
@@ -128,8 +133,8 @@ class StaccatoCommentsViewModel
             _errorMessage.postValue(message)
         }
 
-        private fun handleException(state: ExceptionState) {
-            _errorMessage.postValue(state.message)
+        private fun handleException(state: ExceptionType) {
+            _exceptionMessage.postValue(state.toMessageId())
         }
 
         companion object {

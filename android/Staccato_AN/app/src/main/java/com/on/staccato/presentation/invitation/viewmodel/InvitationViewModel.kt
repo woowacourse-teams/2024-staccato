@@ -6,11 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.R
-import com.on.staccato.data.network.onException2
-import com.on.staccato.data.network.onServerError
-import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.ExceptionType
 import com.on.staccato.domain.model.invitation.ReceivedInvitation
 import com.on.staccato.domain.model.invitation.SentInvitation
+import com.on.staccato.domain.onException
+import com.on.staccato.domain.onServerError
+import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.InvitationRepository
 import com.on.staccato.presentation.invitation.model.InvitationDialogState
 import com.on.staccato.presentation.invitation.model.InvitationDialogState.Cancel
@@ -22,7 +23,7 @@ import com.on.staccato.presentation.invitation.model.ToastMessage
 import com.on.staccato.presentation.invitation.model.ToastMessage.FromResource
 import com.on.staccato.presentation.invitation.model.ToastMessage.Plain
 import com.on.staccato.presentation.mapper.toUiModel
-import com.on.staccato.presentation.util.ExceptionState2
+import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,8 +55,8 @@ class InvitationViewModel
         private val _toastMessage = MutableSharedFlow<ToastMessage>()
         val toastMessage: SharedFlow<ToastMessage> get() = _toastMessage
 
-        private val _exceptionState = MutableSharedFlow<ExceptionState2>()
-        val exceptionState: SharedFlow<ExceptionState2> get() = _exceptionState
+        private val _exceptionState = MutableSharedFlow<Int>()
+        val exceptionState: SharedFlow<Int> get() = _exceptionState
 
         init {
             fetchReceivedInvitations()
@@ -68,7 +69,7 @@ class InvitationViewModel
                 result
                     .onSuccess(::updateReceivedInvitations)
                     .onServerError { handleServerError(it) }
-                    .onException2 { handelException(it) }
+                    .onException { handelException(it) }
             }
         }
 
@@ -82,7 +83,7 @@ class InvitationViewModel
                         updateToastMessage(FromResource(R.string.invitation_management_accept_success))
                     }
                     .onServerError { handleServerError(it) }
-                    .onException2 { handelException(it) }
+                    .onException { handelException(it) }
             }
         }
 
@@ -100,7 +101,7 @@ class InvitationViewModel
                 result
                     .onSuccess(::updateSentInvitations)
                     .onServerError { handleServerError(it) }
-                    .onException2 { handelException(it) }
+                    .onException { handelException(it) }
             }
         }
 
@@ -131,7 +132,7 @@ class InvitationViewModel
                 result
                     .onSuccess { fetchReceivedInvitations() }
                     .onServerError { handleServerError(it) }
-                    .onException2 { handelException(it) }
+                    .onException { handelException(it) }
             }
         }
 
@@ -146,7 +147,7 @@ class InvitationViewModel
                 result
                     .onSuccess { fetchSentInvitations() }
                     .onServerError { handleServerError(it) }
-                    .onException2 { handelException(it) }
+                    .onException { handelException(it) }
             }
         }
 
@@ -158,7 +159,7 @@ class InvitationViewModel
             updateToastMessage(Plain(message))
         }
 
-        private suspend fun handelException(state: ExceptionState2) {
-            _exceptionState.emit(state)
+        private suspend fun handelException(state: ExceptionType) {
+            _exceptionState.emit(state.toMessageId())
         }
     }

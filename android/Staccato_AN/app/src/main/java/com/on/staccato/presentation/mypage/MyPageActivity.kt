@@ -27,8 +27,7 @@ import com.on.staccato.presentation.invitation.InvitationManagementActivity.Comp
 import com.on.staccato.presentation.mypage.component.MyPageMenuButton
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
-import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
-import com.on.staccato.presentation.util.convertMyPageUriToFile
+import com.on.staccato.presentation.util.convertUriToFile
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.webview.WebViewActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,7 +67,7 @@ class MyPageActivity :
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
-        val imageFile = convertMyPageUriToFile(this, uris.first(), IMAGE_FORM_DATA_NAME)
+        val imageFile = convertUriToFile(this, uris.first())
         myPageViewModel.changeProfileImage(imageFile)
     }
 
@@ -163,7 +162,7 @@ class MyPageActivity :
 
     private fun observeException() {
         myPageViewModel.exceptionState.observe(this) { state ->
-            showToast(getString(state.messageId))
+            showToast(getString(state))
         }
     }
 

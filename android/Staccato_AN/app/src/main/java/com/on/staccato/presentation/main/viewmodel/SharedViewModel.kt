@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.network.onException2
-import com.on.staccato.data.network.onServerError
-import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.ExceptionType
 import com.on.staccato.domain.model.MemberProfile
+import com.on.staccato.domain.onException
+import com.on.staccato.domain.onServerError
+import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
-import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,8 +70,8 @@ class SharedViewModel
         private val _staccatoLocation = MutableLiveData<LocationUiModel>()
         val staccatoLocation: LiveData<LocationUiModel> get() = _staccatoLocation
 
-        private val _exception = MutableLiveData<ExceptionState2>()
-        val exception: LiveData<ExceptionState2> get() = _exception
+        private val _exception = MutableLiveData<ExceptionType>()
+        val exception: LiveData<ExceptionType> get() = _exception
 
         private val _retryEvent = MutableSharedFlow<Unit>()
         val retryEvent: SharedFlow<Unit> = _retryEvent.asSharedFlow()
@@ -100,7 +100,7 @@ class SharedViewModel
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = myPageRepository.getMemberProfile()
-                result.onException2(::updateException)
+                result.onException(::updateException)
                     .onServerError(::handleServerError)
                     .onSuccess(::setMemberProfile)
             }
@@ -111,7 +111,7 @@ class SharedViewModel
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
                     .onServerError(::handleServerError)
-                    .onException2(::updateException)
+                    .onException(::updateException)
             }
         }
 
@@ -178,7 +178,7 @@ class SharedViewModel
             isDragging.value = state
         }
 
-        fun updateException(state: ExceptionState2) {
+        fun updateException(state: ExceptionType) {
             _exception.value = state
         }
 

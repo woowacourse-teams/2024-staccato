@@ -1,19 +1,18 @@
 package com.on.staccato.presentation.categorycreation.model
 
 import android.net.Uri
-import com.on.staccato.presentation.common.photo.UploadFile
-import com.on.staccato.presentation.util.ExceptionState2
+import com.on.staccato.domain.UploadFile
 
 sealed interface CategoryCreationError {
-    val state: ExceptionState2
+    val state: Int
 
     data class Thumbnail(
-        override val state: ExceptionState2,
+        override val state: Int,
         val uri: Uri,
         val file: UploadFile,
     ) : CategoryCreationError
 
     data class CategoryCreation(
-        override val state: ExceptionState2,
+        override val state: Int,
     ) : CategoryCreationError
 }

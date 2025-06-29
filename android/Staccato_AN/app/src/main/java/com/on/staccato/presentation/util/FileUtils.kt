@@ -3,18 +3,17 @@ package com.on.staccato.presentation.util
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import com.on.staccato.presentation.common.photo.UploadFile
+import com.on.staccato.domain.UploadFile
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-const val IMAGE_FORM_DATA_NAME = "imageFile"
 const val CATEGORY_FILE_CHILD_NAME = "category"
 private const val STACCATO_FILE_CHILD_NAME = "staccato"
 
-fun convertCategoryUriToFile(
+fun convertUriToFile(
     context: Context,
     uri: Uri,
 ): UploadFile {

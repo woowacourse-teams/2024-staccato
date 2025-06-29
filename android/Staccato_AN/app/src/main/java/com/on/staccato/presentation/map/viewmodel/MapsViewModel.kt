@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.network.onException2
-import com.on.staccato.data.network.onServerError
-import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.ExceptionType
 import com.on.staccato.domain.model.StaccatoMarker
+import com.on.staccato.domain.onException
+import com.on.staccato.domain.onServerError
+import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -15,7 +16,6 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 import com.on.staccato.presentation.mapper.toUiModel
-import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,13 +48,12 @@ class MapsViewModel
         private val _focusLocation = MutableLiveData<LocationUiModel>()
         val focusLocation: LiveData<LocationUiModel> get() = _focusLocation
 
-        private val _exception = MutableSingleLiveData<ExceptionState2>()
-        val exception: SingleLiveData<ExceptionState2> get() = _exception
+        private val _exception = MutableSingleLiveData<ExceptionType>()
+        val exception: SingleLiveData<ExceptionType> get() = _exception
 
         fun getCurrentLocation() {
-            val currentLocation = locationRepository.getCurrentLocation()
-            currentLocation.addOnSuccessListener {
-                _focusLocation.value = LocationUiModel(it.latitude, it.longitude)
+            locationRepository.getCurrentLocation { latitude, longitude ->
+                _focusLocation.value = LocationUiModel(latitude, longitude)
             }
         }
 
@@ -70,7 +69,7 @@ class MapsViewModel
                 val result = staccatoRepository.getStaccatoMarkers()
                 result.onSuccess(::updateStaccatoMarkers)
                     .onServerError(::handleServerError)
-                    .onException2(::handleException)
+                    .onException(::handleException)
             }
         }
 
@@ -104,7 +103,7 @@ class MapsViewModel
             _errorMessage.setValue(message)
         }
 
-        private fun handleException(state: ExceptionState2) {
+        private fun handleException(state: ExceptionType) {
             _exception.setValue(state)
         }
     }

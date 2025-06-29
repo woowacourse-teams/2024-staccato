@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
-import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -32,6 +31,7 @@ import com.on.staccato.presentation.common.location.LocationPermissionManager.Co
 import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
 import com.on.staccato.presentation.common.photo.PhotoAttachFragment
+import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
@@ -98,6 +98,7 @@ class StaccatoCreationActivity :
         initVisitedAtSelectionFragment()
         observeViewModelData()
         initGooglePlaceSearch()
+        showExceptionMessage()
         showWarningMessage()
         handleError()
     }
@@ -331,7 +332,7 @@ class StaccatoCreationActivity :
         }
     }
 
-    private fun fetchAddress(location: Location) {
+    private fun fetchAddress(location: LocationUiModel) {
         lifecycleScope.launch {
             val defaultDelayJob =
                 launch {
@@ -347,7 +348,7 @@ class StaccatoCreationActivity :
         }
     }
 
-    private fun updateAddressByCurrentAddress(location: Location) {
+    private fun updateAddressByCurrentAddress(location: LocationUiModel) {
         val geocoder = Geocoder(this@StaccatoCreationActivity)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val geocodeListener = initGeocodeListener()
@@ -394,6 +395,13 @@ class StaccatoCreationActivity :
         }
     }
 
+    private fun showExceptionMessage() {
+        viewModel.exceptionMessage.observe(this) { messageId ->
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
+            showToast(getString(messageId))
+        }
+    }
+
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
@@ -405,12 +413,12 @@ class StaccatoCreationActivity :
 
     private fun handleCategoryCandidatesFail(error: StaccatoCreationError.CategoryCandidates) {
         finish()
-        showToast(error.message)
+        showToast(getString(error.messageId))
     }
 
     private fun handleStaccatoCreateFail(error: StaccatoCreationError.StaccatoCreation) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(error.message) { recreateStaccato() }
+        showExceptionSnackBar(getString(error.messageId)) { recreateStaccato() }
     }
 
     private fun recreateStaccato() {

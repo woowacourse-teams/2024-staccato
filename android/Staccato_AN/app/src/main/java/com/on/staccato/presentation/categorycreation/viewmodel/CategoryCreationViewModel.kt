@@ -5,13 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.dto.category.CategoryCreationResponse
-import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.network.ApiResult
-import com.on.staccato.data.network.onException2
-import com.on.staccato.data.network.onServerError
-import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.ApiResult
+import com.on.staccato.domain.ExceptionType
+import com.on.staccato.domain.UploadFile
 import com.on.staccato.domain.model.NewCategory
+import com.on.staccato.domain.onException
+import com.on.staccato.domain.onServerError
+import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.presentation.categorycreation.model.CategoryCreationError
@@ -19,23 +19,14 @@ import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.color.CategoryColor
-import com.on.staccato.presentation.common.photo.UploadFile
-import com.on.staccato.presentation.util.CATEGORY_FILE_CHILD_NAME
-import com.on.staccato.presentation.util.ExceptionState2
-import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.toLocalDate
+import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.MultipartBody.Part.Companion.createFormData
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -109,12 +100,12 @@ class CategoryCreationViewModel
             _isPosting.value = true
             viewModelScope.launch {
                 val category: NewCategory = makeNewCategory()
-                val result: ApiResult<CategoryCreationResponse> =
+                val result: ApiResult<Long> =
                     categoryRepository.createCategory(category)
                 result
                     .onSuccess(::setCreatedCategoryId)
                     .onServerError(::handleCreateServerError)
-                    .onException2(::handleCreateException)
+                    .onException(::handleCreateException)
             }
         }
 
@@ -155,40 +146,26 @@ class CategoryCreationViewModel
             uri: Uri,
             file: UploadFile,
         ): Job {
-            val formData = createFormData(file)
-
             return viewModelScope.launch {
-                val result: ApiResult<ImageResponse> =
-                    imageRepository.convertImageFileToUrl(formData)
+                val result: ApiResult<String> =
+                    imageRepository.convertImageFileToUrl(file)
                 result
                     .onSuccess(::setThumbnailUrl)
                     .onServerError(::handlePhotoError)
-                    .onException2 { state ->
+                    .onException { state ->
                         handlePhotoException(state, uri, file)
                     }
             }
         }
 
-        private fun createFormData(uploadFile: UploadFile): MultipartBody.Part {
-            val mediaType: MediaType? = uploadFile.contentType?.toMediaTypeOrNull()
-            val requestFile: RequestBody = uploadFile.file.asRequestBody(mediaType)
-
-            return createFormData(
-                IMAGE_FORM_DATA_NAME,
-                CATEGORY_FILE_CHILD_NAME,
-                requestFile,
-            )
-        }
-
-        private fun setThumbnailUrl(imageResponse: ImageResponse) {
-            val newUrl = imageResponse.imageUrl
+        private fun setThumbnailUrl(newUrl: String) {
             _thumbnail.value = _thumbnail.value?.updateUrl(newUrl)
             _isPhotoPosting.value = false
         }
 
-        private fun setCreatedCategoryId(categoryCreationResponse: CategoryCreationResponse) {
+        private fun setCreatedCategoryId(categoryId: Long) {
             _isPosting.value = false
-            _createdCategoryId.value = categoryCreationResponse.categoryId
+            _createdCategoryId.value = categoryId
         }
 
         private fun makeNewCategory() =
@@ -215,12 +192,12 @@ class CategoryCreationViewModel
         }
 
         private fun handlePhotoException(
-            state: ExceptionState2,
+            state: ExceptionType,
             uri: Uri,
             uploadFile: UploadFile,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(CategoryCreationError.Thumbnail(state, uri, uploadFile))
+                _error.setValue(CategoryCreationError.Thumbnail(state.toMessageId(), uri, uploadFile))
             }
         }
 
@@ -229,8 +206,8 @@ class CategoryCreationViewModel
             _errorMessage.postValue(message)
         }
 
-        private fun handleCreateException(state: ExceptionState2) {
+        private fun handleCreateException(state: ExceptionType) {
             _isPosting.value = false
-            _error.setValue(CategoryCreationError.CategoryCreation(state))
+            _error.setValue(CategoryCreationError.CategoryCreation(state.toMessageId()))
         }
     }

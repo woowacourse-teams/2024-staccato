@@ -77,6 +77,7 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
+                "${project(":domain").projectDir}/consumer-rules.pro",
             )
             if (releaseSigningConfig != null) {
                 signingConfig = releaseSigningConfig
@@ -255,6 +256,9 @@ dependencies {
 
     // Compose ConstraintLayout
     implementation(libs.androidx.constraintlayout.compose)
+
+    implementation(project(":data"))
+    implementation(project(":domain"))
 }
 
 secrets {

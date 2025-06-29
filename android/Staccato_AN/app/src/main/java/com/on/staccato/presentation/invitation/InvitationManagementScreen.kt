@@ -49,7 +49,7 @@ fun InvitationManagementScreen(
 
     LaunchedEffect(Unit) {
         invitationViewModel.exceptionState.collect { state ->
-            context.showToast(context.getString(state.messageId))
+            context.showToast(context.getString(state))
         }
     }
 

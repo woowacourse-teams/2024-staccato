@@ -312,12 +312,15 @@ class StaccatoFragment :
         commentsViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             showToast(message)
         }
+        commentsViewModel.exceptionMessage.observe(viewLifecycleOwner) { messageId ->
+            showToast(getString(messageId))
+        }
     }
 
     private fun showExceptionSnackBar() {
-        staccatoViewModel.exceptionMessage.observe(viewLifecycleOwner) { message ->
+        staccatoViewModel.exceptionMessageId.observe(viewLifecycleOwner) { messageId ->
             view?.showSnackBarWithAction(
-                message = message,
+                message = getString(messageId),
                 actionLabel = R.string.all_retry,
                 onAction = ::onRetryAction,
                 Snackbar.LENGTH_INDEFINITE,

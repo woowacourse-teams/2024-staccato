@@ -5,13 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.network.ApiResult
-import com.on.staccato.data.network.onException2
-import com.on.staccato.data.network.onServerError
-import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.ApiResult
+import com.on.staccato.domain.ExceptionType
+import com.on.staccato.domain.UploadFile
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.NewCategory
+import com.on.staccato.domain.onException
+import com.on.staccato.domain.onServerError
+import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
@@ -19,22 +20,14 @@ import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.color.CategoryColor
-import com.on.staccato.presentation.common.photo.UploadFile
-import com.on.staccato.presentation.util.CATEGORY_FILE_CHILD_NAME
-import com.on.staccato.presentation.util.ExceptionState2
-import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.toLocalDate
+import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -92,7 +85,7 @@ class CategoryUpdateViewModel
                 result
                     .onSuccess(::initializeCategory)
                     .onServerError(::handleInitializeCategoryError)
-                    .onException2(::handleInitializeCategoryException)
+                    .onException(::handleInitializeCategoryException)
             }
         }
 
@@ -103,7 +96,7 @@ class CategoryUpdateViewModel
                 result
                     .onSuccess { updateSuccessStatus() }
                     .onServerError(::handleUpdateError)
-                    .onException2(::handleUpdateException)
+                    .onException(::handleUpdateException)
             }
         }
 
@@ -196,34 +189,20 @@ class CategoryUpdateViewModel
             uri: Uri,
             file: UploadFile,
         ): Job {
-            val formData = createFormData(file)
-
             return viewModelScope.launch {
-                val result: ApiResult<ImageResponse> =
-                    imageRepository.convertImageFileToUrl(formData)
+                val result: ApiResult<String> =
+                    imageRepository.convertImageFileToUrl(file)
                 result
                     .onSuccess(::setThumbnailUrl)
                     .onServerError(::handlePhotoError)
-                    .onException2 { state ->
+                    .onException { state ->
                         handlePhotoException(state, uri, file)
                     }
             }
         }
 
-        private fun createFormData(uploadFile: UploadFile): MultipartBody.Part {
-            val mediaType: MediaType? = uploadFile.contentType?.toMediaTypeOrNull()
-            val requestFile: RequestBody = uploadFile.file.asRequestBody(mediaType)
-
-            return MultipartBody.Part.createFormData(
-                IMAGE_FORM_DATA_NAME,
-                CATEGORY_FILE_CHILD_NAME,
-                requestFile,
-            )
-        }
-
-        private fun setThumbnailUrl(imageResponse: ImageResponse) {
-            val newUrl = imageResponse.imageUrl
-            _thumbnail.value = _thumbnail.value?.updateUrl(newUrl)
+        private fun setThumbnailUrl(imageUrl: String) {
+            _thumbnail.value = _thumbnail.value?.updateUrl(imageUrl)
             _isPhotoPosting.value = false
         }
 
@@ -232,12 +211,12 @@ class CategoryUpdateViewModel
         }
 
         private fun handlePhotoException(
-            state: ExceptionState2,
+            state: ExceptionType,
             uri: Uri,
             uploadFile: UploadFile,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(CategoryUpdateError.Thumbnail(state, uri, uploadFile))
+                _error.setValue(CategoryUpdateError.Thumbnail(state.toMessageId(), uri, uploadFile))
             }
         }
 
@@ -245,8 +224,8 @@ class CategoryUpdateViewModel
             _errorMessage.value = message
         }
 
-        private fun handleInitializeCategoryException(state: ExceptionState2) {
-            _error.setValue(CategoryUpdateError.CategoryInitialization(state))
+        private fun handleInitializeCategoryException(state: ExceptionType) {
+            _error.setValue(CategoryUpdateError.CategoryInitialization(state.toMessageId()))
         }
 
         private fun handleUpdateError(message: String) {
@@ -254,8 +233,8 @@ class CategoryUpdateViewModel
             _errorMessage.value = message
         }
 
-        private fun handleUpdateException(state: ExceptionState2) {
+        private fun handleUpdateException(state: ExceptionType) {
             _isPosting.value = false
-            _error.setValue(CategoryUpdateError.CategoryUpdate(state))
+            _error.setValue(CategoryUpdateError.CategoryUpdate(state.toMessageId()))
         }
     }

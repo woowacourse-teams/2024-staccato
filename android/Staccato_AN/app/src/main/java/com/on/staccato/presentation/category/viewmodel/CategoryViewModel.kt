@@ -4,11 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.network.ApiResult
-import com.on.staccato.data.network.onException
-import com.on.staccato.data.network.onException2
-import com.on.staccato.data.network.onServerError
-import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.ApiResult
+import com.on.staccato.domain.ExceptionType
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.Member
 import com.on.staccato.domain.model.Participants
@@ -16,6 +13,9 @@ import com.on.staccato.domain.model.Role
 import com.on.staccato.domain.model.emptyMembers
 import com.on.staccato.domain.model.emptyParticipants
 import com.on.staccato.domain.model.toMembers
+import com.on.staccato.domain.onException
+import com.on.staccato.domain.onServerError
+import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.InvitationRepository
 import com.on.staccato.domain.repository.MemberRepository
@@ -34,7 +34,7 @@ import com.on.staccato.presentation.category.model.defaultCategoryUiModel
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
-import com.on.staccato.presentation.util.ExceptionState2
+import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,8 +63,8 @@ class CategoryViewModel
         private val _toastMessage = MutableSingleLiveData<String>()
         val toastMessage: SingleLiveData<String> get() = _toastMessage
 
-        private val _exceptionState = MutableSingleLiveData<ExceptionState2>()
-        val exceptionState: SingleLiveData<ExceptionState2> get() = _exceptionState
+        private val _exceptionState = MutableSingleLiveData<Int>()
+        val exceptionState: SingleLiveData<Int> get() = _exceptionState
 
         private val _isInviteMode = MutableStateFlow(false)
         val isInviteMode: StateFlow<Boolean> get() = _isInviteMode
@@ -104,7 +104,7 @@ class CategoryViewModel
                     _toastMessage.setValue("${ids.size}명을 초대했어요!") // stringRes로 빼기
                     toggleInviteMode(false)
                 }.onServerError(::handleServerError)
-                    .onException { handleServerError(it.message) }
+                    .onException(::handleException)
             }
         }
 
@@ -125,7 +125,7 @@ class CategoryViewModel
                 memberRepository.searchMembersBy(keyword).collect { result ->
                     result
                         .onServerError(::handleServerError)
-                        .onException { handleServerError(it.message) }
+                        .onException(::handleException)
                         .onSuccess {
                             searchedMembers.emit(it)
                         }
@@ -142,13 +142,13 @@ class CategoryViewModel
 
         fun loadCategory(id: Long) {
             if (id <= DEFAULT_CATEGORY_ID) {
-                handelException(ExceptionState2.UnknownError)
+                handleException(ExceptionType.UNKNOWN)
             } else {
                 viewModelScope.launch {
                     categoryRepository.getCategory(id)
                         .onSuccess { updateCategory(it) }
                         .onServerError(::handleServerError)
-                        .onException2(::handelException)
+                        .onException(::handleException)
                 }
             }
         }
@@ -164,7 +164,7 @@ class CategoryViewModel
                 val result: ApiResult<Unit> = categoryRepository.deleteCategory(id)
                 result.onSuccess { updateToDeletedEvent(true) }
                     .onServerError(::handleServerError)
-                    .onException2(::handelException)
+                    .onException(::handleException)
             }
         }
 
@@ -197,7 +197,7 @@ class CategoryViewModel
                 categoryRepository.leaveCategory(id)
                     .onSuccess { updateToExitEvent() }
                     .onServerError(::handleServerError)
-                    .onException2(::handelException)
+                    .onException(::handleException)
             }
             dismissDialog()
         }
@@ -234,7 +234,7 @@ class CategoryViewModel
             _toastMessage.setValue(message)
         }
 
-        private fun handelException(state: ExceptionState2) {
-            _exceptionState.setValue(state)
+        private fun handleException(state: ExceptionType) {
+            _exceptionState.setValue(state.toMessageId())
         }
     }

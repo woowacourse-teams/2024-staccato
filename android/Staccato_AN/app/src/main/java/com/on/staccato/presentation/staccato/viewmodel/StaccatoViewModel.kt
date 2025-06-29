@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.network.onException
-import com.on.staccato.data.network.onServerError
-import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.ExceptionType
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.StaccatoShareLink
+import com.on.staccato.domain.onException
+import com.on.staccato.domain.onServerError
+import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -17,7 +18,7 @@ import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoInde
 import com.on.staccato.presentation.mapper.toStaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoShareEvent
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,8 +44,8 @@ class StaccatoViewModel
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
 
-        private val _exceptionMessage: MutableSingleLiveData<String> = MutableSingleLiveData()
-        val exceptionMessage: SingleLiveData<String> get() = _exceptionMessage
+        private val _exceptionMessageId: MutableSingleLiveData<Int> = MutableSingleLiveData()
+        val exceptionMessageId: SingleLiveData<Int> get() = _exceptionMessageId
 
         private val _shareEvent = MutableSingleLiveData<StaccatoShareEvent>()
         val shareEvent: SingleLiveData<StaccatoShareEvent> get() = _shareEvent
@@ -55,7 +56,7 @@ class StaccatoViewModel
         fun createStaccatoShareLink() {
             val staccatoId = staccatoDetail.value?.id
             if (staccatoId == null) {
-                handleException(ExceptionState.UnknownError)
+                handleException(ExceptionType.UNKNOWN)
                 return
             }
             getUserNickname(staccatoId)
@@ -71,7 +72,7 @@ class StaccatoViewModel
                     .onSuccess {
                         shareStaccato(staccatoId, it)
                     }.onFailure {
-                        handleException(ExceptionState.UnknownError)
+                        handleException(ExceptionType.UNKNOWN)
                     }
             }
         }
@@ -130,7 +131,7 @@ class StaccatoViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(state: ExceptionState) {
-            _exceptionMessage.postValue(state.message)
+        private fun handleException(state: ExceptionType) {
+            _exceptionMessageId.postValue(state.toMessageId())
         }
     }

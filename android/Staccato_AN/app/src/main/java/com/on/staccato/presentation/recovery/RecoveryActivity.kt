@@ -33,6 +33,9 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
     private fun observeViewModel() {
         recoveryViewModel.isRecoverySuccess.observe(this, ::checkRecoverySuccess)
         recoveryViewModel.errorMessage.observe(this, ::showToast)
+        recoveryViewModel.exceptionMessage.observe(this) {
+            showToast(getString(it))
+        }
     }
 
     private fun checkRecoverySuccess(success: Boolean) {

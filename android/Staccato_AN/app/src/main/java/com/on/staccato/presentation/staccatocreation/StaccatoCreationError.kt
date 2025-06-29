@@ -1,7 +1,13 @@
 package com.on.staccato.presentation.staccatocreation
 
-sealed interface StaccatoCreationError {
-    data class CategoryCandidates(val message: String) : StaccatoCreationError
+import androidx.annotation.StringRes
 
-    data class StaccatoCreation(val message: String) : StaccatoCreationError
+sealed interface StaccatoCreationError {
+    data class CategoryCandidates(
+        @StringRes val messageId: Int,
+    ) : StaccatoCreationError
+
+    data class StaccatoCreation(
+        @StringRes val messageId: Int,
+    ) : StaccatoCreationError
 }
