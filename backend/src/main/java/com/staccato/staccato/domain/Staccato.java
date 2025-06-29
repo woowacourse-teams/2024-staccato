@@ -56,6 +56,34 @@ public class Staccato extends BaseEntity {
     private Category category;
     @Embedded
     private StaccatoImages staccatoImages = new StaccatoImages();
+    @Column(nullable = false)
+    private Long createdBy;
+    @Column(nullable = false)
+    private Long modifiedBy;
+
+    public static Staccato create(
+            LocalDateTime visitedAt,
+            String title,
+            String placeName,
+            String address,
+            BigDecimal latitude,
+            BigDecimal longitude,
+            List<String> staccatoImageUrls,
+            Category category,
+            Member auditor
+    ) {
+        return new Staccato(
+                visitedAt,
+                title,
+                placeName,
+                address,
+                latitude,
+                longitude,
+                new StaccatoImages(staccatoImageUrls),
+                category,
+                auditor.getId(),
+                auditor.getId());
+    }
 
     @Builder
     public Staccato(
@@ -66,7 +94,9 @@ public class Staccato extends BaseEntity {
             @NonNull BigDecimal latitude,
             @NonNull BigDecimal longitude,
             @NonNull StaccatoImages staccatoImages,
-            @NonNull Category category
+            @NonNull Category category,
+            Long createdBy,
+            Long modifiedBy
     ) {
         validateIsWithinCategoryTerm(visitedAt, category);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
@@ -74,6 +104,8 @@ public class Staccato extends BaseEntity {
         this.spot = new Spot(placeName, address, latitude, longitude);
         this.staccatoImages.addAll(staccatoImages, this);
         this.category = category;
+        this.createdBy = createdBy;
+        this.modifiedBy = modifiedBy;
     }
 
     private void validateIsWithinCategoryTerm(LocalDateTime visitedAt, Category category) {
@@ -88,6 +120,7 @@ public class Staccato extends BaseEntity {
         this.spot = newStaccato.getSpot();
         this.staccatoImages.update(newStaccato.staccatoImages, this);
         this.category = newStaccato.getCategory();
+        this.modifiedBy = newStaccato.getModifiedBy();
     }
 
     public String thumbnailUrl() {

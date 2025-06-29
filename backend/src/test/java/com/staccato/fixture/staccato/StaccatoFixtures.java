@@ -4,9 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-
 import com.staccato.category.domain.Category;
-import com.staccato.staccato.domain.Feeling;
+import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Spot;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.domain.StaccatoImages;
@@ -18,7 +17,9 @@ public class StaccatoFixtures {
         return new StaccatoBuilder()
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .withTitle("staccatoTitle")
-                .withSpot(BigDecimal.ZERO.setScale(14), BigDecimal.ZERO.setScale(14));
+                .withSpot(BigDecimal.ZERO.setScale(14), BigDecimal.ZERO.setScale(14))
+                .withCreatedBy(1L)
+                .withModifiedBy(1L);
     }
 
     public static class StaccatoBuilder {
@@ -28,6 +29,8 @@ public class StaccatoFixtures {
         Spot spot;
         Category category;
         StaccatoImages staccatoImages = new StaccatoImages(List.of());
+        Long createdBy;
+        Long modifiedBy;
 
         public StaccatoBuilder withVisitedAt(LocalDateTime visitedAt) {
             this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
@@ -54,9 +57,25 @@ public class StaccatoFixtures {
             return this;
         }
 
+        public StaccatoBuilder withCreator(Member auditor) {
+            this.createdBy = auditor.getId();
+            this.modifiedBy = auditor.getId();
+            return this;
+        }
+
+        public StaccatoBuilder withCreatedBy(Long createdBy) {
+            this.createdBy = createdBy;
+            return this;
+        }
+
+        public StaccatoBuilder withModifiedBy(Long modifiedBy) {
+            this.modifiedBy = modifiedBy;
+            return this;
+        }
+
         public Staccato build() {
             return new Staccato(visitedAt, title, spot.getPlaceName(), spot.getAddress(), spot.getLatitude(),
-                    spot.getLongitude(), staccatoImages, category);
+                    spot.getLongitude(), staccatoImages, category, createdBy, modifiedBy);
         }
 
         public Staccato buildAndSave(StaccatoRepository repository) {
