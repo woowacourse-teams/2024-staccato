@@ -21,13 +21,14 @@ android {
 
         val secretPropsFile = rootProject.file("secret.properties")
         val localDefaultsFile = rootProject.file("local.defaults.properties")
-        val props = Properties().apply {
-            if (secretPropsFile.exists()) {
-                load(secretPropsFile.inputStream())
-            } else if (localDefaultsFile.exists()) {
-                load(localDefaultsFile.inputStream())
+        val props =
+            Properties().apply {
+                if (secretPropsFile.exists()) {
+                    load(secretPropsFile.inputStream())
+                } else if (localDefaultsFile.exists()) {
+                    load(localDefaultsFile.inputStream())
+                }
             }
-        }
         val mapsApiKey = props.getProperty("MAPS_API_KEY") ?: ""
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
