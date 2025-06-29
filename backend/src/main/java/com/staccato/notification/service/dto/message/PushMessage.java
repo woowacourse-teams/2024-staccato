@@ -2,7 +2,9 @@ package com.staccato.notification.service.dto.message;
 
 import java.util.Map;
 import com.google.firebase.messaging.Notification;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode
 public abstract class PushMessage {
     private final MessageType messageType;
 

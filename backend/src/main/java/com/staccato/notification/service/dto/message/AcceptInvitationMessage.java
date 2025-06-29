@@ -1,10 +1,11 @@
 package com.staccato.notification.service.dto.message;
 
 import java.util.Map;
-import com.google.firebase.messaging.Notification;
 import com.staccato.category.domain.Category;
 import com.staccato.member.domain.Member;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 public class AcceptInvitationMessage extends PushMessage {
     private final String inviteeName;
     private final String categoryTitle;
