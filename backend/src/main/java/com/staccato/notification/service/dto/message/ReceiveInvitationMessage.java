@@ -6,39 +6,23 @@ import com.google.firebase.messaging.Notification;
 import com.staccato.category.domain.Category;
 import com.staccato.member.domain.Member;
 
-public record ReceiveInvitationMessage(
-        String inviterName,
-        String categoryTitle
-) implements PushMessage {
-    public ReceiveInvitationMessage(Member inviter, Category category){
-        this(inviter.getNickname().getNickname(), category.getTitle().getTitle());
+public class ReceiveInvitationMessage extends PushMessage {
+    private final String inviterName;
+    private final String categoryTitle;
+
+    public ReceiveInvitationMessage(Member inviter, Category category) {
+        super(MessageType.RECEIVE_INVITATION);
+        this.inviterName = inviter.getNickname().getNickname();
+        this.categoryTitle = category.getTitle().getTitle();
     }
 
     @Override
-    public Notification toNotification() {
-        return Notification.builder()
-                .setTitle(getTitle())
-                .setBody(getBody())
-                .build();
-    }
-
-    @Override
-    public Map<String, String> toData() {
-        return Map.of(
-                "title", getTitle(),
-                "body", getBody(),
-                "type", "RECEIVE_INVITATION"
-        );
-    }
-
-    @Override
-    public String getTitle() {
+    protected String getTitle() {
         return String.format("%s님이 초대를 보냈어요", inviterName);
-
     }
 
     @Override
-    public String getBody() {
+    protected String getBody() {
         return categoryTitle;
     }
 }

@@ -7,40 +7,30 @@ import com.staccato.comment.domain.Comment;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 
-public record CommentCreatedMessage(
-        String staccatoId,
-        String commentCreatorName,
-        String commentContent
-) implements PushMessage {
+public class CommentCreatedMessage extends PushMessage {
+    private final String staccatoId;
+    private final String commenterName;
+    private final String commentContent;
+
     public CommentCreatedMessage(Member commentCreator, Staccato staccato, Comment comment){
-        this(String.valueOf(staccato.getId()), commentCreator.getNickname().getNickname(), comment.getContent());
+        super(MessageType.COMMENT_CREATED);
+        this.commenterName = commentCreator.getNickname().getNickname();
+        this.commentContent = comment.getContent();
+        this.staccatoId = String.valueOf(staccato.getId());
     }
 
     @Override
-    public Notification toNotification() {
-        return Notification.builder()
-                .setTitle(getTitle())
-                .setBody(getBody())
-                .build();
+    protected String getTitle() {
+        return String.format("%s님의 코멘트", commenterName);
     }
 
     @Override
-    public Map<String, String> toData() {
-        return Map.of(
-                "title", getTitle(),
-                "body", getBody(),
-                "type", "COMMENT_CREATED",
-                "staccatoId", staccatoId
-        );
-    }
-
-    @Override
-    public String getTitle() {
-        return String.format("%s님의 코멘트", commentCreatorName);
-    }
-
-    @Override
-    public String getBody() {
+    protected String getBody() {
         return commentContent;
+    }
+
+    @Override
+    protected Map<String, String> getAdditionalData() {
+        return Map.of("staccatoId", staccatoId);
     }
 }
