@@ -1,32 +1,36 @@
 package com.staccato.notification.service.dto.message;
 
 import java.util.Map;
-
 import com.staccato.comment.domain.Comment;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
+import lombok.EqualsAndHashCode;
 
-public record CommentCreatedMessage(
-        Member commentCreator,
-        Staccato staccato,
-        Comment comment
-) implements PushMessage {
+@EqualsAndHashCode(callSuper = true)
+public class CommentCreatedMessage extends PushMessage {
+    private final String staccatoId;
+    private final String commenterName;
+    private final String commentContent;
 
-    @Override
-    public Map<String, String> toMap() {
-        return Map.of(
-                "type", "COMMENT_CREATED",
-                "staccatoId", String.valueOf(staccato.getId())
-        );
+    public CommentCreatedMessage(Member commentCreator, Staccato staccato, Comment comment) {
+        super(MessageType.COMMENT_CREATED);
+        this.commenterName = commentCreator.getNickname().getNickname();
+        this.commentContent = comment.getContent();
+        this.staccatoId = String.valueOf(staccato.getId());
     }
 
     @Override
-    public String getTitle() {
-        return String.format("%s님의 코멘트", commentCreator.getNickname().getNickname());
+    protected String getTitle() {
+        return String.format("%s님의 코멘트", commenterName);
     }
 
     @Override
-    public String getBody() {
-        return comment.getContent();
+    protected String getBody() {
+        return commentContent;
+    }
+
+    @Override
+    protected Map<String, String> getAdditionalData() {
+        return Map.of("staccatoId", staccatoId);
     }
 }
