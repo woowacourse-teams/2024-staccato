@@ -1,4 +1,3 @@
-
 CREATE TABLE member (
                         id BIGINT NOT NULL AUTO_INCREMENT,
                         created_at TIMESTAMP(6) DEFAULT NULL,
@@ -6,8 +5,9 @@ CREATE TABLE member (
                         image_url TEXT DEFAULT NULL,
                         is_deleted BIT(1) DEFAULT NULL,
                         nickname VARCHAR(20) NOT NULL,
-                        code VARCHAR(36) NOT NULL UNIQUE,
-                        PRIMARY KEY (id)
+                        code VARCHAR(36) NOT NULL,
+                        PRIMARY KEY (id),
+                        CONSTRAINT uk_code UNIQUE (code)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 
 CREATE TABLE category (
