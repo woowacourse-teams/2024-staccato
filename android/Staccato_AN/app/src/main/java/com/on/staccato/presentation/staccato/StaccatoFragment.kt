@@ -10,23 +10,25 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayoutMediator
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentStaccatoBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.ShareManager
 import com.on.staccato.presentation.common.clipboard.ClipboardHelper
+import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoHandler
+import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoIndex
+import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoScreen
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.comments.CommentHandler
 import com.on.staccato.presentation.staccato.comments.CommentsAdapter
 import com.on.staccato.presentation.staccato.comments.StaccatoCommentsViewModel
-import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
+import com.on.staccato.presentation.staccato.detail.StaccatoPhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.StaccatoFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
-import com.on.staccato.presentation.util.MenuHandler
+import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity.Companion.KEY_IS_STACCATO_UPDATED
 import com.on.staccato.presentation.util.showPopupMenu
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
@@ -39,10 +41,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class StaccatoFragment :
     BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato),
-    StaccatoShareHandler,
-    StaccatoToolbarHandler,
     CommentHandler,
-    MenuHandler {
+    StaccatoHandler,
+    OriginalPhotoHandler {
     @Inject
     lateinit var loggingManager: LoggingManager
 
@@ -56,7 +57,7 @@ class StaccatoFragment :
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private val commentsViewModel: StaccatoCommentsViewModel by viewModels()
     private val commentsAdapter: CommentsAdapter by lazy { CommentsAdapter(this) }
-    private val pagePhotoAdapter: ViewpagePhotoAdapter by lazy { ViewpagePhotoAdapter() }
+    private val staccatoPhotoAdapter: StaccatoPhotoAdapter by lazy { StaccatoPhotoAdapter(this) }
     private val staccatoDeleteDialog =
         DeleteDialogFragment {
             staccatoViewModel.deleteStaccato(staccatoId)
@@ -76,14 +77,16 @@ class StaccatoFragment :
         arguments?.getBoolean(CREATED_STACCATO_KEY) ?: false
     }
 
+    private val isStaccatoUpdated by lazy {
+        arguments?.getBoolean(KEY_IS_STACCATO_UPDATED) ?: false
+    }
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        if (isStaccatoCreated) sharedViewModel.setStaccatosHasUpdated()
+        if (isStaccatoCreated || isStaccatoUpdated) sharedViewModel.updateIsStaccatosUpdated(true)
         setUpBinding()
-        setNavigationClickListener()
-        setUpViewPager()
         setUpComments()
         loadStaccato()
         loadComments()
@@ -95,26 +98,15 @@ class StaccatoFragment :
         logAccess()
     }
 
-    override fun onDeleteClicked() {
-        staccatoDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
+    override fun onShowOriginalPhoto(position: Int) {
+        staccatoViewModel.changeOriginalPhotoIndex(OriginalPhotoIndex(position))
     }
 
-    override fun onUpdateClicked(
-        categoryId: Long,
-        categoryTitle: String,
-    ) {
-        val staccatoUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
-        StaccatoUpdateActivity.startWithResultLauncher(
-            staccatoId = staccatoId,
-            categoryId = categoryId,
-            categoryTitle = categoryTitle,
-            context = requireContext(),
-            activityLauncher = staccatoUpdateLauncher,
+    override fun onStaccatoMenuClicked() {
+        binding.ivStaccatoMenu.showPopupMenu(
+            menuRes = R.menu.menu_staccato,
+            menuHandler = ::handleStaccatoMenuItemClick,
         )
-    }
-
-    override fun onStaccatoShareClicked() {
-        staccatoViewModel.createStaccatoShareLink()
     }
 
     override fun onCommentLongClicked(
@@ -125,16 +117,35 @@ class StaccatoFragment :
         commentsViewModel.setSelectedComment(id)
         view.showPopupMenu(
             menuRes = R.menu.menu_comment,
-            menuHandler = ::setupActionBy,
+            menuHandler = ::handleCommentMenuItemClick,
             gravity = gravity,
         )
     }
 
-    override fun setupActionBy(menuItemId: Int) {
+    fun handleStaccatoMenuItemClick(menuItemId: Int) {
+        when (menuItemId) {
+            R.id.staccato_delete ->
+                staccatoDeleteDialog.show(
+                    parentFragmentManager,
+                    DeleteDialogFragment.TAG,
+                )
+
+            R.id.staccato_modify ->
+                startStaccatoUpdateActivity(
+                    staccatoViewModel.staccatoDetail.value?.categoryId ?: return,
+                    staccatoViewModel.staccatoDetail.value?.staccatoTitle ?: return,
+                )
+
+            R.id.staccato_share -> staccatoViewModel.createStaccatoShareLink()
+        }
+    }
+
+    fun handleCommentMenuItemClick(menuItemId: Int) {
         when (menuItemId) {
             R.id.comment_delete -> {
                 commentDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
             }
+
             R.id.comment_copy -> {
                 val comment =
                     commentsViewModel.selectedComment?.content
@@ -148,33 +159,34 @@ class StaccatoFragment :
         }
     }
 
-    private fun setUpBinding() {
-        binding.lifecycleOwner = this
-        binding.toolbarHandler = this
-        binding.shareHandler = this
-        binding.staccatoViewModel = staccatoViewModel
-        binding.commentsViewModel = commentsViewModel
+    private fun startStaccatoUpdateActivity(
+        categoryId: Long,
+        categoryTitle: String,
+    ) {
+        val staccatoUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
+        StaccatoUpdateActivity.startWithResultLauncher(
+            staccatoId = staccatoId,
+            categoryId = categoryId,
+            categoryTitle = categoryTitle,
+            context = requireContext(),
+            activityLauncher = staccatoUpdateLauncher,
+        )
     }
 
-    private fun setNavigationClickListener() {
-        binding.toolbarStaccato.setNavigationOnClickListener {
-            findNavController().popBackStack()
+    private fun setUpBinding() {
+        binding.lifecycleOwner = this
+        binding.staccatoHandler = this
+        binding.staccatoViewModel = staccatoViewModel
+        binding.commentsViewModel = commentsViewModel
+        binding.rvStaccatoPhotoHorizontal.adapter = staccatoPhotoAdapter
+        binding.cvOriginalPhoto.setContent {
+            OriginalPhotoScreen()
         }
     }
 
     private fun setUpComments() {
         binding.rvStaccatoComments.adapter = commentsAdapter
         binding.rvStaccatoComments.itemAnimator = null
-    }
-
-    private fun setUpViewPager() {
-        binding.vpStaccatoPhotoHorizontal.adapter = pagePhotoAdapter
-        TabLayoutMediator(
-            binding.tabStaccatoPhotoHorizontal,
-            binding.vpStaccatoPhotoHorizontal,
-        ) { tab, _ ->
-            tab.setCustomView(R.layout.item_tab_dot)
-        }.attach()
     }
 
     private fun loadStaccato() {
@@ -193,7 +205,7 @@ class StaccatoFragment :
 
     private fun observeStaccatoDetail() {
         staccatoViewModel.staccatoDetail.observe(viewLifecycleOwner) { staccatoDetail ->
-            pagePhotoAdapter.submitList(staccatoDetail.staccatoImageUrls)
+            staccatoPhotoAdapter.submitList(staccatoDetail.staccatoImageUrls)
             sharedViewModel.updateStaccatoLocation(
                 staccatoDetail.latitude,
                 staccatoDetail.longitude,
@@ -204,7 +216,7 @@ class StaccatoFragment :
     private fun observeStaccatoDelete() {
         staccatoViewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
             if (isDeleted) {
-                sharedViewModel.setStaccatosHasUpdated()
+                sharedViewModel.updateIsStaccatosUpdated(true)
                 findNavController().popBackStack()
             }
         }

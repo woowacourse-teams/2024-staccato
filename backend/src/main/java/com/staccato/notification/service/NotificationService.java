@@ -1,8 +1,14 @@
 package com.staccato.notification.service;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.swing.text.SimpleAttributeSet;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.staccato.StaccatoApplication;
 import com.staccato.category.domain.Category;
 import com.staccato.comment.domain.Comment;
 import com.staccato.config.log.annotation.Trace;
@@ -11,8 +17,15 @@ import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
 import com.staccato.notification.domain.NotificationToken;
 import com.staccato.notification.repository.NotificationTokenRepository;
+import com.staccato.notification.service.dto.message.AcceptInvitationMessage;
+import com.staccato.notification.service.dto.message.CommentCreatedMessage;
+import com.staccato.notification.service.dto.message.PushMessage;
+import com.staccato.notification.service.dto.message.ReceiveInvitationMessage;
+import com.staccato.notification.service.dto.message.StaccatoCreatedMessage;
 import com.staccato.notification.service.dto.request.NotificationTokenRequest;
 import com.staccato.notification.service.dto.response.NotificationExistResponse;
+import com.staccato.staccato.domain.Staccato;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -44,37 +57,31 @@ public class NotificationService {
                         });
     }
 
-    public void sendInvitationAlert(Member sender, List<Member> receivers, Category category) {
-        String title = String.format("%s님이 초대를 보냈어요", sender.getNickname().getNickname());
-        String message = category.getTitle().getTitle();
-        sendToMembers(title, message, receivers);
+    public void sendInvitationAlert(Member inviter, Category category, List<Member> receivers) {
+        ReceiveInvitationMessage message = new ReceiveInvitationMessage(inviter, category);
+        sendToMembers(receivers, message);
     }
 
-    public void sendAcceptAlert(Member accepter, Category category, List<Member> existingMembers) {
-        String title = String.format("%s님이 참여했어요", accepter.getNickname().getNickname());
-        String message = String.format("%s에서 환영해주세요!", category.getTitle().getTitle());
-        sendToMembers(title, message, existingMembers);
+    public void sendAcceptAlert(Member invitee, Category category, List<Member> receivers) {
+        AcceptInvitationMessage message = new AcceptInvitationMessage(invitee, category);
+        sendToMembers(receivers, message);
     }
 
-    public void sendNewStaccatoAlert(Member member, Category category, List<Member> existingMembers) {
-        String title = "스타카토가 추가됐어요";
-        String message = String.format("%s님이 %s에 남긴 스타카토를 확인해보세요",
-                member.getNickname().getNickname(),
-                category.getTitle().getTitle());
-        sendToMembers(title, message, existingMembers);
+    public void sendNewStaccatoAlert(Member staccatoCreator, Category category, Staccato staccato, List<Member> receivers) {
+        StaccatoCreatedMessage message = new StaccatoCreatedMessage(staccatoCreator, staccato, category);
+        sendToMembers(receivers, message);
     }
 
-    public void sendNewCommentAlert(Member commenter, Comment comment, List<Member> existingMembers) {
-        String title = String.format("%s님의 코멘트", commenter.getNickname().getNickname());
-        String message = comment.getContent();
-        sendToMembers(title, message, existingMembers);
+    public void sendNewCommentAlert(Member commentCreator, Comment comment, Staccato staccato, List<Member> receivers) {
+        CommentCreatedMessage message = new CommentCreatedMessage(commentCreator, staccato, comment);
+        sendToMembers(receivers, message);
     }
 
-    private void sendToMembers(String title, String message, List<Member> members) {
+    private void sendToMembers(List<Member> members, PushMessage pushMessage) {
         List<NotificationToken> notificationTokens = notificationTokenRepository.findByMemberIn(members);
         List<String> tokens = notificationTokens.stream()
                 .map(NotificationToken::getToken)
                 .toList();
-        fcmService.sendPush(tokens, title, message);
+        fcmService.sendPush(tokens, pushMessage);
     }
 }

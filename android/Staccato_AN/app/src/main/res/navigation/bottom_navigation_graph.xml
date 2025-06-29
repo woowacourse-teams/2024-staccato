@@ -5,6 +5,15 @@
     android:id="@+id/main_navigation_graph"
     app:startDestination="@id/timelineFragment">
 
+    <action
+        android:id="@+id/action_staccatoFragment"
+        app:launchSingleTop="true"
+        app:destination="@id/staccatoFragment"
+        app:enterAnim="@anim/anim_slide_in_from_left_fade_in"
+        app:exitAnim="@anim/anim_fade_out"
+        app:popEnterAnim="@anim/anim_fade_in"
+        app:popExitAnim="@anim/anim_slide_out_to_left_fade_out"/>
+
     <fragment
         android:id="@+id/timelineFragment"
         android:name="com.on.staccato.presentation.timeline.TimelineFragment"

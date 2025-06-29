@@ -3,7 +3,7 @@ package com.on.staccato.data.staccato
 import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
-import com.on.staccato.data.dto.staccato.StaccatoLocationResponse
+import com.on.staccato.data.dto.staccato.StaccatoMarkerResponses
 import com.on.staccato.data.dto.staccato.StaccatoResponse
 import com.on.staccato.data.dto.staccato.StaccatoShareLinkResponse
 import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
@@ -17,7 +17,7 @@ import retrofit2.http.Path
 
 interface StaccatoApiService {
     @GET(STACCATOS_PATH_V2)
-    suspend fun getStaccatos(): ApiResult<StaccatoLocationResponse>
+    suspend fun getStaccatoMarkers(): ApiResult<StaccatoMarkerResponses>
 
     @GET(STACCATO_PATH_WITH_ID)
     suspend fun getStaccato(

@@ -43,7 +43,7 @@ public class StaccatoService {
         Staccato staccato = staccatoRequest.toStaccato(category, member);
 
         staccatoRepository.save(staccato);
-        eventPublisher.publishEvent(new StaccatoCreatedEvent(member, category));
+        eventPublisher.publishEvent(new StaccatoCreatedEvent(member, category, staccato));
         return new StaccatoIdResponse(staccato.getId());
     }
 

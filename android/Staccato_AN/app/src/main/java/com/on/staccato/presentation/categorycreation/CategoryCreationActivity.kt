@@ -140,9 +140,10 @@ class CategoryCreationActivity :
 
     private fun observeCreatedCategoryId() {
         viewModel.createdCategoryId.observe(this) { categoryId ->
-            val resultIntent = Intent()
-            resultIntent.putExtra(CATEGORY_ID_KEY, categoryId)
-            setResult(RESULT_OK, resultIntent)
+            val intent =
+                Intent().putExtra(CATEGORY_ID_KEY, categoryId)
+                    .putExtra(KEY_IS_CATEGORY_CREATED, true)
+            setResult(RESULT_OK, intent)
             finish()
         }
     }
@@ -205,6 +206,8 @@ class CategoryCreationActivity :
     }
 
     companion object {
+        const val KEY_IS_CATEGORY_CREATED = "isCategoryCreated"
+
         fun startWithResultLauncher(
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,

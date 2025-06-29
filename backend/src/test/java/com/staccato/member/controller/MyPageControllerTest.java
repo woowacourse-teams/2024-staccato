@@ -43,7 +43,7 @@ class MyPageControllerTest extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("마이페이지의 사용자 정보를 조회한다.")
@@ -65,6 +65,6 @@ class MyPageControllerTest extends ControllerTest {
         mockMvc.perform(get("/mypage")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 }

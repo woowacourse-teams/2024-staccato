@@ -53,4 +53,9 @@ class CategoryRemoteDataSource
             categoryApiService.deleteCategory(
                 categoryId,
             )
+
+        override suspend fun deleteMeFromCategory(categoryId: Long): ApiResult<Unit> =
+            categoryApiService.deleteMeFromCategory(
+                categoryId,
+            )
     }

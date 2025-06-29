@@ -15,6 +15,7 @@
 </head>
 <body>
 <div class="container">
+    <img class="staccato-banner" src="https://image.staccato.kr/web/share/staccato-banner.png" alt="Staccato Banner">
     <div class="staccato-header">
         <h1 class="staccato-header-title"></h1>
         <p class="staccato-header-expiration"></p>
@@ -58,10 +59,15 @@
     </div>
 
     <div class="promotion">
-        <a href="https://play.google.com/store/apps/details?id=com.on.staccato&pcampaignid=web_share" target="_blank" class="google-play-link">
-            <img th:src="${'https://image.staccato.kr/web/share/google-play-badge.png'}" alt="Get it on Google Play">
-        </a>
-        <p>플레이 스토어에서 스타카토를 만나보세요!</p>
+        <p>모바일 스토어에서 스타카토를 만나보세요!</p>
+        <div class="store-buttons">
+            <a href="https://apps.apple.com/kr/app/%EC%8A%A4%ED%83%80%EC%B9%B4%ED%86%A0-staccato/id6741481784" target="_blank" class="store-button apple">
+                <span class="apple-icon"></span> App Store →
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.on.staccato&pcampaignid=web_share" target="_blank" class="store-button google">
+                <span class="google-icon">G</span> Play Store →
+            </a>
+        </div>
     </div>
 </div>
 
