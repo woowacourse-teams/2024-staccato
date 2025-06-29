@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -16,6 +18,18 @@ android {
         testInstrumentationRunnerArguments["runnerBuilder"] =
             "de.mannodermaus.junit5.AndroidJUnit5Builder"
         consumerProguardFiles("consumer-rules.pro")
+
+        val secretPropsFile = rootProject.file("secret.properties")
+        val localDefaultsFile = rootProject.file("local.defaults.properties")
+        val props = Properties().apply {
+            if (secretPropsFile.exists()) {
+                load(secretPropsFile.inputStream())
+            } else if (localDefaultsFile.exists()) {
+                load(localDefaultsFile.inputStream())
+            }
+        }
+        val mapsApiKey = props.getProperty("MAPS_API_KEY") ?: ""
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
