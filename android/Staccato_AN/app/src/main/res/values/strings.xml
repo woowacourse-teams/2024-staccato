@@ -46,7 +46,7 @@
     <string name="notification_permission_rationale_bullet">▪ 새로운 코멘트가 달렸을 때\n▪ 누군가 나를 카테고리에 초대했을 때\n▪ 공유 카테고리에 새로운 참여자가 생겼을 때\n▪ 공유 카테고리에 새로운 스타카토가 올라왔을 때</string>
     <string name="notification_permission_denial">알림 권한을 거부 하셨습니다.</string>
     <string name="channel_name_invitation">초대 알림</string>
-    <string name="channel_name_category">카테고리 알림</string>
+    <string name="channel_name_category">공동 카테고리 알림</string>
     <string name="channel_name_comment">댓글 알림</string>
 
     // MainActivity

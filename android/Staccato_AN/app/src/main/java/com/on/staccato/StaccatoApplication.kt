@@ -5,7 +5,7 @@ import android.app.NotificationManager
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.on.staccato.data.PlacesClientProvider
-import com.on.staccato.presentation.common.notification.NotificationChannelType
+import com.on.staccato.presentation.common.notification.ChannelType
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -19,7 +19,7 @@ class StaccatoApplication : Application() {
 
     private fun registerNotificationChannel() {
         val manager = getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannels(NotificationChannelType.getAllChannels(applicationContext))
+        manager.createNotificationChannels(ChannelType.getAllChannels(applicationContext))
     }
 
     companion object {
