@@ -20,6 +20,7 @@ import com.on.staccato.presentation.category.naMembersUiModel
 import com.on.staccato.presentation.category.nana
 import com.on.staccato.presentation.category.participants
 import com.on.staccato.presentation.category.selectedNaMembersUiModel
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.getOrAwaitValue
 import com.on.staccato.toMessageId
 import io.mockk.MockKAnnotations
@@ -59,13 +60,14 @@ class CategoryViewModelTest {
     }
 
     @Test
-    fun `조회하려는 카테고리 ID가 유효하지 않으면 예외 상태를 설정한다`() {
+    fun `조회하려는 카테고리 ID가 유효하지 않으면 예외 메시지를 설정한다`() {
         // when
         viewModel.loadCategory(INVALID_ID)
 
         // then
-        val actual = viewModel.exceptionState.getOrAwaitValue()
-        assertThat(actual).isEqualTo(ExceptionType.UNKNOWN.toMessageId())
+        val actual = viewModel.messageEvent.getOrAwaitValue()
+        val expected = MessageEvent.FromResource(ExceptionType.UNKNOWN.toMessageId())
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -96,12 +98,13 @@ class CategoryViewModelTest {
             viewModel.loadCategory(VALID_ID)
 
             // then
-            val actual = viewModel.toastMessage.getOrAwaitValue()
-            assertThat(actual).isEqualTo("Bad Request")
+            val actual = viewModel.messageEvent.getOrAwaitValue()
+            val expected = MessageEvent.Plain("Bad Request")
+            assertThat(actual).isEqualTo(expected)
         }
 
     @Test
-    fun `카테고리 조회 중 네트워크 오류가 발생하면 예외 상태를 설정한다`() =
+    fun `카테고리 조회 중 네트워크 오류가 발생하면 예외 메시지를 설정한다`() =
         runTest {
             // given
             coEvery { categoryRepository.getCategory(VALID_ID) } returns Exception.NetworkError()
@@ -110,12 +113,13 @@ class CategoryViewModelTest {
             viewModel.loadCategory(VALID_ID)
 
             // then
-            val actual = viewModel.exceptionState.getOrAwaitValue()
-            assertThat(actual).isEqualTo(ExceptionType.NETWORK.toMessageId())
+            val actual = viewModel.messageEvent.getOrAwaitValue()
+            val expected = MessageEvent.FromResource(ExceptionType.NETWORK.toMessageId())
+            assertThat(actual).isEqualTo(expected)
         }
 
     @Test
-    fun `카테고리 조회 중 알 수 없는 오류가 발생하면 예외 상태를 설정한다`() =
+    fun `카테고리 조회 중 알 수 없는 오류가 발생하면 예외 메시지를 설정한다`() =
         runTest {
             // given
             coEvery { categoryRepository.getCategory(VALID_ID) } returns Exception.UnknownError()
@@ -124,8 +128,9 @@ class CategoryViewModelTest {
             viewModel.loadCategory(VALID_ID)
 
             // then
-            val actual = viewModel.exceptionState.getOrAwaitValue()
-            assertThat(actual).isEqualTo(ExceptionType.UNKNOWN.toMessageId())
+            val actual = viewModel.messageEvent.getOrAwaitValue()
+            val expected = MessageEvent.FromResource(ExceptionType.UNKNOWN.toMessageId())
+            assertThat(actual).isEqualTo(expected)
         }
 
     @Test
@@ -148,7 +153,7 @@ class CategoryViewModelTest {
         }
 
     @Test
-    fun `카테고리 삭제 중 서버 오류가 발생하면 에러 메시지를 설정한다`() =
+    fun `카테고리 삭제 중 서버 오류가 발생하면 예외 메시지를 설정한다`() =
         runTest {
             // given
             coEvery { categoryRepository.getCategory(VALID_ID) } returns Success(category)
@@ -163,12 +168,13 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val errorMessage = viewModel.toastMessage.getOrAwaitValue()
-            assertThat(errorMessage).isEqualTo("Bad Request")
+            val actual = viewModel.messageEvent.getOrAwaitValue()
+            val expected = MessageEvent.Plain("Bad Request")
+            assertThat(actual).isEqualTo(expected)
         }
 
     @Test
-    fun `카테고리 삭제 중 네트워크 오류가 발생하면 예외 상태를 설정한다`() =
+    fun `카테고리 삭제 중 네트워크 오류가 발생하면 예외 메시지를 설정한다`() =
         runTest {
             // given
             coEvery { categoryRepository.getCategory(VALID_ID) } returns Success(category)
@@ -179,12 +185,13 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val exceptionState = viewModel.exceptionState.getOrAwaitValue()
-            assertThat(exceptionState).isEqualTo(ExceptionType.NETWORK.toMessageId())
+            val actual = viewModel.messageEvent.getOrAwaitValue()
+            val expected = MessageEvent.FromResource(ExceptionType.NETWORK.toMessageId())
+            assertThat(actual).isEqualTo(expected)
         }
 
     @Test
-    fun `카테고리 삭제 중 알 수 없는 오류가 발생하면 예외 상태를 설정한다`() =
+    fun `카테고리 삭제 중 알 수 없는 오류가 발생하면 예외 메시지를 설정한다`() =
         runTest {
             // given
             coEvery { categoryRepository.getCategory(VALID_ID) } returns Success(category)
@@ -195,8 +202,9 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val exceptionState = viewModel.exceptionState.getOrAwaitValue()
-            assertThat(exceptionState).isEqualTo(ExceptionType.UNKNOWN.toMessageId())
+            val actual = viewModel.messageEvent.getOrAwaitValue()
+            val expected = MessageEvent.FromResource(ExceptionType.UNKNOWN.toMessageId())
+            assertThat(actual).isEqualTo(expected)
         }
 
     @Test
