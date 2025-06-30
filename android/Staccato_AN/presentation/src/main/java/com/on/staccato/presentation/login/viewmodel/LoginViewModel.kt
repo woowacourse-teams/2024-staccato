@@ -37,7 +37,7 @@ class LoginViewModel
 
         val nicknameMaxLength = Nickname.MAX_LENGTH
 
-        private val token: MutableLiveData<String?> = MutableLiveData(null)
+        private var token: String? = null
 
         private val _isLoggedIn = MutableSingleLiveData(false)
         val isLoggedIn: SingleLiveData<Boolean> = _isLoggedIn
@@ -70,8 +70,8 @@ class LoginViewModel
             viewModelScope.launch {
                 loginRepository.getToken()
                     .onSuccess {
-                        token.value = it
-                        _isLoggedIn.setValue(!token.value.isNullOrEmpty())
+                        token = it
+                        _isLoggedIn.setValue(!token.isNullOrEmpty())
                     }
                     .onFailure {
                         handleException(ExceptionType.UNKNOWN)
