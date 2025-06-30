@@ -23,10 +23,10 @@ import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
 import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
-import com.on.staccato.presentation.common.photo.AttachedPhotoUiModel
-import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel
-import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
-import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.toSuccessPhotos
+import com.on.staccato.presentation.common.photo.PhotoUiModel
+import com.on.staccato.presentation.common.photo.PhotosUiModel
+import com.on.staccato.presentation.common.photo.PhotosUiModel.Companion.MAX_PHOTO_NUMBER
+import com.on.staccato.presentation.common.photo.PhotosUiModel.Companion.toSuccessPhotos
 import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel.Companion.FAIL_IMAGE_UPLOAD_MESSAGE
@@ -60,11 +60,11 @@ class StaccatoUpdateViewModel
         val address: LiveData<String?> get() = _address
 
         private val _currentPhotos =
-            MutableLiveData(AttachedPhotosUiModel(emptyList()))
-        val currentPhotos: LiveData<AttachedPhotosUiModel> get() = _currentPhotos
+            MutableLiveData(PhotosUiModel(emptyList()))
+        val currentPhotos: LiveData<PhotosUiModel> get() = _currentPhotos
 
-        private val _pendingPhotos = MutableSingleLiveData<List<AttachedPhotoUiModel>>()
-        val pendingPhotos: SingleLiveData<List<AttachedPhotoUiModel>> get() = _pendingPhotos
+        private val _pendingPhotos = MutableSingleLiveData<List<PhotoUiModel>>()
+        val pendingPhotos: SingleLiveData<List<PhotoUiModel>> get() = _pendingPhotos
 
         private val _currentLocation = MutableLiveData<LocationUiModel>()
         val currentLocation: LiveData<LocationUiModel> get() = _currentLocation
@@ -118,7 +118,7 @@ class StaccatoUpdateViewModel
             }
         }
 
-        override fun onDeleteClicked(deletedPhoto: AttachedPhotoUiModel) {
+        override fun onDeleteClicked(deletedPhoto: PhotoUiModel) {
             _currentPhotos.value = currentPhotos.value?.removePhoto(deletedPhoto)
             if (photoJobs[deletedPhoto.uri.toString()]?.isActive == true) {
                 photoJobs[deletedPhoto.uri.toString()]?.cancel()
@@ -141,7 +141,7 @@ class StaccatoUpdateViewModel
             }
         }
 
-        override fun onRetryClicked(retryPhoto: AttachedPhotoUiModel) {
+        override fun onRetryClicked(retryPhoto: PhotoUiModel) {
             _currentPhotos.value = currentPhotos.value?.toLoading(retryPhoto)
             _pendingPhotos.postValue(listOf(retryPhoto))
         }
@@ -193,8 +193,8 @@ class StaccatoUpdateViewModel
             _pendingPhotos.postValue(updatedPhotos.getLoadingPhotosWithoutUrls())
         }
 
-        fun setUrisWithNewOrder(list: List<AttachedPhotoUiModel>) {
-            _currentPhotos.value = AttachedPhotosUiModel(list)
+        fun setUrisWithNewOrder(list: List<PhotoUiModel>) {
+            _currentPhotos.value = PhotosUiModel(list)
         }
 
         fun fetchPhotosUrlsByUris(context: Context) {
@@ -284,7 +284,7 @@ class StaccatoUpdateViewModel
 
         private fun createPhotoUploadJob(
             context: Context,
-            photo: AttachedPhotoUiModel,
+            photo: PhotoUiModel,
         ) = viewModelScope.async(buildCoroutineExceptionHandler()) {
             // TODO: 리팩터링
             val file = convertUriToFile(context, photo.uri ?: return@async)
@@ -306,7 +306,7 @@ class StaccatoUpdateViewModel
         }
 
         private fun updatePhotoWithUrl(
-            targetPhoto: AttachedPhotoUiModel,
+            targetPhoto: PhotoUiModel,
             url: String,
         ) {
             val updatedPhoto = targetPhoto.toSuccessPhotoWith(url)
@@ -319,7 +319,7 @@ class StaccatoUpdateViewModel
         }
 
         private fun handlePhotoServerError(
-            photo: AttachedPhotoUiModel,
+            photo: PhotoUiModel,
             message: String,
         ) {
             _currentPhotos.value = currentPhotos.value?.updatePhoto(photo)
@@ -327,7 +327,7 @@ class StaccatoUpdateViewModel
         }
 
         private fun handlePhotoException(
-            photo: AttachedPhotoUiModel,
+            photo: PhotoUiModel,
             message: ExceptionType,
         ) {
             _currentPhotos.value = currentPhotos.value?.updatePhoto(photo)

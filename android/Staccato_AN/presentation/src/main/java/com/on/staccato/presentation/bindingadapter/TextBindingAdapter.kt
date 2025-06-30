@@ -12,7 +12,7 @@ import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.common.InputState
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
-import com.on.staccato.presentation.common.photo.AttachedPhotoState
+import com.on.staccato.presentation.common.photo.PhotoUploadState
 import com.on.staccato.presentation.common.toMonthDay
 import com.on.staccato.presentation.common.toYearMonthDay
 import com.on.staccato.presentation.mapper.toInputState
@@ -297,9 +297,9 @@ fun View.visibilityByDescription(description: String?) {
 }
 
 @BindingAdapter("failVisibilityByState")
-fun TextView.setFailVisibilityByPhotoState(photoState: AttachedPhotoState) {
+fun TextView.setFailVisibilityByPhotoState(photoState: PhotoUploadState) {
     visibility =
-        if (photoState == AttachedPhotoState.Failure) {
+        if (photoState == PhotoUploadState.Failure) {
             View.VISIBLE
         } else {
             View.GONE

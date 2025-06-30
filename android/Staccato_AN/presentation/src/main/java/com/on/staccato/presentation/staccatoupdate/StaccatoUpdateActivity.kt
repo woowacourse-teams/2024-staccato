@@ -26,8 +26,8 @@ import com.on.staccato.presentation.common.categoryselection.CategorySelectionVi
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
-import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
 import com.on.staccato.presentation.common.photo.PhotoAttachFragment
+import com.on.staccato.presentation.common.photo.PhotosUiModel.Companion.MAX_PHOTO_NUMBER
 import com.on.staccato.presentation.databinding.ActivityStaccatoUpdateBinding
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.model.LocationUiModel
@@ -259,7 +259,7 @@ class StaccatoUpdateActivity :
         viewModel.currentPhotos.observe(this) { photos ->
             photoAttachFragment.setCurrentImageCount(MAX_PHOTO_NUMBER - photos.size)
             photoAttachAdapter.submitList(
-                listOf(photoAdditionButton, *photos.attachedPhotos.toTypedArray()),
+                listOf(photoAdditionButton, *photos.photos.toTypedArray()),
             )
         }
     }
