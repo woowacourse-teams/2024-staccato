@@ -102,7 +102,7 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
 
     private fun checkLoginSuccess(success: Boolean) {
         if (success) {
-            showToast(LOGIN_SUCCESS_MESSAGE)
+            showToast(getString(R.string.login_success))
             navigateToMainActivity()
             window.clearFlags(FLAG_NOT_TOUCHABLE)
         }
@@ -134,7 +134,6 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
     }
 
     companion object {
-        private const val LOGIN_SUCCESS_MESSAGE = "스타카토에 찾아오신걸 환영해요!"
         private const val SPLASH_SCREEN_DURATION = 2000L
     }
 }
