@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.clipboard.ClipboardHelper
 import com.on.staccato.presentation.common.photo.PhotoAttachFragment
 import com.on.staccato.presentation.component.DefaultDivider
@@ -55,8 +56,7 @@ class MyPageActivity :
         finishOnBackPressed()
         loadMemberProfile()
         observeCopyingUuidCode()
-        observeErrorMessage()
-        observeException()
+        observeMessageEvent()
         fetchNotifications()
     }
 
@@ -154,15 +154,12 @@ class MyPageActivity :
         }
     }
 
-    private fun observeErrorMessage() {
-        myPageViewModel.errorMessage.observe(this) { errorMessage ->
-            showToast(errorMessage)
-        }
-    }
-
-    private fun observeException() {
-        myPageViewModel.exceptionState.observe(this) { state ->
-            showToast(getString(state))
+    private fun observeMessageEvent() {
+        myPageViewModel.messageEvent.observe(this) { event ->
+            when (event) {
+                is MessageEvent.FromResource -> showToast(getString(event.messageId))
+                is MessageEvent.Plain -> showToast(event.message)
+            }
         }
     }
 

@@ -12,8 +12,10 @@ import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.domain.repository.NotificationRepository
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.mypage.MemberProfileHandler
 import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,20 +49,16 @@ class MyPageViewModel
         private val _hasNotification = MutableStateFlow(false)
         val hasNotification: StateFlow<Boolean> = _hasNotification.asStateFlow()
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String>
-            get() = _errorMessage
-
-        private val _exceptionState = MutableSingleLiveData<Int>()
-        val exceptionState: SingleLiveData<Int>
-            get() = _exceptionState
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent>
+            get() = _messageEvent
 
         override fun onCodeCopyClicked() {
             val memberProfile = memberProfile.value
             if (memberProfile != null) {
                 _uuidCode.setValue(memberProfile.uuidCode)
             } else {
-                _errorMessage.setValue(ERROR_NO_MEMBER_PROFILE)
+                _messageEvent.setValue(convertMessageEvent(ERROR_NO_MEMBER_PROFILE))
             }
         }
 
@@ -70,8 +68,8 @@ class MyPageViewModel
                     .onSuccess {
                         _memberProfile.value = memberProfile.value?.copy(profileImageUrl = it)
                         hasProfileUpdated = true
-                    }.onServerError(::handleError)
-                    .onException(::handleException2)
+                    }.onServerError(::updateMessageEvent)
+                    .onException(::updateMessageEvent)
             }
         }
 
@@ -79,8 +77,8 @@ class MyPageViewModel
             viewModelScope.launch {
                 myPageRepository.getMemberProfile()
                     .onSuccess { _memberProfile.value = it }
-                    .onServerError(::handleError)
-                    .onException(::handleException2)
+                    .onServerError(::updateMessageEvent)
+                    .onException(::updateMessageEvent)
             }
         }
 
@@ -88,8 +86,8 @@ class MyPageViewModel
             viewModelScope.launch {
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
-                    .onServerError(::handleError)
-                    .onException(::handleException2)
+                    .onServerError(::updateMessageEvent)
+                    .onException(::updateMessageEvent)
             }
         }
 
@@ -97,12 +95,8 @@ class MyPageViewModel
             hasTimelineUpdated = true
         }
 
-        private fun handleError(errorMessage: String) {
-            _errorMessage.postValue(errorMessage)
-        }
-
-        private fun handleException2(state: ExceptionType) {
-            _exceptionState.setValue(state.toMessageId())
+        private fun <T> updateMessageEvent(message: T) {
+            _messageEvent.setValue(convertMessageEvent(message))
         }
 
         companion object {
