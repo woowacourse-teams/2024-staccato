@@ -50,6 +50,7 @@ fun SearchedMemberItem(
             url = item.member.memberImage,
             bitmapPixelSize = 150,
             placeHolder = R.drawable.icon_member,
+            errorImageRes = R.drawable.icon_member,
             modifier =
                 Modifier
                     .size(35.dp)
