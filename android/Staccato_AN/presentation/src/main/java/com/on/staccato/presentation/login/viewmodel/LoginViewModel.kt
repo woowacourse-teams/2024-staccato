@@ -16,7 +16,7 @@ import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.toMessageId
+import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.util.launchOnce
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -54,8 +54,8 @@ class LoginViewModel
                 viewModelScope.launch {
                     loginRepository.loginWithNickname(nickname.value)
                         .onSuccess { updateIsLoginSuccess() }
-                        .onServerError(::handleError)
-                        .onException(::handleException)
+                        .onServerError(::updateMessageEvent)
+                        .onException(::updateMessageEvent)
                 }
             }
         }
@@ -69,12 +69,8 @@ class LoginViewModel
         fun fetchToken() {
             viewModelScope.launch {
                 loginRepository.getToken()
-                    .onSuccess {
-                        token = it
-                    }
-                    .onFailure {
-                        handleException(ExceptionType.UNKNOWN)
-                    }
+                    .onSuccess { token = it }
+                    .onFailure { updateMessageEvent(ExceptionType.UNKNOWN) }
                 _isLoggedIn.setValue(!token.isNullOrEmpty())
             }
         }
@@ -83,11 +79,8 @@ class LoginViewModel
             _isLoginSuccess.postValue(true)
         }
 
-        private fun handleError(errorMessage: String) {
-            _messageEvent.postValue(MessageEvent.Plain(errorMessage))
-        }
-
-        private fun handleException(state: ExceptionType) {
-            _messageEvent.postValue(MessageEvent.FromResource(state.toMessageId()))
+        private fun <T> updateMessageEvent(message: T) {
+            val event = convertMessageEvent(message)
+            _messageEvent.postValue(event)
         }
     }
