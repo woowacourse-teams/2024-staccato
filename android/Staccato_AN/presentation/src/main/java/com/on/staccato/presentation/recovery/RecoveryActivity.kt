@@ -19,23 +19,24 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
     private val recoveryViewModel: RecoveryViewModel by viewModels()
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        setBinding()
-        observeViewModel()
-        navigateToLogin()
+        setBindings()
+        observeRecoverySuccess()
+        observeMessageEvent()
     }
 
-    private fun setBinding() {
+    private fun setBindings() {
         binding.lifecycleOwner = this
         binding.viewModel = recoveryViewModel
         binding.handler = recoveryViewModel
+        binding.toolbarRecovery.setNavigationOnClickListener { finish() }
     }
 
-    private fun observeViewModel() {
-        recoveryViewModel.isRecoverySuccess.observe(this, ::checkRecoverySuccess)
+    private fun observeMessageEvent() {
         recoveryViewModel.errorMessage.observe(this, ::showToast)
-        recoveryViewModel.exceptionMessage.observe(this) {
-            showToast(getString(it))
-        }
+    }
+
+    private fun observeRecoverySuccess() {
+        recoveryViewModel.isRecoverySuccess.observe(this, ::checkRecoverySuccess)
     }
 
     private fun checkRecoverySuccess(success: Boolean) {
@@ -57,12 +58,6 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
             )
         startActivity(intent, options.toBundle())
         finish()
-    }
-
-    private fun navigateToLogin() {
-        binding.toolbarRecovery.setNavigationOnClickListener {
-            finish()
-        }
     }
 
     companion object {
