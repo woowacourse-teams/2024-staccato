@@ -99,7 +99,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         observeCurrentLocationEvent()
         setupMap()
         setupBinding()
-        setupPermissionRequestLauncher(view)
+        setupPermissionRequestLauncher()
         registerSettingsResultListener()
         observeStaccatoMarkers()
         observeUpdatedStaccato()
@@ -180,11 +180,10 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         )
     }
 
-    private fun setupPermissionRequestLauncher(view: View) {
+    private fun setupPermissionRequestLauncher() {
         permissionRequestLauncher =
             locationPermissionManager.requestPermissionLauncher(
                 activity = requireActivity(),
-                view = view,
                 activityResultCaller = this,
                 actionWhenHavePermission = ::enableMyLocation,
             )
