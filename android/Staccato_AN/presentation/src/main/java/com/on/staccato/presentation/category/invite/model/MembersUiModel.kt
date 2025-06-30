@@ -3,7 +3,7 @@ package com.on.staccato.presentation.category.invite.model
 import com.on.staccato.domain.model.Members
 
 data class MembersUiModel(val members: List<MemberUiModel>) {
-    operator fun plus(newMembersUiModel: MembersUiModel): MembersUiModel = MembersUiModel(this.members + newMembersUiModel.members)
+    operator fun plus(newMembersUiModel: MembersUiModel): MembersUiModel = MembersUiModel(members + newMembersUiModel.members)
 
     fun changeStates(
         target: Members,
