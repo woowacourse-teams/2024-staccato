@@ -35,14 +35,6 @@ class RecoveryViewModel
         private val _messageEvent = MutableSingleLiveData<MessageEvent>()
         val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String>
-            get() = _errorMessage
-
-        private val _exceptionMessage = MutableSingleLiveData<Int>()
-        val exceptionMessage: SingleLiveData<Int>
-            get() = _exceptionMessage
-
         override fun onRecoveryClicked() {
             requestRecovery()
         }
