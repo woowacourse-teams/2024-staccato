@@ -10,6 +10,7 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.presentation.categorycreation.model.CategoryCreationError
 import com.on.staccato.presentation.categorycreation.newCategory
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.getOrAwaitValue
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -76,8 +77,9 @@ class CategoryCreationViewModelTest {
             viewModel.createCategory()
 
             // then
-            val actual = viewModel.errorMessage.getOrAwaitValue()
-            assertThat(actual).isEqualTo("Bad Request")
+            val actual = viewModel.messageEvent.getOrAwaitValue()
+            val expected = MessageEvent.Plain("Bad Request")
+            assertThat(actual).isEqualTo(expected)
         }
 
     @Test
