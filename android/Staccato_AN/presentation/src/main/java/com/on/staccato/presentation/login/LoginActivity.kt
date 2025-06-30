@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         super.onCreate(savedInstanceState)
         val splashScreen = installSplashScreen()
         checkIfLoggedIn(splashScreen)
-        setBinding()
+        setBindings()
         observeLoginState()
         observeMessageEvent()
     }
@@ -49,23 +49,8 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         hideKeyboardAndClearFocus()
     }
 
-    private fun hideKeyboardAndClearFocus() {
-        currentFocus?.let {
-            inputManager.hideSoftInputFromWindow(
-                it.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS,
-            )
-            it.clearFocus()
-        }
-    }
-
     override fun onRecoveryClicked() {
         navigateToRecoveryActivity()
-    }
-
-    private fun navigateToRecoveryActivity() {
-        val intent = Intent(this, RecoveryActivity::class.java)
-        startActivity(intent)
     }
 
     private fun checkIfLoggedIn(splashScreen: SplashScreen) {
@@ -104,7 +89,7 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         finish()
     }
 
-    private fun setBinding() {
+    private fun setBindings() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.lifecycleOwner = this
         binding.viewModel = loginViewModel
@@ -131,6 +116,21 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
             }
             window.clearFlags(FLAG_NOT_TOUCHABLE)
         }
+    }
+
+    private fun hideKeyboardAndClearFocus() {
+        currentFocus?.let {
+            inputManager.hideSoftInputFromWindow(
+                it.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS,
+            )
+            it.clearFocus()
+        }
+    }
+
+    private fun navigateToRecoveryActivity() {
+        val intent = Intent(this, RecoveryActivity::class.java)
+        startActivity(intent)
     }
 
     companion object {
