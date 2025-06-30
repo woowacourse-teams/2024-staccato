@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.main
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -10,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -451,5 +453,19 @@ class MainActivity :
         private const val BOTTOM_SHEET_STATE_REQUEST_KEY = "requestKey"
         private const val BOTTOM_SHEET_NEW_STATE = "newState"
         private const val MILLISECONDS_TO_SECONDS = 1000.0
+
+        fun launch(startContext: Context) {
+            val intent =
+                Intent(startContext, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+            val animationOption =
+                ActivityOptionsCompat.makeCustomAnimation(
+                    startContext,
+                    R.anim.anim_fade_in,
+                    R.anim.anim_fade_out,
+                )
+            startContext.startActivity(intent, animationOption.toBundle())
+        }
     }
 }

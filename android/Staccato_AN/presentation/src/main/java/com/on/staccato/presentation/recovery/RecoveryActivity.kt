@@ -1,9 +1,7 @@
 package com.on.staccato.presentation.recovery
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.app.ActivityOptionsCompat
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.MessageEvent
@@ -45,15 +43,7 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
 
     private fun navigateToMainActivity() {
         recoveryViewModel.registerCurrentFcmToken()
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val options =
-            ActivityOptionsCompat.makeCustomAnimation(
-                this,
-                R.anim.anim_fade_in,
-                R.anim.anim_fade_out,
-            )
-        startActivity(intent, options.toBundle())
+        MainActivity.launch(startContext = this)
         finish()
     }
 

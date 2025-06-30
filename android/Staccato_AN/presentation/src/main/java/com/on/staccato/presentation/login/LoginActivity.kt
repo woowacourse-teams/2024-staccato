@@ -6,7 +6,6 @@ import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.databinding.DataBindingUtil
@@ -77,15 +76,7 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
 
     private fun navigateToMainActivity() {
         loginViewModel.registerCurrentFcmToken()
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val options =
-            ActivityOptionsCompat.makeCustomAnimation(
-                this,
-                R.anim.anim_fade_in,
-                R.anim.anim_fade_out,
-            )
-        startActivity(intent, options.toBundle())
+        MainActivity.launch(startContext = this)
         finish()
     }
 
