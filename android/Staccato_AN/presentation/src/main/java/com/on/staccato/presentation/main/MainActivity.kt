@@ -31,6 +31,7 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity.Companion.KEY_IS_CATEGORY_CREATED
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity.Companion.KEY_IS_CATEGORY_UPDATED
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.notification.NotificationPermissionManager
 import com.on.staccato.presentation.common.notification.NotificationPermissionRationale
 import com.on.staccato.presentation.databinding.ActivityMainBinding
@@ -95,7 +96,7 @@ class MainActivity :
         setUpBottomSheetStateListener()
         updateBottomSheetIsDraggable()
         setupBackPressedHandler()
-        observeException()
+        observeMessageEvent()
         observeRetryEvent()
         loadMemberProfile()
         registerAndLaunchNotificationPermission()
@@ -292,10 +293,15 @@ class MainActivity :
         return currentTime
     }
 
-    private fun observeException() {
-        sharedViewModel.exception.observe(this) { state ->
+    private fun observeMessageEvent() {
+        sharedViewModel.messageEvent.observe(this) { event ->
+            val message =
+                when (event) {
+                    is MessageEvent.FromResource -> getString(event.messageId)
+                    is MessageEvent.Plain -> event.message
+                }
             binding.root.showSnackBarWithAction(
-                message = getString(state.toMessageId()),
+                message = message,
                 actionLabel = R.string.all_retry,
                 onAction = ::onRetryAction,
                 length = Snackbar.LENGTH_INDEFINITE,
