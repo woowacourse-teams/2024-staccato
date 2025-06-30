@@ -39,6 +39,7 @@ import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter.Companion.photoAdditionButton
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
+import com.on.staccato.presentation.util.convertUriToFile
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -76,7 +77,12 @@ class StaccatoCreationActivity :
 
     private val categoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID) }
     private val categoryTitle by lazy { intent.getStringExtra(CATEGORY_TITLE_KEY) ?: "" }
-    private val isPermissionCanceled by lazy { intent.getBooleanExtra(PERMISSION_CANCEL_KEY, false) }
+    private val isPermissionCanceled by lazy {
+        intent.getBooleanExtra(
+            PERMISSION_CANCEL_KEY,
+            false,
+        )
+    }
 
     @Inject
     lateinit var gpsManager: GPSManager
@@ -263,8 +269,13 @@ class StaccatoCreationActivity :
                 photoAttachFragment.show(supportFragmentManager, PhotoAttachFragment.TAG)
             }
         }
-        viewModel.pendingPhotos.observe(this) {
-            viewModel.fetchPhotosUrlsByUris(this)
+        viewModel.pendingPhotos.observe(this) { photos ->
+            photos.forEach { photo ->
+                photo.uri?.let { uri ->
+                    val file = convertUriToFile(this, uri)
+                    viewModel.launchPhotoUploadJob(file, photo)
+                }
+            }
         }
         viewModel.currentPhotos.observe(this) { photos ->
             photoAttachFragment.setCurrentImageCount(MAX_PHOTO_NUMBER - photos.size)

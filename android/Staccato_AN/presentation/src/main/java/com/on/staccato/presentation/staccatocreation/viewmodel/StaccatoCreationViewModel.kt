@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.staccatocreation.viewmodel
 
-import android.content.Context
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
@@ -8,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.domain.ExceptionType
+import com.on.staccato.domain.UploadFile
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.CategoryCandidates.Companion.emptyCategoryCandidates
@@ -29,7 +29,6 @@ import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationError
 import com.on.staccato.presentation.util.ExceptionState
-import com.on.staccato.presentation.util.convertUriToFile
 import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -236,14 +235,13 @@ class StaccatoCreationViewModel
             _currentPhotos.value = PhotosUiModel(list)
         }
 
-        fun fetchPhotosUrlsByUris(context: Context) {
-            pendingPhotos.getValue()?.forEach { photo ->
-                val job = createPhotoUploadJob(context, photo)
-                job.invokeOnCompletion { _ ->
-                    photoJobs.remove(photo.uri.toString())
-                }
-                photoJobs[photo.uri.toString()] = job
-            }
+        fun launchPhotoUploadJob(
+            file: UploadFile,
+            photo: PhotoUiModel,
+        ) {
+            val job = createPhotoUploadJob(file, photo)
+            job.invokeOnCompletion { photoJobs.remove(photo.uri.toString()) }
+            photoJobs[photo.uri.toString()] = job
         }
 
         fun createStaccato() =
@@ -265,14 +263,12 @@ class StaccatoCreationViewModel
             }
 
         private fun createPhotoUploadJob(
-            context: Context,
+            file: UploadFile,
             photo: PhotoUiModel,
         ) = viewModelScope.launch(buildCoroutineExceptionHandler()) {
-            // TODO: 리팩터링
-            val file = convertUriToFile(context, photo.uri ?: return@launch)
             imageRepository.convertImageFileToUrl(file)
-                .onSuccess {
-                    updatePhotoWithUrl(photo, it)
+                .onSuccess { url ->
+                    updatePhotoWithUrl(photo, url)
                 }.onException { state ->
                     if (isActive) handlePhotoException(photo.toRetry(), state.toMessageId())
                 }

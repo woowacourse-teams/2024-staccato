@@ -39,6 +39,7 @@ import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter.Companion.photoAdditionButton
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatoupdate.viewmodel.StaccatoUpdateViewModel
+import com.on.staccato.presentation.util.convertUriToFile
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -253,8 +254,13 @@ class StaccatoUpdateActivity :
                 photoAttachFragment.show(supportFragmentManager, PhotoAttachFragment.TAG)
             }
         }
-        viewModel.pendingPhotos.observe(this) {
-            viewModel.fetchPhotosUrlsByUris(this)
+        viewModel.pendingPhotos.observe(this) { photos ->
+            photos.forEach { photo ->
+                photo.uri?.let { uri ->
+                    val file = convertUriToFile(this, uri)
+                    viewModel.launchPhotoUploadJob(file, photo)
+                }
+            }
         }
         viewModel.currentPhotos.observe(this) { photos ->
             photoAttachFragment.setCurrentImageCount(MAX_PHOTO_NUMBER - photos.size)
