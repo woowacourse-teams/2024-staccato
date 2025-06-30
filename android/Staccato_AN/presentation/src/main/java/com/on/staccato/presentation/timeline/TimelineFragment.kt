@@ -70,11 +70,6 @@ class TimelineFragment :
         )
     }
 
-    fun onMenuItemClicked(menuItemId: Int) {
-        val sortType: SortType = SortType.from(menuItemId)
-        timelineViewModel.sortTimeline(sortType)
-    }
-
     override fun onFilterClicked() {
         timelineViewModel.changeFilterState()
     }
@@ -170,5 +165,10 @@ class TimelineFragment :
             NAME_FRAGMENT_PAGE,
             Param(KEY_FRAGMENT_NAME, PARAM_CATEGORY_LIST),
         )
+    }
+
+    private fun onMenuItemClicked(menuItemId: Int) {
+        val sortType: SortType = SortType.from(menuItemId)
+        timelineViewModel.sortTimeline(sortType)
     }
 }
