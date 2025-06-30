@@ -14,10 +14,10 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
--keepattributes SourceFile,LineNumberTable,Signature
+#-keepattributes SourceFile,LineNumberTable,Signature
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
--renamesourcefileattribute SourceFile
+#-renamesourcefileattribute SourceFile
 
--keepnames, allowobfuscation class com.on.staccato.data.network.ApiResult
+-keepnames, allowobfuscation class com.on.staccato.domain.ApiResult

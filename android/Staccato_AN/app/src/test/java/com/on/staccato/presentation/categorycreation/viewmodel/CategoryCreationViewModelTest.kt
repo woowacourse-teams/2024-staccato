@@ -2,17 +2,15 @@ package com.on.staccato.presentation.categorycreation.viewmodel
 
 import com.on.staccato.CoroutinesTestExtension
 import com.on.staccato.InstantTaskExecutorExtension
-import com.on.staccato.data.dto.Status
-import com.on.staccato.data.dto.category.CategoryCreationResponse
-import com.on.staccato.data.network.Exception
-import com.on.staccato.data.network.ServerError
-import com.on.staccato.data.network.Success
+import com.on.staccato.domain.Exception
+import com.on.staccato.domain.ServerError
+import com.on.staccato.domain.Status
+import com.on.staccato.domain.Success
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.presentation.categorycreation.model.CategoryCreationError
 import com.on.staccato.presentation.categorycreation.newCategory
 import com.on.staccato.presentation.getOrAwaitValue
-import com.on.staccato.presentation.util.ExceptionState2
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.InjectMockKs
@@ -56,9 +54,7 @@ class CategoryCreationViewModelTest {
             coEvery {
                 categoryRepository.createCategory(newCategory.copy(categoryTitle = viewModel.title.getOrAwaitValue()))
             } returns
-                Success(
-                    CategoryCreationResponse(categoryId = 1L),
-                )
+                Success(1L)
 
             // when
             viewModel.createCategory()
@@ -97,7 +93,8 @@ class CategoryCreationViewModelTest {
 
             // then
             val actual = viewModel.error.getOrAwaitValue()
-            assertThat(actual).isInstanceOf(CategoryCreationError.CategoryCreation(ExceptionState2.NetworkError)::class.java)
+            val expected = CategoryCreationError.CategoryCreation::class.java
+            assertThat(actual).isInstanceOf(expected)
         }
 
     @Test
@@ -113,7 +110,8 @@ class CategoryCreationViewModelTest {
 
             // then
             val actual = viewModel.error.getOrAwaitValue()
-            assertThat(actual).isInstanceOf(CategoryCreationError.CategoryCreation(ExceptionState2.UnknownError)::class.java)
+            val expected = CategoryCreationError.CategoryCreation::class.java
+            assertThat(actual).isInstanceOf(expected)
         }
 
     @Test

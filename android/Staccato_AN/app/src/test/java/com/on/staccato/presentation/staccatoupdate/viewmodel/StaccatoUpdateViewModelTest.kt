@@ -2,7 +2,7 @@ package com.on.staccato.presentation.staccatoupdate.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.on.staccato.data.image.ImageDefaultRepository
-import com.on.staccato.data.network.Success
+import com.on.staccato.domain.Success
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.TARGET_STACCATO_ID

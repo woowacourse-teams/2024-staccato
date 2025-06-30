@@ -11,7 +11,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isNotEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.on.staccato.R
+import com.on.staccato.presentation.R
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.hamcrest.core.AllOf.allOf

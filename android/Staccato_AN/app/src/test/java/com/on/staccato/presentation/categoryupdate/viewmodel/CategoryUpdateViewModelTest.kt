@@ -2,10 +2,10 @@ package com.on.staccato.presentation.categoryupdate.viewmodel
 
 import com.on.staccato.CoroutinesTestExtension
 import com.on.staccato.InstantTaskExecutorExtension
-import com.on.staccato.data.dto.Status
-import com.on.staccato.data.network.Exception
-import com.on.staccato.data.network.ServerError
-import com.on.staccato.data.network.Success
+import com.on.staccato.domain.Exception
+import com.on.staccato.domain.ServerError
+import com.on.staccato.domain.Status
+import com.on.staccato.domain.Success
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.presentation.category.VALID_ID
@@ -13,7 +13,6 @@ import com.on.staccato.presentation.category.category
 import com.on.staccato.presentation.categorycreation.newCategory
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
 import com.on.staccato.presentation.getOrAwaitValue
-import com.on.staccato.presentation.util.ExceptionState2
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.InjectMockKs
@@ -88,7 +87,8 @@ class CategoryUpdateViewModelTest {
 
             // then
             val actual = viewModel.error.getOrAwaitValue()
-            assertThat(actual).isInstanceOf(CategoryUpdateError.CategoryInitialization(ExceptionState2.NetworkError)::class.java)
+            val expected = CategoryUpdateError.CategoryInitialization::class.java
+            assertThat(actual).isInstanceOf(expected)
         }
 
     @Test
@@ -102,7 +102,8 @@ class CategoryUpdateViewModelTest {
 
             // then
             val actual = viewModel.error.getOrAwaitValue()
-            assertThat(actual).isInstanceOf(CategoryUpdateError.CategoryInitialization(ExceptionState2.UnknownError)::class.java)
+            val expected = CategoryUpdateError.CategoryInitialization::class.java
+            assertThat(actual).isInstanceOf(expected)
         }
 
     @Test
@@ -174,7 +175,8 @@ class CategoryUpdateViewModelTest {
 
             // then
             val actual = viewModel.error.getOrAwaitValue()
-            assertThat(actual).isInstanceOf(CategoryUpdateError.CategoryUpdate(ExceptionState2.NetworkError)::class.java)
+            val expected = CategoryUpdateError.CategoryUpdate::class.java
+            assertThat(actual).isInstanceOf(expected)
         }
 
     @Test
@@ -198,7 +200,8 @@ class CategoryUpdateViewModelTest {
 
             // then
             val actual = viewModel.error.getOrAwaitValue()
-            assertThat(actual).isInstanceOf(CategoryUpdateError.CategoryUpdate(ExceptionState2.UnknownError)::class.java)
+            val expected = CategoryUpdateError.CategoryUpdate::class.java
+            assertThat(actual).isInstanceOf(expected)
         }
 
     @Test

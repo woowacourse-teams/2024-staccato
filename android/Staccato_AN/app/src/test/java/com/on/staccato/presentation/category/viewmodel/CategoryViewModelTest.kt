@@ -2,10 +2,11 @@ package com.on.staccato.presentation.category.viewmodel
 
 import com.on.staccato.CoroutinesTestExtension
 import com.on.staccato.InstantTaskExecutorExtension
-import com.on.staccato.data.dto.Status
-import com.on.staccato.data.network.Exception
-import com.on.staccato.data.network.ServerError
-import com.on.staccato.data.network.Success
+import com.on.staccato.domain.Exception
+import com.on.staccato.domain.ExceptionType
+import com.on.staccato.domain.ServerError
+import com.on.staccato.domain.Status
+import com.on.staccato.domain.Success
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.InvitationRepository
 import com.on.staccato.domain.repository.MemberRepository
@@ -20,7 +21,7 @@ import com.on.staccato.presentation.category.nana
 import com.on.staccato.presentation.category.participants
 import com.on.staccato.presentation.category.selectedNaMembersUiModel
 import com.on.staccato.presentation.getOrAwaitValue
-import com.on.staccato.presentation.util.ExceptionState2
+import com.on.staccato.toMessageId
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.InjectMockKs
@@ -64,7 +65,7 @@ class CategoryViewModelTest {
 
         // then
         val actual = viewModel.exceptionState.getOrAwaitValue()
-        assertThat(actual).isInstanceOf(ExceptionState2.UnknownError::class.java)
+        assertThat(actual).isEqualTo(ExceptionType.UNKNOWN.toMessageId())
     }
 
     @Test
@@ -87,8 +88,8 @@ class CategoryViewModelTest {
             // given
             coEvery { categoryRepository.getCategory(VALID_ID) } returns
                 ServerError(
-                    Status.Code(400),
-                    "Bad Request",
+                    status = Status.Code(400),
+                    message = "Bad Request",
                 )
 
             // when
@@ -110,7 +111,7 @@ class CategoryViewModelTest {
 
             // then
             val actual = viewModel.exceptionState.getOrAwaitValue()
-            assertThat(actual).isInstanceOf(ExceptionState2.NetworkError::class.java)
+            assertThat(actual).isEqualTo(ExceptionType.NETWORK.toMessageId())
         }
 
     @Test
@@ -124,7 +125,7 @@ class CategoryViewModelTest {
 
             // then
             val actual = viewModel.exceptionState.getOrAwaitValue()
-            assertThat(actual).isInstanceOf(ExceptionState2.UnknownError::class.java)
+            assertThat(actual).isEqualTo(ExceptionType.UNKNOWN.toMessageId())
         }
 
     @Test
@@ -179,7 +180,7 @@ class CategoryViewModelTest {
 
             // then
             val exceptionState = viewModel.exceptionState.getOrAwaitValue()
-            assertThat(exceptionState).isInstanceOf(ExceptionState2.NetworkError::class.java)
+            assertThat(exceptionState).isEqualTo(ExceptionType.NETWORK.toMessageId())
         }
 
     @Test
@@ -195,7 +196,7 @@ class CategoryViewModelTest {
 
             // then
             val exceptionState = viewModel.exceptionState.getOrAwaitValue()
-            assertThat(exceptionState).isInstanceOf(ExceptionState2.UnknownError::class.java)
+            assertThat(exceptionState).isEqualTo(ExceptionType.UNKNOWN.toMessageId())
         }
 
     @Test
