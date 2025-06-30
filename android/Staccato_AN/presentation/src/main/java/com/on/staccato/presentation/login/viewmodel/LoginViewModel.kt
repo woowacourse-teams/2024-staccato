@@ -71,11 +71,11 @@ class LoginViewModel
                 loginRepository.getToken()
                     .onSuccess {
                         token = it
-                        _isLoggedIn.setValue(!token.isNullOrEmpty())
                     }
                     .onFailure {
                         handleException(ExceptionType.UNKNOWN)
                     }
+                _isLoggedIn.setValue(!token.isNullOrEmpty())
             }
         }
 
