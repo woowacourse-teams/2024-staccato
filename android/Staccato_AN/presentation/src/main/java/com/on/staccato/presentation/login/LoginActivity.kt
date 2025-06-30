@@ -134,6 +134,6 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
     }
 
     companion object {
-        private const val SPLASH_SCREEN_DURATION = 2000L
+        private const val SPLASH_SCREEN_DURATION = 1500L
     }
 }
