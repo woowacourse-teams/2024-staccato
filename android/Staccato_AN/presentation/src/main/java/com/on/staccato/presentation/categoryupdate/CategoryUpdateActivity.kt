@@ -17,6 +17,7 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.categoryupdate.component.PeriodActiveSwitch
 import com.on.staccato.presentation.categoryupdate.viewmodel.CategoryUpdateViewModel
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.color.CategoryColor.Companion.getCategoryColorBy
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY
@@ -50,7 +51,7 @@ class CategoryUpdateActivity :
         updateCategoryPeriod()
         observeIsUpdateSuccess()
         observeIsPosting()
-        showErrorToast()
+        observeMessageEvent()
         handleError()
     }
 
@@ -164,9 +165,9 @@ class CategoryUpdateActivity :
         }
     }
 
-    private fun showErrorToast() {
-        viewModel.errorMessage.observe(this) {
-            showToast(it)
+    private fun observeMessageEvent() {
+        viewModel.messageEvent.observe(this) { event ->
+            if (event is MessageEvent.Plain) showToast(event.message)
         }
     }
 
