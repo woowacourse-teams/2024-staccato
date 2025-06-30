@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity(), LoginHandler {
     private lateinit var binding: ActivityLoginBinding
     private val loginViewModel: LoginViewModel by viewModels()
-
     private val inputManager: InputMethodManager by lazy {
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
     }
