@@ -257,12 +257,9 @@ dependencies {
     // Compose ConstraintLayout
     implementation(libs.androidx.constraintlayout.compose)
 
-    androidTestImplementation(libs.hilt.android.testing)
-
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":presentation"))
-    androidTestImplementation(project(":presentation"))
 }
 
 secrets {

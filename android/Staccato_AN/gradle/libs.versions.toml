@@ -131,7 +131,6 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
-hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroid" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
