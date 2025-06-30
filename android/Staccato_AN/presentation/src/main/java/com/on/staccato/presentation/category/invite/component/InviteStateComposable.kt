@@ -16,8 +16,8 @@ import com.on.staccato.presentation.category.invite.model.InviteState
 import com.on.staccato.presentation.category.invite.model.MemberUiModel
 import com.on.staccato.presentation.category.invite.model.participatingMemberUiModel
 import com.on.staccato.presentation.category.invite.model.selectedMemberUiModel
-import com.on.staccato.presentation.category.invite.model.toUiModel
 import com.on.staccato.presentation.component.clickableWithoutRipple
+import com.on.staccato.presentation.mapper.toUiModel
 
 @Composable
 fun InviteStateComposable(

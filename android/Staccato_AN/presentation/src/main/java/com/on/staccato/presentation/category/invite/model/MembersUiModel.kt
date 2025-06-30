@@ -23,8 +23,6 @@ data class MembersUiModel(val members: List<MemberUiModel>) {
     }
 }
 
-fun Members.toUiModel() = MembersUiModel(members = members.map { it.toUiModel() })
-
 val dummyMembersUiModel =
     MembersUiModel(
         listOf(

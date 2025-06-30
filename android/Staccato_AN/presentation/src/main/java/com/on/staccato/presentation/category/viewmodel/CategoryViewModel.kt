@@ -20,7 +20,6 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.InvitationRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.category.invite.model.InviteState
-import com.on.staccato.presentation.category.invite.model.toUiModel
 import com.on.staccato.presentation.category.model.CategoryDialogState
 import com.on.staccato.presentation.category.model.CategoryDialogState.Exit
 import com.on.staccato.presentation.category.model.CategoryDialogState.None
