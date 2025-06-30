@@ -38,7 +38,7 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
 
     private fun checkRecoverySuccess(success: Boolean) {
         if (success) {
-            showToast(RECOVERY_SUCCESS_MESSAGE)
+            showToast(getString(R.string.recovery_success))
             navigateToMainActivity()
         }
     }
@@ -65,9 +65,5 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
             }
 
         }
-    }
-
-    companion object {
-        private const val RECOVERY_SUCCESS_MESSAGE = "이전 데이터를 불러오는데 성공했어요!"
     }
 }

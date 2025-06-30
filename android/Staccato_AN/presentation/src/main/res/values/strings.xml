@@ -187,6 +187,7 @@
     <string name="recovery_subtitle">고유 코드를 입력해 주세요</string>
     <string name="recovery_code_hint">ex) bt2hnhd4-07kght-0pp2ln</string>
     <string name="recovery_load">불러오기</string>
+    <string name="recovery_success">이전 데이터를 불러오는데 성공했어요!</string>
 
     // activity_mypage
     <string name="mypage_title">마이페이지</string>
