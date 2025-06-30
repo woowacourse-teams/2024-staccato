@@ -12,6 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.on.staccato.presentation.R
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.databinding.ActivityLoginBinding
 import com.on.staccato.presentation.login.viewmodel.LoginViewModel
 import com.on.staccato.presentation.main.MainActivity
@@ -36,8 +37,7 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         checkIfLoggedIn(splashScreen)
         setBinding()
         observeLoginState()
-        observeErrorEvent()
-        observeExceptionEvent()
+        observeMessageEvent()
     }
 
     override fun onStartClicked() {
@@ -123,16 +123,12 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         }
     }
 
-    private fun observeErrorEvent() {
-        loginViewModel.errorMessage.observe(this) { message ->
-            showToast(message)
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
-        }
-    }
-
-    private fun observeExceptionEvent() {
-        loginViewModel.exceptionMessage.observe(this) { messageId ->
-            showToast(getString(messageId))
+    private fun observeMessageEvent() {
+        loginViewModel.messageEvent.observe(this) { event ->
+            when (event) {
+                is MessageEvent.FromResource -> showToast(getString(event.messageId))
+                is MessageEvent.Plain -> showToast(event.message)
+            }
             window.clearFlags(FLAG_NOT_TOUCHABLE)
         }
     }

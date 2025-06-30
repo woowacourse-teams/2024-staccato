@@ -13,6 +13,7 @@ import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.LoginRepository
 import com.on.staccato.domain.repository.NotificationRepository
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.toMessageId
@@ -27,7 +28,7 @@ import javax.inject.Inject
 class LoginViewModel
     @Inject
     constructor(
-        private val repository: LoginRepository,
+        private val loginRepository: LoginRepository,
         private val notificationRepository: NotificationRepository,
     ) : ViewModel() {
         val nickname = MutableLiveData("")
@@ -42,21 +43,16 @@ class LoginViewModel
         val isLoggedIn: SingleLiveData<Boolean> = _isLoggedIn
 
         private val _isLoginSuccess = MutableSingleLiveData(false)
-        val isLoginSuccess: SingleLiveData<Boolean>
-            get() = _isLoginSuccess
+        val isLoginSuccess: SingleLiveData<Boolean> get() = _isLoginSuccess
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String> get() = _errorMessage
-
-        private val _exceptionMessage = MutableSingleLiveData<Int>()
-        val exceptionMessage: SingleLiveData<Int>
-            get() = _exceptionMessage
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
 
         fun requestLogin() {
             val nickname = nicknameState.value
             if (nickname is NicknameState.Valid) {
                 viewModelScope.launch {
-                    repository.loginWithNickname(nickname.value)
+                    loginRepository.loginWithNickname(nickname.value)
                         .onSuccess { updateIsLoginSuccess() }
                         .onServerError(::handleError)
                         .onException(::handleException)
@@ -72,12 +68,14 @@ class LoginViewModel
 
         fun fetchToken() {
             viewModelScope.launch {
-                repository.getToken()
-                    .onSuccess { token.value = it }
+                loginRepository.getToken()
+                    .onSuccess {
+                        token.value = it
+                        _isLoggedIn.setValue(!token.value.isNullOrEmpty())
+                    }
                     .onFailure {
                         handleException(ExceptionType.UNKNOWN)
                     }
-                _isLoggedIn.setValue(!token.value.isNullOrEmpty())
             }
         }
 
@@ -86,10 +84,10 @@ class LoginViewModel
         }
 
         private fun handleError(errorMessage: String) {
-            _errorMessage.postValue(errorMessage)
+            _messageEvent.postValue(MessageEvent.Plain(errorMessage))
         }
 
         private fun handleException(state: ExceptionType) {
-            _exceptionMessage.postValue(state.toMessageId())
+            _messageEvent.postValue(MessageEvent.FromResource(state.toMessageId()))
         }
     }
