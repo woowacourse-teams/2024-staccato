@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.map
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.clustering.ClusterManager
 import com.on.staccato.presentation.R
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.KEY_HAS_VISITED_SETTINGS
 import com.on.staccato.presentation.common.location.LocationPermissionManager
@@ -106,7 +108,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         observeLocation()
         observeIsTimelineUpdated()
         observeCategoryRefreshEvent()
-        observeException()
+        observeMessageEvent()
         observeIsRetry()
     }
 
@@ -207,6 +209,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         )
     }
 
+    @SuppressLint("MissingPermission")
     private fun enableMyLocation() {
         val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
         val shouldShowRequestLocationPermissionsRationale =
@@ -341,9 +344,12 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         }
     }
 
-    private fun observeException() {
-        mapsViewModel.exception.observe(viewLifecycleOwner) { state ->
-            sharedViewModel.updateMessageEvent(state)
+    private fun observeMessageEvent() {
+        mapsViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is MessageEvent.Plain -> {}
+                is MessageEvent.FromResource -> sharedViewModel.updateMessageEvent(event)
+            }
         }
     }
 
