@@ -59,7 +59,7 @@ class RecoveryViewModel
             _isRecoverySuccess.postValue(true)
         }
 
-        private fun<T> updateMessageEvent(message: T) {
+        private fun <T> updateMessageEvent(message: T) {
             _messageEvent.postValue(convertMessageEvent(message))
         }
     }

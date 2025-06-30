@@ -53,7 +53,6 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
                 is MessageEvent.FromResource -> showToast(getString(event.messageId))
                 is MessageEvent.Plain -> showToast(event.message)
             }
-
         }
     }
 }
