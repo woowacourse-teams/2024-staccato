@@ -343,7 +343,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun observeException() {
         mapsViewModel.exception.observe(viewLifecycleOwner) { state ->
-            sharedViewModel.updateException(state)
+            sharedViewModel.updateMessageEvent(state)
         }
     }
 

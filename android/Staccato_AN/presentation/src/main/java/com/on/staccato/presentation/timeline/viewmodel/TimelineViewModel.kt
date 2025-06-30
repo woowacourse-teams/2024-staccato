@@ -5,14 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.domain.ExceptionType
 import com.on.staccato.domain.model.Timeline
 import com.on.staccato.domain.onException
 import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.CategoryRepository
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.mapper.toTimelineUiModel
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
@@ -46,13 +47,9 @@ class TimelineViewModel
         val isTimelineLoading: LiveData<Boolean>
             get() = _isTimelineLoading
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String>
-            get() = _errorMessage
-
-        private val _exception = MutableSingleLiveData<ExceptionType>()
-        val exception: SingleLiveData<ExceptionType>
-            get() = _exception
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent>
+            get() = _messageEvent
 
         private val coroutineExceptionHandler =
             CoroutineExceptionHandler { context, throwable ->
@@ -73,8 +70,8 @@ class TimelineViewModel
                     sort = sortType.value?.name,
                     filter = filterType.value?.name,
                 ).onSuccess(::setTimelineUiModels)
-                    .onServerError(::handleServerError)
-                    .onException(::handleException)
+                    .onServerError(::updateMessageEvent)
+                    .onException(::updateMessageEvent)
             }
         }
 
@@ -93,11 +90,7 @@ class TimelineViewModel
             _isTimelineLoading.value = false
         }
 
-        private fun handleServerError(errorMessage: String) {
-            _errorMessage.postValue(errorMessage)
-        }
-
-        private fun handleException(state: ExceptionType) {
-            _exception.postValue(state)
+        private fun <T> updateMessageEvent(message: T) {
+            _messageEvent.setValue(convertMessageEvent(message))
         }
     }

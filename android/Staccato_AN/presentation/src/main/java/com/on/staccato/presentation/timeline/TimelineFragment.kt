@@ -13,6 +13,7 @@ import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.databinding.FragmentTimelineBinding
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
@@ -98,8 +99,7 @@ class TimelineFragment :
     }
 
     private fun initObserving() {
-        observeErrorMessage()
-        observeException()
+        observeMessageEvent()
         observeIsRetry()
         observeIsTimelineUpdated()
         observeMemberNickname()
@@ -107,15 +107,12 @@ class TimelineFragment :
         observeIsAtTop()
     }
 
-    private fun observeErrorMessage() {
-        timelineViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
-            showToast(message)
-        }
-    }
-
-    private fun observeException() {
-        timelineViewModel.exception.observe(viewLifecycleOwner) { state ->
-            sharedViewModel.updateException(state)
+    private fun observeMessageEvent() {
+        timelineViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is MessageEvent.Plain -> showToast(event.message)
+                is MessageEvent.FromResource -> sharedViewModel.updateMessageEvent(event)
+            }
         }
     }
 
