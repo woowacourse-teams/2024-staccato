@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityOptionsCompat
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.databinding.ActivityRecoveryBinding
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.recovery.viewmodel.RecoveryViewModel
@@ -31,10 +32,6 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
         binding.toolbarRecovery.setNavigationOnClickListener { finish() }
     }
 
-    private fun observeMessageEvent() {
-        recoveryViewModel.errorMessage.observe(this, ::showToast)
-    }
-
     private fun observeRecoverySuccess() {
         recoveryViewModel.isRecoverySuccess.observe(this, ::checkRecoverySuccess)
     }
@@ -58,6 +55,16 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
             )
         startActivity(intent, options.toBundle())
         finish()
+    }
+
+    private fun observeMessageEvent() {
+        recoveryViewModel.messageEvent.observe(this) { event ->
+            when (event) {
+                is MessageEvent.FromResource -> showToast(getString(event.messageId))
+                is MessageEvent.Plain -> showToast(event.message)
+            }
+
+        }
     }
 
     companion object {
