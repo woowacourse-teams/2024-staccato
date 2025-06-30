@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.invitation.component.InvitationDialogs
 import com.on.staccato.presentation.invitation.component.InvitationManagement
 import com.on.staccato.presentation.invitation.component.InvitationManagementTopBar
@@ -37,19 +38,13 @@ fun InvitationManagementScreen(
     var selectedMenu by remember { mutableStateOf(defaultSelectedMenu) }
 
     LaunchedEffect(Unit) {
-        invitationViewModel.toastMessage.collect {
+        invitationViewModel.messageEvent.collect { event ->
             val message =
-                when (it) {
-                    is ToastMessage.FromResource -> context.getString(it.messageId)
-                    is ToastMessage.Plain -> it.errorMessage
+                when (event) {
+                    is MessageEvent.FromResource -> context.getString(event.messageId)
+                    is MessageEvent.Plain -> event.message
                 }
             context.showToast(message)
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        invitationViewModel.exceptionState.collect { state ->
-            context.showToast(context.getString(state))
         }
     }
 

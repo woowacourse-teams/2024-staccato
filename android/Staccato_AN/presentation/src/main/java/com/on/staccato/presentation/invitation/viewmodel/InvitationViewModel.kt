@@ -5,7 +5,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.domain.ExceptionType
 import com.on.staccato.domain.model.invitation.ReceivedInvitation
 import com.on.staccato.domain.model.invitation.SentInvitation
 import com.on.staccato.domain.onException
@@ -13,17 +12,16 @@ import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.InvitationRepository
 import com.on.staccato.presentation.R
+import com.on.staccato.presentation.common.MessageEvent
+import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.invitation.model.InvitationDialogState
 import com.on.staccato.presentation.invitation.model.InvitationDialogState.Cancel
 import com.on.staccato.presentation.invitation.model.InvitationDialogState.None
 import com.on.staccato.presentation.invitation.model.InvitationDialogState.Reject
 import com.on.staccato.presentation.invitation.model.ReceivedInvitationUiModel
 import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
-import com.on.staccato.presentation.invitation.model.ToastMessage
 import com.on.staccato.presentation.invitation.model.ToastMessage.FromResource
-import com.on.staccato.presentation.invitation.model.ToastMessage.Plain
 import com.on.staccato.presentation.mapper.toUiModel
-import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,11 +50,8 @@ class InvitationViewModel
         private val _dialogState: MutableState<InvitationDialogState> = mutableStateOf(None)
         val dialogState: State<InvitationDialogState> = _dialogState
 
-        private val _toastMessage = MutableSharedFlow<ToastMessage>()
-        val toastMessage: SharedFlow<ToastMessage> get() = _toastMessage
-
-        private val _exceptionState = MutableSharedFlow<Int>()
-        val exceptionState: SharedFlow<Int> get() = _exceptionState
+        private val _messageEvent = MutableSharedFlow<MessageEvent>()
+        val messageEvent: SharedFlow<MessageEvent> get() = _messageEvent.asSharedFlow()
 
         init {
             fetchReceivedInvitations()
@@ -68,8 +63,8 @@ class InvitationViewModel
                 val result = invitationRepository.getReceivedInvitations()
                 result
                     .onSuccess(::updateReceivedInvitations)
-                    .onServerError { handleServerError(it) }
-                    .onException { handelException(it) }
+                    .onServerError { updateMessageEvent(it) }
+                    .onException { updateMessageEvent(it) }
             }
         }
 
@@ -80,10 +75,10 @@ class InvitationViewModel
                     .onSuccess {
                         fetchReceivedInvitations()
                         updateHasInvitationAccepted()
-                        updateToastMessage(FromResource(R.string.invitation_management_accept_success))
+                        _messageEvent.emit(MessageEvent.FromResource(R.string.invitation_management_accept_success))
                     }
-                    .onServerError { handleServerError(it) }
-                    .onException { handelException(it) }
+                    .onServerError { updateMessageEvent(it) }
+                    .onException { updateMessageEvent(it) }
             }
         }
 
@@ -100,8 +95,8 @@ class InvitationViewModel
                 val result = invitationRepository.getSentInvitations()
                 result
                     .onSuccess(::updateSentInvitations)
-                    .onServerError { handleServerError(it) }
-                    .onException { handelException(it) }
+                    .onServerError { updateMessageEvent(it) }
+                    .onException { updateMessageEvent(it) }
             }
         }
 
@@ -131,8 +126,8 @@ class InvitationViewModel
                 val result = invitationRepository.rejectInvitation(invitationId)
                 result
                     .onSuccess { fetchReceivedInvitations() }
-                    .onServerError { handleServerError(it) }
-                    .onException { handelException(it) }
+                    .onServerError { updateMessageEvent(it) }
+                    .onException { updateMessageEvent(it) }
             }
         }
 
@@ -146,20 +141,12 @@ class InvitationViewModel
                 val result = invitationRepository.cancelInvitation(invitationId)
                 result
                     .onSuccess { fetchSentInvitations() }
-                    .onServerError { handleServerError(it) }
-                    .onException { handelException(it) }
+                    .onServerError { updateMessageEvent(it) }
+                    .onException { updateMessageEvent(it) }
             }
         }
 
-        private suspend fun updateToastMessage(toastMessage: ToastMessage) {
-            _toastMessage.emit(toastMessage)
-        }
-
-        private suspend fun handleServerError(message: String) {
-            updateToastMessage(Plain(message))
-        }
-
-        private suspend fun handelException(state: ExceptionType) {
-            _exceptionState.emit(state.toMessageId())
+        private suspend fun <T> updateMessageEvent(message: T) {
+            _messageEvent.emit(convertMessageEvent(message))
         }
     }
