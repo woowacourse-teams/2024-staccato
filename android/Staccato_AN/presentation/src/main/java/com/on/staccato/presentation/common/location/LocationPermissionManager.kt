@@ -4,14 +4,13 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.view.View
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.on.staccato.presentation.R
-import com.on.staccato.presentation.util.showSnackBar
+import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -26,15 +25,14 @@ class LocationPermissionManager
         fun requestPermissionLauncher(
             activityResultCaller: ActivityResultCaller,
             activity: Activity,
-            view: View,
             actionWhenHavePermission: () -> Unit,
         ) = activityResultCaller.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             permissions.forEach { (_, isGranted) ->
                 if (isGranted) {
-                    view.showSnackBar(context.resources.getString(R.string.maps_location_permission_granted_message))
+                    context.showToast(context.resources.getString(R.string.maps_location_permission_granted_message))
                     gpsManager.checkLocationSetting(context, activity, actionWhenHavePermission)
                 } else {
-                    view.showSnackBar(context.resources.getString(R.string.all_location_permission_denial))
+                    context.showToast(context.resources.getString(R.string.all_location_permission_denial))
                 }
             }
         }

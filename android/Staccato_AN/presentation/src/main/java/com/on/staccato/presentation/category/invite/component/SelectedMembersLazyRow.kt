@@ -61,6 +61,7 @@ fun SelectedMembersLazyRow(
 @Preview(showBackground = true)
 fun SelectedMembersLazyRowPreview() {
     SelectedMembersLazyRow(
-        dummyMembers.members,
-    ) {}
+        members = dummyMembers.members,
+        onDeselect = {},
+    )
 }

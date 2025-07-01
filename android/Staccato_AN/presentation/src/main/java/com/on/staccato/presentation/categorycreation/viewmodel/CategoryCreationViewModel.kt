@@ -16,6 +16,7 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.presentation.categorycreation.model.CategoryCreationError
 import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.color.CategoryColor
@@ -61,8 +62,8 @@ class CategoryCreationViewModel
         private val _isPhotoPosting = MutableLiveData<Boolean>(false)
         val isPhotoPosting: LiveData<Boolean> get() = _isPhotoPosting
 
-        private val _errorMessage = MutableLiveData<String>()
-        val errorMessage: LiveData<String> get() = _errorMessage
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
 
         private val _error = MutableSingleLiveData<CategoryCreationError>()
         val error: SingleLiveData<CategoryCreationError> get() = _error
@@ -104,7 +105,7 @@ class CategoryCreationViewModel
                     categoryRepository.createCategory(category)
                 result
                     .onSuccess(::setCreatedCategoryId)
-                    .onServerError(::handleCreateServerError)
+                    .onServerError(::updateCreateServerError)
                     .onException(::handleCreateException)
             }
         }
@@ -151,9 +152,9 @@ class CategoryCreationViewModel
                     imageRepository.convertImageFileToUrl(file)
                 result
                     .onSuccess(::setThumbnailUrl)
-                    .onServerError(::handlePhotoError)
-                    .onException { state ->
-                        handlePhotoException(state, uri, file)
+                    .onServerError(::updateMessageEvent)
+                    .onException { type ->
+                        handlePhotoException(type, uri, file)
                     }
             }
         }
@@ -187,27 +188,27 @@ class CategoryCreationViewModel
             }
         }
 
-        private fun handlePhotoError(message: String) {
-            _errorMessage.postValue(message)
+        private fun updateMessageEvent(message: String) {
+            _messageEvent.setValue(MessageEvent.from(message))
         }
 
         private fun handlePhotoException(
-            state: ExceptionType,
+            type: ExceptionType,
             uri: Uri,
             uploadFile: UploadFile,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(CategoryCreationError.Thumbnail(state.toMessageId(), uri, uploadFile))
+                _error.setValue(CategoryCreationError.Thumbnail(type.toMessageId(), uri, uploadFile))
             }
         }
 
-        private fun handleCreateServerError(message: String) {
+        private fun updateCreateServerError(message: String) {
             _isPosting.value = false
-            _errorMessage.postValue(message)
+            updateMessageEvent(message)
         }
 
-        private fun handleCreateException(state: ExceptionType) {
+        private fun handleCreateException(type: ExceptionType) {
             _isPosting.value = false
-            _error.setValue(CategoryCreationError.CategoryCreation(state.toMessageId()))
+            _error.setValue(CategoryCreationError.CategoryCreation(type.toMessageId()))
         }
     }

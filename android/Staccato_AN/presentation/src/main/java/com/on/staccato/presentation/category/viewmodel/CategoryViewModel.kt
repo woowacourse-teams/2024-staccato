@@ -20,7 +20,6 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.InvitationRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.category.invite.model.InviteState
-import com.on.staccato.presentation.category.invite.model.toUiModel
 import com.on.staccato.presentation.category.model.CategoryDialogState
 import com.on.staccato.presentation.category.model.CategoryDialogState.Exit
 import com.on.staccato.presentation.category.model.CategoryDialogState.None
@@ -31,6 +30,7 @@ import com.on.staccato.presentation.category.model.CategoryEvent.Exited
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.category.model.defaultCategoryUiModel
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
@@ -60,11 +60,8 @@ class CategoryViewModel
         private val _category = MutableStateFlow<CategoryUiModel>(defaultCategoryUiModel)
         val category: StateFlow<CategoryUiModel> = _category.asStateFlow()
 
-        private val _toastMessage = MutableSingleLiveData<String>()
-        val toastMessage: SingleLiveData<String> get() = _toastMessage
-
-        private val _exceptionState = MutableSingleLiveData<Int>()
-        val exceptionState: SingleLiveData<Int> get() = _exceptionState
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
 
         private val _isInviteMode = MutableStateFlow(false)
         val isInviteMode: StateFlow<Boolean> get() = _isInviteMode
@@ -100,11 +97,12 @@ class CategoryViewModel
             if (categoryId == DEFAULT_CATEGORY_ID) return
 
             viewModelScope.launch {
-                invitationRepository.invite(categoryId, ids).onSuccess {
-                    _toastMessage.setValue("${ids.size}명을 초대했어요!") // stringRes로 빼기
-                    toggleInviteMode(false)
-                }.onServerError(::handleServerError)
-                    .onException(::handleException)
+                invitationRepository.invite(categoryId, ids)
+                    .onSuccess {
+                        updateToInviteSuccessEvent(count = ids.size)
+                        toggleInviteMode(false)
+                    }.onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -124,11 +122,11 @@ class CategoryViewModel
             viewModelScope.launch {
                 memberRepository.searchMembersBy(keyword).collect { result ->
                     result
-                        .onServerError(::handleServerError)
-                        .onException(::handleException)
                         .onSuccess {
                             searchedMembers.emit(it)
                         }
+                        .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                        .onException { updateMessageEvent(MessageEvent.from(it)) }
                 }
             }
         }
@@ -142,13 +140,13 @@ class CategoryViewModel
 
         fun loadCategory(id: Long) {
             if (id <= DEFAULT_CATEGORY_ID) {
-                handleException(ExceptionType.UNKNOWN)
+                updateMessageEvent(MessageEvent.FromResource(ExceptionType.UNKNOWN.toMessageId()))
             } else {
                 viewModelScope.launch {
                     categoryRepository.getCategory(id)
                         .onSuccess { updateCategory(it) }
-                        .onServerError(::handleServerError)
-                        .onException(::handleException)
+                        .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                        .onException { updateMessageEvent(MessageEvent.from(it)) }
                 }
             }
         }
@@ -163,8 +161,8 @@ class CategoryViewModel
 
                 val result: ApiResult<Unit> = categoryRepository.deleteCategory(id)
                 result.onSuccess { updateToDeletedEvent(true) }
-                    .onServerError(::handleServerError)
-                    .onException(::handleException)
+                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -196,8 +194,8 @@ class CategoryViewModel
                 }
                 categoryRepository.leaveCategory(id)
                     .onSuccess { updateToExitEvent() }
-                    .onServerError(::handleServerError)
-                    .onException(::handleException)
+                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(it)) }
             }
             dismissDialog()
         }
@@ -230,11 +228,11 @@ class CategoryViewModel
             _categoryEvent.emit(Error)
         }
 
-        private fun handleServerError(message: String) {
-            _toastMessage.setValue(message)
+        private suspend fun updateToInviteSuccessEvent(count: Int) {
+            _categoryEvent.emit(CategoryEvent.InviteSuccess(count))
         }
 
-        private fun handleException(state: ExceptionType) {
-            _exceptionState.setValue(state.toMessageId())
+        private fun updateMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
     }

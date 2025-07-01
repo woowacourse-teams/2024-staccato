@@ -41,9 +41,9 @@ fun SearchedMembersLazyColumn(
 @Preview(showBackground = true)
 fun SearchedMembersLazyColumnPreview() {
     SearchedMembersLazyColumn(
-        dummyMembersUiModel.members,
-        {},
-        {},
+        members = dummyMembersUiModel.members,
+        onSelect = {},
+        onDeselect = {},
     )
 }
 
@@ -51,8 +51,8 @@ fun SearchedMembersLazyColumnPreview() {
 @Preview(showBackground = true)
 fun EmptySearchedMembersLazyColumnPreview() {
     SearchedMembersLazyColumn(
-        emptyMembersUiModel.members,
-        {},
-        {},
+        members = emptyMembersUiModel.members,
+        onSelect = {},
+        onDeselect = {},
     )
 }

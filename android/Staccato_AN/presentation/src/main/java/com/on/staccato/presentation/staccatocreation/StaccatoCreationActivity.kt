@@ -166,7 +166,6 @@ class StaccatoCreationActivity :
         permissionRequestLauncher =
             locationPermissionManager.requestPermissionLauncher(
                 activity = this,
-                view = binding.root,
                 activityResultCaller = this,
                 actionWhenHavePermission = ::fetchCurrentLocationAddress,
             )

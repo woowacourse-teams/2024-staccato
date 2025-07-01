@@ -2,6 +2,7 @@ package com.on.staccato.presentation.category
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -28,6 +29,7 @@ import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity.Companion.KEY_IS_CATEGORY_UPDATED
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.DialogHandler
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.ToolbarHandler
 import com.on.staccato.presentation.databinding.FragmentCategoryBinding
 import com.on.staccato.presentation.main.MainActivity
@@ -95,8 +97,7 @@ class CategoryFragment :
         observeCategoryInformation()
         observeIsStaccatosUpdated()
         observeCategoryState()
-        showToastMessage()
-        showExceptionSnackBar()
+        observeMessageEvent()
         logAccess()
     }
 
@@ -264,24 +265,31 @@ class CategoryFragment :
                 showToast(getString(R.string.category_empty_error))
                 findNavController().popBackStack()
             }
+
+            is CategoryEvent.InviteSuccess -> {
+                showToast(getString(R.string.invite_member_success, state.count))
+            }
         }
     }
 
-    private fun showToastMessage() {
-        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
-            showToast(message)
+    private fun observeMessageEvent() {
+        viewModel.messageEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is MessageEvent.Plain -> showToast(event.message)
+                is MessageEvent.FromResource -> showExceptionSnackBar(event.messageId)
+            }
         }
     }
 
-    private fun showExceptionSnackBar() {
-        viewModel.exceptionState.observe(viewLifecycleOwner) { messageId ->
-            view?.showSnackBarWithAction(
-                message = getString(messageId),
-                actionLabel = R.string.all_retry,
-                onAction = ::onRetryAction,
-                Snackbar.LENGTH_INDEFINITE,
-            )
-        }
+    private fun showExceptionSnackBar(
+        @StringRes messageId: Int,
+    ) {
+        view?.showSnackBarWithAction(
+            message = getString(messageId),
+            actionLabel = R.string.all_retry,
+            onAction = ::onRetryAction,
+            Snackbar.LENGTH_INDEFINITE,
+        )
     }
 
     private fun onRetryAction() {

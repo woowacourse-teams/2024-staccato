@@ -40,11 +40,11 @@ private fun CategoryPeriodPreview(
     )
 }
 
-private class CategoryPeriodPreviewParameterProvider : PreviewParameterProvider<Pair<LocalDate?, LocalDate?>> {
+private class CategoryPeriodPreviewParameterProvider(
     override val values: Sequence<Pair<LocalDate?, LocalDate?>> =
         sequenceOf(
             LocalDate.of(2025, 4, 12) to LocalDate.of(2025, 10, 20),
             LocalDate.of(2025, 4, 12) to LocalDate.of(2026, 10, 20),
             null to null,
-        )
-}
+        ),
+) : PreviewParameterProvider<Pair<LocalDate?, LocalDate?>>
