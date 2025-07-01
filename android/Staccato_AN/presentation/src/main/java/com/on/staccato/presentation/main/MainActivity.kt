@@ -9,6 +9,7 @@ import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
@@ -29,6 +30,7 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity.Companion.KEY_IS_CATEGORY_CREATED
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity.Companion.KEY_IS_CATEGORY_UPDATED
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.notification.NotificationPermissionManager
 import com.on.staccato.presentation.common.notification.NotificationPermissionRationale
 import com.on.staccato.presentation.databinding.ActivityMainBinding
@@ -43,7 +45,6 @@ import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity.Companion.KEY_IS_STACCATO_UPDATED
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
-import com.on.staccato.toMessageId
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_BOTTOM_SHEET
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_CREATION
 import com.on.staccato.util.logging.LoggingManager
@@ -89,7 +90,7 @@ class MainActivity :
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
         loadMemberProfile()
-        observeException()
+        observeMessageEvent()
         observeRetryEvent()
         setupBottomSheetController()
         setupBackPressedHandler()
@@ -139,15 +140,24 @@ class MainActivity :
         sharedViewModel.fetchMemberProfile()
     }
 
-    private fun observeException() {
-        sharedViewModel.exception.observe(this) { state ->
-            binding.root.showSnackBarWithAction(
-                message = getString(state.toMessageId()),
-                actionLabel = R.string.all_retry,
-                onAction = ::onRetryAction,
-                length = Snackbar.LENGTH_INDEFINITE,
-            )
+    private fun observeMessageEvent() {
+        sharedViewModel.messageEvent.observe(this) { event ->
+            when (event) {
+                is MessageEvent.Plain -> {}
+                is MessageEvent.FromResource -> showSnackBar(event.messageId)
+            }
         }
+    }
+
+    private fun showSnackBar(
+        @StringRes messageId: Int,
+    ) {
+        binding.root.showSnackBarWithAction(
+            message = getString(messageId),
+            actionLabel = R.string.all_retry,
+            onAction = ::onRetryAction,
+            length = Snackbar.LENGTH_INDEFINITE,
+        )
     }
 
     private fun onRetryAction() {

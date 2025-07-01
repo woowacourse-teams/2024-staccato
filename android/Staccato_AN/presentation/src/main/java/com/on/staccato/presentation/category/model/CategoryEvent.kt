@@ -6,4 +6,6 @@ sealed interface CategoryEvent {
     data object Exited : CategoryEvent
 
     data object Error : CategoryEvent
+
+    data class InviteSuccess(val count: Int) : CategoryEvent
 }

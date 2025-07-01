@@ -76,10 +76,9 @@ fun InviteTopBar(
 @Composable
 fun InviteZeroTopBarPreview() {
     InviteTopBar(
-        Modifier,
-        {},
-        {},
-        0,
+        onDismissRequest = {},
+        onInviteConfirmed = {},
+        participantsNumber = 0,
     )
 }
 
@@ -87,9 +86,8 @@ fun InviteZeroTopBarPreview() {
 @Composable
 fun InviteTopBarPreview() {
     InviteTopBar(
-        Modifier,
-        {},
-        {},
-        3,
+        onDismissRequest = {},
+        onInviteConfirmed = {},
+        participantsNumber = 3,
     )
 }

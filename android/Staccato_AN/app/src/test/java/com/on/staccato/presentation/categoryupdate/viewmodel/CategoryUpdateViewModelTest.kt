@@ -12,6 +12,7 @@ import com.on.staccato.presentation.category.VALID_ID
 import com.on.staccato.presentation.category.category
 import com.on.staccato.presentation.categorycreation.newCategory
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.getOrAwaitValue
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -72,8 +73,9 @@ class CategoryUpdateViewModelTest {
             viewModel.fetchCategory(VALID_ID)
 
             // then
-            val actual = viewModel.errorMessage.getOrAwaitValue()
-            assertThat(actual).isEqualTo("Bad Request")
+            val actual = viewModel.messageEvent.getOrAwaitValue()
+            val expected = MessageEvent.Plain("Bad Request")
+            assertThat(actual).isEqualTo(expected)
         }
 
     @Test
@@ -150,8 +152,9 @@ class CategoryUpdateViewModelTest {
             viewModel.updateCategory()
 
             // then
-            val actual = viewModel.errorMessage.getOrAwaitValue()
-            assertThat(actual).isEqualTo("Bad Request")
+            val actual = viewModel.messageEvent.getOrAwaitValue()
+            val expected = MessageEvent.Plain("Bad Request")
+            assertThat(actual).isEqualTo(expected)
         }
 
     @Test

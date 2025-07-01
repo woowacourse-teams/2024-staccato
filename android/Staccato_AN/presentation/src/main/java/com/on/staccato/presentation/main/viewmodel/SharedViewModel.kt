@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.domain.ExceptionType
 import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.onException
 import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.domain.repository.NotificationRepository
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
@@ -58,8 +58,8 @@ class SharedViewModel
         private val _isSettingClicked = MutableLiveData(false)
         val isSettingClicked: LiveData<Boolean> get() = _isSettingClicked
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String> get() = _errorMessage
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
 
         private val _isBottomSheetExpanded = MutableLiveData<Boolean>(false)
         val isBottomSheetExpanded: LiveData<Boolean> get() = _isBottomSheetExpanded
@@ -69,9 +69,6 @@ class SharedViewModel
 
         private val _staccatoLocation = MutableLiveData<LocationUiModel>()
         val staccatoLocation: LiveData<LocationUiModel> get() = _staccatoLocation
-
-        private val _exception = MutableLiveData<ExceptionType>()
-        val exception: LiveData<ExceptionType> get() = _exception
 
         private val _retryEvent = MutableSharedFlow<Unit>()
         val retryEvent: SharedFlow<Unit> = _retryEvent.asSharedFlow()
@@ -100,9 +97,10 @@ class SharedViewModel
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = myPageRepository.getMemberProfile()
-                result.onException(::updateException)
-                    .onServerError(::handleServerError)
+                result
                     .onSuccess(::setMemberProfile)
+                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -110,8 +108,8 @@ class SharedViewModel
             viewModelScope.launch {
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
-                    .onServerError(::handleServerError)
-                    .onException(::updateException)
+                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -178,8 +176,8 @@ class SharedViewModel
             isDragging.value = state
         }
 
-        fun updateException(state: ExceptionType) {
-            _exception.value = state
+        fun updateMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
 
         fun updateIsRetry() {
@@ -190,9 +188,5 @@ class SharedViewModel
 
         private fun setMemberProfile(memberProfile: MemberProfile) {
             _memberProfile.value = memberProfile
-        }
-
-        private fun handleServerError(errorMessage: String) {
-            _errorMessage.postValue(errorMessage)
         }
     }
