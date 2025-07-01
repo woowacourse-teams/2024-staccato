@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.domain.ExceptionType
 import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.onException
 import com.on.staccato.domain.onServerError
@@ -99,8 +98,8 @@ class SharedViewModel
             viewModelScope.launch {
                 myPageRepository.getMemberProfile()
                     .onSuccess(::setMemberProfile)
-                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { updateMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -108,8 +107,8 @@ class SharedViewModel
             viewModelScope.launch {
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
-                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { updateMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -176,8 +175,8 @@ class SharedViewModel
             isDragging.value = state
         }
 
-        fun updateException(exceptionType: ExceptionType) {
-            _messageEvent.postValue(MessageEvent.from(exceptionType))
+        fun updateMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
 
         fun updateIsRetry() {
@@ -188,9 +187,5 @@ class SharedViewModel
 
         private fun setMemberProfile(memberProfile: MemberProfile) {
             _memberProfile.value = memberProfile
-        }
-
-        private fun changeMessageEvent(messageEvent: MessageEvent) {
-            _messageEvent.postValue(messageEvent)
         }
     }

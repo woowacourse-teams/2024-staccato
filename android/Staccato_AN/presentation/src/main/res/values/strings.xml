@@ -254,6 +254,7 @@
     <string name="invite_member_selected_description">선택됨</string>
     <string name="invite_member_unselected_description">선택 가능</string>
     <string name="invite_member_participating_description">참여중</string>
+    <string name="invite_member_success">%d명을 초대했어요!</string>
 
     // invitation management
     <string name="invitation_management_received">받은 초대</string>

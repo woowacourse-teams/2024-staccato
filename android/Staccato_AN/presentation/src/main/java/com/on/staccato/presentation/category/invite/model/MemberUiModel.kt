@@ -11,11 +11,6 @@ data class MemberUiModel(
     fun changeState(newState: InviteState) = copy(inviteState = newState)
 }
 
-fun Member.toUiModel() =
-    MemberUiModel(
-        member = this,
-    )
-
 val dummyMemberUiModel = MemberUiModel(dummyMember)
 
 val longNameMemberUiModel = MemberUiModel(longNameMember)

@@ -294,18 +294,25 @@ class MainActivity :
 
     private fun observeMessageEvent() {
         sharedViewModel.messageEvent.observe(this) { event ->
-            val message =
-                when (event) {
-                    is MessageEvent.FromResource -> getString(event.messageId)
-                    is MessageEvent.Plain -> event.message
+            when (event) {
+                is MessageEvent.FromResource -> {
+                    showSnackBar(getString(event.messageId))
                 }
-            binding.root.showSnackBarWithAction(
-                message = message,
-                actionLabel = R.string.all_retry,
-                onAction = ::onRetryAction,
-                length = Snackbar.LENGTH_INDEFINITE,
-            )
+
+                is MessageEvent.Plain -> {
+                    showToast(event.message)
+                }
+            }
         }
+    }
+
+    private fun showSnackBar(message: String) {
+        binding.root.showSnackBarWithAction(
+            message = message,
+            actionLabel = R.string.all_retry,
+            onAction = ::onRetryAction,
+            length = Snackbar.LENGTH_INDEFINITE,
+        )
     }
 
     private fun onRetryAction() {

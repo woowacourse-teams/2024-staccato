@@ -18,6 +18,7 @@ import com.on.staccato.presentation.categorycreation.component.CategoryShareSect
 import com.on.staccato.presentation.categorycreation.component.PeriodActiveSwitch
 import com.on.staccato.presentation.categorycreation.model.CategoryCreationError
 import com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.color.CategoryColor.Companion.getCategoryColorBy
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY
@@ -49,7 +50,7 @@ class CategoryCreationActivity :
         updateCategoryPeriod()
         observeCreatedCategoryId()
         observeIsPosting()
-        showErrorToast()
+        observeMessageEvent()
         handleError()
     }
 
@@ -157,9 +158,12 @@ class CategoryCreationActivity :
         }
     }
 
-    private fun showErrorToast() {
-        viewModel.errorMessage.observe(this) {
-            showToast(it)
+    private fun observeMessageEvent() {
+        viewModel.messageEvent.observe(this) { event ->
+            when (event) {
+                is MessageEvent.Plain -> showToast(event.message)
+                is MessageEvent.FromResource -> {}
+            }
         }
     }
 
@@ -173,11 +177,11 @@ class CategoryCreationActivity :
     }
 
     private fun handleCreatePhotoUrlFail(error: CategoryCreationError.Thumbnail) {
-        showExceptionSnackBar(error.state) { recreateThumbnailUrl(error.uri, error.file) }
+        showExceptionSnackBar(error.messageId) { recreateThumbnailUrl(error.uri, error.file) }
     }
 
     private fun handleCreateException(error: CategoryCreationError.CategoryCreation) {
-        showExceptionSnackBar(error.state) { recreateCategory() }
+        showExceptionSnackBar(error.messageId) { recreateCategory() }
     }
 
     private fun recreateThumbnailUrl(

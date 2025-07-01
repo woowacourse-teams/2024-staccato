@@ -76,18 +76,18 @@ class StaccatoUpdateViewModelTest {
             assertEquals(targetStaccato.address, actualAddress)
 
             // 카테고리 선택을 위한 데이터 검사
-            val actualCategoryCandidates = viewModel.categoryCandidates.getOrAwaitValue()
-            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
+            val actualCategoryCandidates = viewModel.allCategories.value
+            val actualSelectableCategories = viewModel.selectableCategories.value
             val expectedSelectableCategories =
                 dummyCategoryCandidates.filterBy(targetStaccato.visitedAt.toLocalDate())
-            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualSelectedCategory = viewModel.selectedCategory.value
 
             assertEquals(dummyCategoryCandidates, actualCategoryCandidates)
             assertEquals(expectedSelectableCategories, actualSelectableCategories)
             assertEquals(targetCategoryCandidate, actualSelectedCategory)
 
             // 일시 선택을 위한 데이터 검사
-            val actualSelectedVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
+            val actualSelectedVisitedAt = viewModel.selectedVisitedAt.value
             assertEquals(targetStaccato.visitedAt, actualSelectedVisitedAt)
         }
 
@@ -106,10 +106,10 @@ class StaccatoUpdateViewModelTest {
 
             // then : 바뀐 날짜 기준으로 유효한 값을 업데이트한다
             val expectedSelectableCategories = CategoryCandidates.from(categoryCandidateWithId1)
-            val actualSelectedCategories = viewModel.selectableCategories.getOrAwaitValue()
+            val actualSelectedCategories = viewModel.selectableCategories.value
 
             val expectedSelectableCategory = categoryCandidateWithId1
-            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualSelectedCategory = viewModel.selectedCategory.value
 
             assertEquals(expectedSelectableCategories, actualSelectedCategories)
             assertEquals(expectedSelectableCategory, actualSelectedCategory)

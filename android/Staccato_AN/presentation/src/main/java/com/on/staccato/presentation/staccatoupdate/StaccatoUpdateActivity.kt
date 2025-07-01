@@ -11,7 +11,9 @@ import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.material.snackbar.Snackbar
@@ -21,13 +23,14 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_TITLE_KEY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionFragment
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModelProvider
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
-import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
 import com.on.staccato.presentation.common.photo.PhotoAttachFragment
+import com.on.staccato.presentation.common.photo.PhotosUiModel.Companion.MAX_PHOTO_NUMBER
 import com.on.staccato.presentation.databinding.ActivityStaccatoUpdateBinding
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.model.LocationUiModel
@@ -39,6 +42,7 @@ import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter.Companion.photoAdditionButton
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatoupdate.viewmodel.StaccatoUpdateViewModel
+import com.on.staccato.presentation.util.convertUriToFile
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -149,8 +153,7 @@ class StaccatoUpdateActivity :
         initItemTouchHelper()
         observeViewModelData()
         initGooglePlaceSearch()
-        showWarningMessage()
-        showExceptionMessage()
+        observeMessageEvent()
         handleError()
         viewModel.fetchTargetData(staccatoId)
     }
@@ -163,7 +166,6 @@ class StaccatoUpdateActivity :
     private fun setupPermissionRequestLauncher() {
         permissionRequestLauncher =
             locationPermissionManager.requestPermissionLauncher(
-                view = binding.root,
                 activity = this,
                 activityResultCaller = this,
                 actionWhenHavePermission = ::fetchCurrentLocationAddress,
@@ -253,13 +255,18 @@ class StaccatoUpdateActivity :
                 photoAttachFragment.show(supportFragmentManager, PhotoAttachFragment.TAG)
             }
         }
-        viewModel.pendingPhotos.observe(this) {
-            viewModel.fetchPhotosUrlsByUris(this)
+        viewModel.pendingPhotos.observe(this) { photos ->
+            photos.forEach { photo ->
+                photo.uri?.let { uri ->
+                    val file = convertUriToFile(this, uri)
+                    viewModel.launchPhotoUploadJob(file, photo)
+                }
+            }
         }
         viewModel.currentPhotos.observe(this) { photos ->
             photoAttachFragment.setCurrentImageCount(MAX_PHOTO_NUMBER - photos.size)
             photoAttachAdapter.submitList(
-                listOf(photoAdditionButton, *photos.attachedPhotos.toTypedArray()),
+                listOf(photoAdditionButton, *photos.photos.toTypedArray()),
             )
         }
     }
@@ -271,10 +278,14 @@ class StaccatoUpdateActivity :
     }
 
     private fun observeVisitedAtData() {
-        viewModel.selectedVisitedAt.observe(this) {
-            it?.let {
-                visitedAtSelectionFragment.initCalendarByVisitedAt(it)
-                viewModel.updateCategorySelectionBy(it)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.selectedVisitedAt.collect {
+                    it?.let {
+                        visitedAtSelectionFragment.initCalendarByVisitedAt(it)
+                        viewModel.updateCategorySelectionBy(it)
+                    }
+                }
             }
         }
     }
@@ -361,43 +372,46 @@ class StaccatoUpdateActivity :
         }
     }
 
-    private fun showWarningMessage() {
-        viewModel.warningMessage.observe(this) { message ->
+    private fun observeMessageEvent() {
+        viewModel.messageEvent.observe(this) { event ->
             window.clearFlags(FLAG_NOT_TOUCHABLE)
-            showToast(message)
-        }
-    }
-
-    private fun showExceptionMessage() {
-        viewModel.exceptionMessage.observe(this) { messageId ->
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
-            showToast(getString(messageId))
+            showToast(
+                when (event) {
+                    is MessageEvent.FromResource -> getString(event.messageId)
+                    is MessageEvent.Plain -> event.message
+                },
+            )
         }
     }
 
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
-                is StaccatoUpdateError.CategoryCandidates -> handleCategoryCandidatesFail(error)
-                is StaccatoUpdateError.StaccatoInitialize -> handleInitializeFail(error)
-                is StaccatoUpdateError.StaccatoUpdate -> handleStaccatoUpdateFail(error)
+                is AllCandidates -> showToastAndFinish(error.messageEvent)
+                is StaccatoInitialize -> showToastAndFinish(error.messageEvent)
+                is StaccatoUpdate -> clearFlagsAndShowSnackBar(error.messageEvent)
             }
         }
     }
 
-    private fun handleCategoryCandidatesFail(error: StaccatoUpdateError.CategoryCandidates) {
+    private fun showToastAndFinish(messageEvent: MessageEvent) {
         finish()
-        showToast(getString(error.messageId))
+        showToast(
+            when (messageEvent) {
+                is MessageEvent.FromResource -> getString(messageEvent.messageId)
+                is MessageEvent.Plain -> messageEvent.message
+            },
+        )
     }
 
-    private fun handleInitializeFail(error: StaccatoUpdateError.StaccatoInitialize) {
-        finish()
-        showToast(getString(error.messageId))
-    }
-
-    private fun handleStaccatoUpdateFail(error: StaccatoUpdateError.StaccatoUpdate) {
+    private fun clearFlagsAndShowSnackBar(messageEvent: MessageEvent) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(getString(error.messageId)) { reUpdateStaccato() }
+        showExceptionSnackBar(
+            when (messageEvent) {
+                is MessageEvent.FromResource -> getString(messageEvent.messageId)
+                is MessageEvent.Plain -> messageEvent.message
+            },
+        ) { reUpdateStaccato() }
     }
 
     private fun reUpdateStaccato() {

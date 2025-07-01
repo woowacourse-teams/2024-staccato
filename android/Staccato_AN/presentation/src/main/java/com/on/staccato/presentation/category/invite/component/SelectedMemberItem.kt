@@ -45,6 +45,7 @@ fun SelectedMemberItem(
                 url = item.memberImage,
                 bitmapPixelSize = 150,
                 placeHolder = R.drawable.icon_member,
+                errorImageRes = R.drawable.icon_member,
                 modifier =
                     Modifier
                         .size(40.dp)

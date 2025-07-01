@@ -6,8 +6,8 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
-import com.on.staccato.presentation.common.photo.AttachedPhotoState
-import com.on.staccato.presentation.common.photo.AttachedPhotoUiModel
+import com.on.staccato.presentation.common.photo.PhotoUiModel
+import com.on.staccato.presentation.common.photo.PhotoUploadState
 import com.on.staccato.presentation.databinding.ItemAddPhotoBinding
 import com.on.staccato.presentation.databinding.ItemAttachedPhotoBinding
 
@@ -15,7 +15,7 @@ class PhotoAttachAdapter(
     private val attachedPhotoHandler: AttachedPhotoHandler,
     private val dragListener: ItemDragListener,
 ) :
-    ItemMoveListener, ListAdapter<AttachedPhotoUiModel, PhotoAttachViewHolder>(diffUtil) {
+    ItemMoveListener, ListAdapter<PhotoUiModel, PhotoAttachViewHolder>(diffUtil) {
     init {
         submitList(listOf(photoAdditionButton))
     }
@@ -89,18 +89,18 @@ class PhotoAttachAdapter(
         const val VIEW_TYPE_ATTACHED_PHOTO = 1
 
         val photoAdditionButton by lazy {
-            AttachedPhotoUiModel(
+            PhotoUiModel(
                 ADD_PHOTO_BUTTON_URI.toUri(),
                 ADD_PHOTO_BUTTON_URL,
-                AttachedPhotoState.Success,
+                PhotoUploadState.Success,
             )
         }
 
         val diffUtil =
-            object : DiffUtil.ItemCallback<AttachedPhotoUiModel>() {
+            object : DiffUtil.ItemCallback<PhotoUiModel>() {
                 override fun areItemsTheSame(
-                    oldItem: AttachedPhotoUiModel,
-                    newItem: AttachedPhotoUiModel,
+                    oldItem: PhotoUiModel,
+                    newItem: PhotoUiModel,
                 ): Boolean {
                     return if (oldItem.uri == null && newItem.uri == null) {
                         oldItem.imageUrl == newItem.imageUrl
@@ -110,8 +110,8 @@ class PhotoAttachAdapter(
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: AttachedPhotoUiModel,
-                    newItem: AttachedPhotoUiModel,
+                    oldItem: PhotoUiModel,
+                    newItem: PhotoUiModel,
                 ): Boolean {
                     return oldItem == newItem
                 }

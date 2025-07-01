@@ -60,11 +60,11 @@ private fun HiddenParticipantCountPreview(
     )
 }
 
-private class HiddenParticipantCountPreviewParameterProvider : PreviewParameterProvider<Long> {
+private class HiddenParticipantCountPreviewParameterProvider(
     override val values: Sequence<Long> =
         sequenceOf(
             3L,
             10L,
             16L,
-        )
-}
+        ),
+) : PreviewParameterProvider<Long>
