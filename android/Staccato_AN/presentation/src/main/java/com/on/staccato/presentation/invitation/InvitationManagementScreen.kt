@@ -19,7 +19,6 @@ import com.on.staccato.presentation.invitation.component.InvitationManagementTop
 import com.on.staccato.presentation.invitation.model.InvitationTabMenu
 import com.on.staccato.presentation.invitation.model.InvitationTabMenu.RECEIVED_INVITATION
 import com.on.staccato.presentation.invitation.model.InvitationTabMenu.SENT_INVITATION
-import com.on.staccato.presentation.invitation.model.ToastMessage
 import com.on.staccato.presentation.invitation.viewmodel.InvitationViewModel
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.theme.White

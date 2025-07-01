@@ -46,7 +46,6 @@ import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity.Companion.KEY_IS_STACCATO_UPDATED
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
-import com.on.staccato.toMessageId
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_BOTTOM_SHEET
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_CREATION
 import com.on.staccato.util.logging.LoggingManager
