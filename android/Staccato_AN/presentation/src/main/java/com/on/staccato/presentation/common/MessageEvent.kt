@@ -17,10 +17,3 @@ sealed interface MessageEvent {
         fun from(exceptionType: ExceptionType) = FromResource(exceptionType.toMessageId())
     }
 }
-
-fun <T> convertMessageEvent(message: T?): MessageEvent =
-    when (message) {
-        is String -> MessageEvent.Plain(message)
-        is ExceptionType -> MessageEvent.FromResource(message.toMessageId())
-        else -> MessageEvent.FromResource(ExceptionType.UNKNOWN.toMessageId())
-    }
