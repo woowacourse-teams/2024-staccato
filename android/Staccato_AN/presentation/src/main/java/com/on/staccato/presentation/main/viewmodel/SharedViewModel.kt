@@ -99,8 +99,8 @@ class SharedViewModel
             viewModelScope.launch {
                 myPageRepository.getMemberProfile()
                     .onSuccess(::setMemberProfile)
-                    .onServerError { changeMessageEvent(MessageEvent.from(it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(it)) }
+                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -108,8 +108,8 @@ class SharedViewModel
             viewModelScope.launch {
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
-                    .onServerError { changeMessageEvent(MessageEvent.from(it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(it)) }
+                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 

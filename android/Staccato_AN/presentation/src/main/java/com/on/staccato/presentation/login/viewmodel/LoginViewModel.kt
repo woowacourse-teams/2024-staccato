@@ -53,8 +53,8 @@ class LoginViewModel
                 viewModelScope.launch {
                     loginRepository.loginWithNickname(nickname.value)
                         .onSuccess { updateIsLoginSuccess() }
-                        .onServerError { changeMessageEvent(MessageEvent.from(it)) }
-                        .onException { changeMessageEvent(MessageEvent.from(it)) }
+                        .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
+                        .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
                 }
             }
         }
