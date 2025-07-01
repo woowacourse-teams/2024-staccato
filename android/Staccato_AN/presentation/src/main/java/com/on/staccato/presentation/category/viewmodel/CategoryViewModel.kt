@@ -140,7 +140,7 @@ class CategoryViewModel
 
         fun loadCategory(id: Long) {
             if (id <= DEFAULT_CATEGORY_ID) {
-                emitMessageEvent(MessageEvent.FromResource(ExceptionType.UNKNOWN.toMessageId()))
+                emitMessageEvent(MessageEvent.ResId(ExceptionType.UNKNOWN.toMessageId()))
             } else {
                 viewModelScope.launch {
                     categoryRepository.getCategory(id)

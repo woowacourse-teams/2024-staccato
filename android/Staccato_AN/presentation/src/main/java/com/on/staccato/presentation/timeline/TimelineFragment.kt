@@ -105,8 +105,8 @@ class TimelineFragment :
     private fun observeMessageEvent() {
         timelineViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is MessageEvent.Plain -> showToast(event.message)
-                is MessageEvent.FromResource -> sharedViewModel.emitMessageEvent(event)
+                is MessageEvent.Text -> showToast(event.message)
+                is MessageEvent.ResId -> sharedViewModel.emitMessageEvent(event)
             }
         }
     }

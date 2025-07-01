@@ -275,8 +275,8 @@ class CategoryFragment :
     private fun observeMessageEvent() {
         viewModel.messageEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is MessageEvent.Plain -> showToast(event.message)
-                is MessageEvent.FromResource -> showExceptionSnackBar(event.messageId)
+                is MessageEvent.Text -> showToast(event.message)
+                is MessageEvent.ResId -> showExceptionSnackBar(event.messageId)
             }
         }
     }

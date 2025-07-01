@@ -101,8 +101,8 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
     private fun observeMessageEvent() {
         loginViewModel.messageEvent.observe(this) { event ->
             when (event) {
-                is MessageEvent.FromResource -> showToast(getString(event.messageId))
-                is MessageEvent.Plain -> showToast(event.message)
+                is MessageEvent.ResId -> showToast(getString(event.messageId))
+                is MessageEvent.Text -> showToast(event.message)
             }
             window.clearFlags(FLAG_NOT_TOUCHABLE)
         }

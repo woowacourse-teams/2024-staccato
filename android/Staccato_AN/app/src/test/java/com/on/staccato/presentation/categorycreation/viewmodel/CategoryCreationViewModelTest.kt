@@ -78,7 +78,7 @@ class CategoryCreationViewModelTest {
 
             // then
             val actual = viewModel.messageEvent.getOrAwaitValue()
-            val expected = MessageEvent.Plain("Bad Request")
+            val expected = MessageEvent.Text("Bad Request")
             assertThat(actual).isEqualTo(expected)
         }
 

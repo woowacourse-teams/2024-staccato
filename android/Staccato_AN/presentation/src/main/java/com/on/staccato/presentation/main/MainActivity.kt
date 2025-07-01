@@ -295,11 +295,11 @@ class MainActivity :
     private fun observeMessageEvent() {
         sharedViewModel.messageEvent.observe(this) { event ->
             when (event) {
-                is MessageEvent.FromResource -> {
+                is MessageEvent.ResId -> {
                     showSnackBar(getString(event.messageId))
                 }
 
-                is MessageEvent.Plain -> {
+                is MessageEvent.Text -> {
                     showToast(event.message)
                 }
             }

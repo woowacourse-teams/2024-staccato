@@ -309,8 +309,8 @@ class StaccatoFragment :
         commentsViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
             showToast(
                 when (event) {
-                    is MessageEvent.FromResource -> getString(event.messageId)
-                    is MessageEvent.Plain -> event.message
+                    is MessageEvent.ResId -> getString(event.messageId)
+                    is MessageEvent.Text -> event.message
                 },
             )
         }
@@ -319,10 +319,10 @@ class StaccatoFragment :
     private fun observeMessageEvent() {
         staccatoViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is MessageEvent.FromResource -> {
+                is MessageEvent.ResId -> {
                     handleMessageEventWithRetryAction(event)
                 }
-                is MessageEvent.Plain -> {
+                is MessageEvent.Text -> {
                     showToast(event.message)
                     findNavController().popBackStack()
                 }
@@ -330,7 +330,7 @@ class StaccatoFragment :
         }
     }
 
-    private fun handleMessageEventWithRetryAction(event: MessageEvent.FromResource) {
+    private fun handleMessageEventWithRetryAction(event: MessageEvent.ResId) {
         view?.showSnackBarWithAction(
             message = getString(event.messageId),
             actionLabel = R.string.all_retry,

@@ -40,8 +40,8 @@ fun InvitationManagementScreen(
         invitationViewModel.messageEvent.collect { event ->
             val message =
                 when (event) {
-                    is MessageEvent.FromResource -> context.getString(event.messageId)
-                    is MessageEvent.Plain -> event.message
+                    is MessageEvent.ResId -> context.getString(event.messageId)
+                    is MessageEvent.Text -> event.message
                 }
             context.showToast(message)
         }

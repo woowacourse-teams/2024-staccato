@@ -66,7 +66,7 @@ class CategoryViewModelTest {
 
         // then
         val actual = viewModel.messageEvent.getOrAwaitValue()
-        val expected = MessageEvent.FromResource(ExceptionType.UNKNOWN.toMessageId())
+        val expected = MessageEvent.ResId(ExceptionType.UNKNOWN.toMessageId())
         assertThat(actual).isEqualTo(expected)
     }
 
@@ -99,7 +99,7 @@ class CategoryViewModelTest {
 
             // then
             val actual = viewModel.messageEvent.getOrAwaitValue()
-            val expected = MessageEvent.Plain("Bad Request")
+            val expected = MessageEvent.Text("Bad Request")
             assertThat(actual).isEqualTo(expected)
         }
 
@@ -114,7 +114,7 @@ class CategoryViewModelTest {
 
             // then
             val actual = viewModel.messageEvent.getOrAwaitValue()
-            val expected = MessageEvent.FromResource(ExceptionType.NETWORK.toMessageId())
+            val expected = MessageEvent.ResId(ExceptionType.NETWORK.toMessageId())
             assertThat(actual).isEqualTo(expected)
         }
 
@@ -129,7 +129,7 @@ class CategoryViewModelTest {
 
             // then
             val actual = viewModel.messageEvent.getOrAwaitValue()
-            val expected = MessageEvent.FromResource(ExceptionType.UNKNOWN.toMessageId())
+            val expected = MessageEvent.ResId(ExceptionType.UNKNOWN.toMessageId())
             assertThat(actual).isEqualTo(expected)
         }
 
@@ -169,7 +169,7 @@ class CategoryViewModelTest {
 
             // then
             val actual = viewModel.messageEvent.getOrAwaitValue()
-            val expected = MessageEvent.Plain("Bad Request")
+            val expected = MessageEvent.Text("Bad Request")
             assertThat(actual).isEqualTo(expected)
         }
 
@@ -186,7 +186,7 @@ class CategoryViewModelTest {
 
             // then
             val actual = viewModel.messageEvent.getOrAwaitValue()
-            val expected = MessageEvent.FromResource(ExceptionType.NETWORK.toMessageId())
+            val expected = MessageEvent.ResId(ExceptionType.NETWORK.toMessageId())
             assertThat(actual).isEqualTo(expected)
         }
 
@@ -203,7 +203,7 @@ class CategoryViewModelTest {
 
             // then
             val actual = viewModel.messageEvent.getOrAwaitValue()
-            val expected = MessageEvent.FromResource(ExceptionType.UNKNOWN.toMessageId())
+            val expected = MessageEvent.ResId(ExceptionType.UNKNOWN.toMessageId())
             assertThat(actual).isEqualTo(expected)
         }
 

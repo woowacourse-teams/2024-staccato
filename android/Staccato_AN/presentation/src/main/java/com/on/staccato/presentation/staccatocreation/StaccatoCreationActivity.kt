@@ -415,8 +415,8 @@ class StaccatoCreationActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(
                 when (event) {
-                    is MessageEvent.FromResource -> getString(event.messageId)
-                    is MessageEvent.Plain -> event.message
+                    is MessageEvent.ResId -> getString(event.messageId)
+                    is MessageEvent.Text -> event.message
                 },
             )
         }
@@ -435,8 +435,8 @@ class StaccatoCreationActivity :
         finish()
         showToast(
             when (messageEvent) {
-                is MessageEvent.FromResource -> getString(messageEvent.messageId)
-                is MessageEvent.Plain -> messageEvent.message
+                is MessageEvent.ResId -> getString(messageEvent.messageId)
+                is MessageEvent.Text -> messageEvent.message
             },
         )
     }
@@ -445,8 +445,8 @@ class StaccatoCreationActivity :
         window.clearFlags(FLAG_NOT_TOUCHABLE)
         showExceptionSnackBar(
             when (messageEvent) {
-                is MessageEvent.FromResource -> getString(messageEvent.messageId)
-                is MessageEvent.Plain -> messageEvent.message
+                is MessageEvent.ResId -> getString(messageEvent.messageId)
+                is MessageEvent.Text -> messageEvent.message
             },
         ) { recreateStaccato() }
     }

@@ -5,15 +5,15 @@ import com.on.staccato.domain.ExceptionType
 import com.on.staccato.toMessageId
 
 sealed interface MessageEvent {
-    data class FromResource(
+    data class ResId(
         @StringRes val messageId: Int,
     ) : MessageEvent
 
-    data class Plain(val message: String) : MessageEvent
+    data class Text(val message: String) : MessageEvent
 
     companion object {
-        fun from(message: String) = Plain(message)
+        fun from(message: String) = Text(message)
 
-        fun from(exceptionType: ExceptionType) = FromResource(exceptionType.toMessageId())
+        fun from(exceptionType: ExceptionType) = ResId(exceptionType.toMessageId())
     }
 }

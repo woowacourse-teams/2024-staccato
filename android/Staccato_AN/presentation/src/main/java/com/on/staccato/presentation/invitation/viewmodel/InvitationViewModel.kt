@@ -73,7 +73,7 @@ class InvitationViewModel
                     .onSuccess {
                         fetchReceivedInvitations()
                         updateHasInvitationAccepted()
-                        _messageEvent.emit(MessageEvent.FromResource(R.string.invitation_management_accept_success))
+                        _messageEvent.emit(MessageEvent.ResId(R.string.invitation_management_accept_success))
                     }
                     .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
                     .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }

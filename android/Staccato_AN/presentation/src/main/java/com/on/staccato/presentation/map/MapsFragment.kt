@@ -347,8 +347,8 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private fun observeMessageEvent() {
         mapsViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is MessageEvent.Plain -> {}
-                is MessageEvent.FromResource -> sharedViewModel.emitMessageEvent(event)
+                is MessageEvent.Text -> {}
+                is MessageEvent.ResId -> sharedViewModel.emitMessageEvent(event)
             }
         }
     }
