@@ -12,11 +12,14 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.map.model.ClusterColor
+import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
 class ClusterDrawManager
     @Inject
-    constructor(private val context: Context) {
+    constructor(
+        @ActivityContext private val context: Context,
+    ) {
         fun generateClusterIcon(staccatoCount: Int): BitmapDescriptor {
             val bitmap: Bitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)

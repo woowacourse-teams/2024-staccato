@@ -4,7 +4,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import com.on.staccato.presentation.common.share.ShareManager
-import com.on.staccato.presentation.map.cluster.ClusterDrawManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,9 +25,4 @@ object ManagerModule {
     ): ClipboardManager {
         return context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
     }
-
-    @Provides
-    fun provideClusterDrawManger(
-        @ActivityContext context: Context,
-    ): ClusterDrawManager = ClusterDrawManager(context)
 }
