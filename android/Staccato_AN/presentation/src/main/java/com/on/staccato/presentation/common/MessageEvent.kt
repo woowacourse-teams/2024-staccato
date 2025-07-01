@@ -10,11 +10,10 @@ sealed interface MessageEvent {
     ) : MessageEvent
 
     data class Plain(val message: String) : MessageEvent
-}
 
-fun <T> convertMessageEvent(message: T?): MessageEvent =
-    when (message) {
-        is String -> MessageEvent.Plain(message)
-        is ExceptionType -> MessageEvent.FromResource(message.toMessageId())
-        else -> MessageEvent.FromResource(ExceptionType.UNKNOWN.toMessageId())
+    companion object {
+        fun from(message: String) = Plain(message)
+
+        fun from(exceptionType: ExceptionType) = FromResource(exceptionType.toMessageId())
     }
+}

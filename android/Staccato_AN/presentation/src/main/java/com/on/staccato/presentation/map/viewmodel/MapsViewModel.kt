@@ -13,7 +13,6 @@ import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 import com.on.staccato.presentation.mapper.toUiModel
@@ -66,8 +65,8 @@ class MapsViewModel
             viewModelScope.launch {
                 val result = staccatoRepository.getStaccatoMarkers()
                 result.onSuccess(::updateStaccatoMarkers)
-                    .onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -97,7 +96,7 @@ class MapsViewModel
             _staccatoMarkers.value = markers.map { it.toUiModel() }
         }
 
-        private fun <T> updateMessageEvent(message: T) {
-            _messageEvent.setValue(convertMessageEvent(message))
+        private fun updateMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
     }

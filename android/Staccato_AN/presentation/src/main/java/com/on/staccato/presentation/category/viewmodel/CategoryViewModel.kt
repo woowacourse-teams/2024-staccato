@@ -33,7 +33,6 @@ import com.on.staccato.presentation.category.model.defaultCategoryUiModel
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -102,8 +101,8 @@ class CategoryViewModel
                     .onSuccess {
                         updateToInviteSuccessEvent(count = ids.size)
                         toggleInviteMode(false)
-                    }.onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    }.onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -126,8 +125,8 @@ class CategoryViewModel
                         .onSuccess {
                             searchedMembers.emit(it)
                         }
-                        .onServerError(::updateMessageEvent)
-                        .onException(::updateMessageEvent)
+                        .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                        .onException { updateMessageEvent(MessageEvent.from(it)) }
                 }
             }
         }
@@ -146,8 +145,8 @@ class CategoryViewModel
                 viewModelScope.launch {
                     categoryRepository.getCategory(id)
                         .onSuccess { updateCategory(it) }
-                        .onServerError(::updateMessageEvent)
-                        .onException(::updateMessageEvent)
+                        .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                        .onException { updateMessageEvent(MessageEvent.from(it)) }
                 }
             }
         }
@@ -162,8 +161,8 @@ class CategoryViewModel
 
                 val result: ApiResult<Unit> = categoryRepository.deleteCategory(id)
                 result.onSuccess { updateToDeletedEvent(true) }
-                    .onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -195,8 +194,8 @@ class CategoryViewModel
                 }
                 categoryRepository.leaveCategory(id)
                     .onSuccess { updateToExitEvent() }
-                    .onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(it)) }
             }
             dismissDialog()
         }
@@ -233,7 +232,7 @@ class CategoryViewModel
             _categoryEvent.emit(CategoryEvent.InviteSuccess(count))
         }
 
-        private fun <T> updateMessageEvent(message: T) {
-            _messageEvent.setValue(convertMessageEvent(message))
+        private fun updateMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
     }

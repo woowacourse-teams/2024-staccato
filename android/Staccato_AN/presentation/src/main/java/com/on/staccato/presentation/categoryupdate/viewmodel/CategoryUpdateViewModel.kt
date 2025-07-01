@@ -21,7 +21,6 @@ import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.color.CategoryColor
-import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.util.toLocalDate
 import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -209,7 +208,7 @@ class CategoryUpdateViewModel
         }
 
         private fun updateMessageEvent(message: String) {
-            _messageEvent.setValue(convertMessageEvent(message))
+            _messageEvent.setValue(MessageEvent.from(message))
         }
 
         private fun handlePhotoException(

@@ -13,7 +13,6 @@ import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.map.model.LocationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -100,8 +99,8 @@ class SharedViewModel
                 val result = myPageRepository.getMemberProfile()
                 result
                     .onSuccess(::setMemberProfile)
-                    .onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -109,8 +108,8 @@ class SharedViewModel
             viewModelScope.launch {
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
-                    .onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
+                    .onException { updateMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -177,8 +176,8 @@ class SharedViewModel
             isDragging.value = state
         }
 
-        fun <T> updateMessageEvent(message: T) {
-            _messageEvent.setValue(convertMessageEvent(message))
+        fun updateMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
 
         fun updateIsRetry() {
