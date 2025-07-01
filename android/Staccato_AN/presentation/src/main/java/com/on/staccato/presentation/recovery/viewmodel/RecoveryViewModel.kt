@@ -11,7 +11,6 @@ import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.recovery.RecoveryHandler
 import com.on.staccato.util.launchOnce
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,8 +49,8 @@ class RecoveryViewModel
             viewModelScope.launch {
                 repository.fetchTokenWithRecoveryCode(code)
                     .onSuccess { updateIsRecoverySuccess() }
-                    .onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    .onServerError { changeMessageEvent(MessageEvent.from(it)) }
+                    .onException { changeMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -59,7 +58,7 @@ class RecoveryViewModel
             _isRecoverySuccess.postValue(true)
         }
 
-        private fun <T> updateMessageEvent(message: T) {
-            _messageEvent.postValue(convertMessageEvent(message))
+        private fun changeMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
     }
