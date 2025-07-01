@@ -16,7 +16,6 @@ import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.util.launchOnce
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -54,8 +53,8 @@ class LoginViewModel
                 viewModelScope.launch {
                     loginRepository.loginWithNickname(nickname.value)
                         .onSuccess { updateIsLoginSuccess() }
-                        .onServerError(::updateMessageEvent)
-                        .onException(::updateMessageEvent)
+                        .onServerError { changeMessageEvent(MessageEvent.from(it)) }
+                        .onException { changeMessageEvent(MessageEvent.from(it)) }
                 }
             }
         }
@@ -70,7 +69,7 @@ class LoginViewModel
             viewModelScope.launch {
                 loginRepository.getToken()
                     .onSuccess { token = it }
-                    .onFailure { updateMessageEvent(ExceptionType.UNKNOWN) }
+                    .onFailure { changeMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN)) }
                 _isLoggedIn.setValue(!token.isNullOrEmpty())
             }
         }
@@ -79,8 +78,7 @@ class LoginViewModel
             _isLoginSuccess.postValue(true)
         }
 
-        private fun <T> updateMessageEvent(message: T) {
-            val event = convertMessageEvent(message)
-            _messageEvent.postValue(event)
+        private fun changeMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
     }
