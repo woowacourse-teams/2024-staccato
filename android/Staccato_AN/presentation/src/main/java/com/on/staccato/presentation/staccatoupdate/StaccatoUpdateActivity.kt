@@ -11,7 +11,9 @@ import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.material.snackbar.Snackbar
@@ -277,10 +279,14 @@ class StaccatoUpdateActivity :
     }
 
     private fun observeVisitedAtData() {
-        viewModel.selectedVisitedAt.observe(this) {
-            it?.let {
-                visitedAtSelectionFragment.initCalendarByVisitedAt(it)
-                viewModel.updateCategorySelectionBy(it)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.selectedVisitedAt.collect {
+                    it?.let {
+                        visitedAtSelectionFragment.initCalendarByVisitedAt(it)
+                        viewModel.updateCategorySelectionBy(it)
+                    }
+                }
             }
         }
     }

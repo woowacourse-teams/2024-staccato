@@ -35,6 +35,8 @@ import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -73,20 +75,20 @@ class StaccatoUpdateViewModel
         private val _longitude = MutableLiveData<Double?>()
         private val longitude: LiveData<Double?> get() = _longitude
 
-        private val _categoryCandidates = MutableLiveData<CategoryCandidates>()
-        val categoryCandidates: LiveData<CategoryCandidates> get() = _categoryCandidates
+        private val _allCategories = MutableStateFlow(emptyCategoryCandidates)
+        val allCategories: StateFlow<CategoryCandidates> get() = _allCategories
 
-        private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
-        val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
+        private val _selectableCategories = MutableStateFlow(emptyCategoryCandidates)
+        override val selectableCategories: StateFlow<CategoryCandidates> get() = _selectableCategories
+
+        private val _selectedCategory = MutableStateFlow<CategoryCandidate?>(null)
+        override val selectedCategory: StateFlow<CategoryCandidate?> get() = _selectedCategory
+
+        private val _selectedVisitedAt = MutableStateFlow<LocalDateTime?>(null)
+        val selectedVisitedAt: StateFlow<LocalDateTime?> get() = _selectedVisitedAt
 
         private val _isCurrentLocationLoading = MutableLiveData(false)
         val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
-
-        private val _selectedCategory = MutableLiveData<CategoryCandidate>()
-        override val selectedCategory: LiveData<CategoryCandidate> get() = _selectedCategory
-
-        private val _selectableCategories = MutableLiveData<CategoryCandidates>()
-        override val selectableCategories: LiveData<CategoryCandidates> get() = _selectableCategories
 
         private val _isUpdateCompleted = MutableLiveData(false)
         val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
@@ -124,7 +126,7 @@ class StaccatoUpdateViewModel
         }
 
         override fun selectCategory(position: Int) {
-            selectableCategories.value?.categoryCandidates?.get(position)?.let {
+            selectableCategories.value.categoryCandidates[position].let {
                 _selectedCategory.value = it
             }
         }
@@ -205,12 +207,9 @@ class StaccatoUpdateViewModel
         }
 
         fun updateCategorySelectionBy(visitedAt: LocalDateTime) {
-            val filteredCategories =
-                categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
+            val filteredCategories = allCategories.value.filterBy(visitedAt.toLocalDate())
             _selectableCategories.value = filteredCategories
-            _selectedCategory.value =
-                filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
-                    ?: return
+            _selectedCategory.value = filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
         }
 
         fun updateStaccato(staccatoId: Long) {
@@ -236,7 +235,7 @@ class StaccatoUpdateViewModel
         private suspend fun fetchCategoryCandidates() {
             categoryRepository.getCategoryCandidates()
                 .onSuccess { categoryCandidates ->
-                    _categoryCandidates.value = categoryCandidates
+                    _allCategories.value = categoryCandidates
                 }.onException(::handleCategoryCandidatesException)
                 .onServerError(::handleServerError)
         }
@@ -275,7 +274,7 @@ class StaccatoUpdateViewModel
 
         private fun initializeSelectableCategories() {
             selectedVisitedAt.value?.toLocalDate()?.let { visitedAt ->
-                _selectableCategories.value = categoryCandidates.value?.filterBy(visitedAt)
+                _selectableCategories.value = allCategories.value.filterBy(visitedAt)
             }
         }
 

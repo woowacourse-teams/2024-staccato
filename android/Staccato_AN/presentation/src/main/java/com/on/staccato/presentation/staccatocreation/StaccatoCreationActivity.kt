@@ -11,7 +11,9 @@ import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.material.snackbar.Snackbar
@@ -292,32 +294,42 @@ class StaccatoCreationActivity :
     }
 
     private fun observeVisitedAtData() {
-        viewModel.selectedVisitedAt.observe(this) {
-            it?.let {
-                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
-                if (categoryId == DEFAULT_CATEGORY_ID) {
-                    viewModel.updateCategorySelectionBy(it)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.selectedVisitedAt.collect {
+                    it?.let {
+                        visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+                        if (categoryId == DEFAULT_CATEGORY_ID) {
+                            viewModel.updateCategorySelectionBy(it)
+                        }
+                    }
                 }
             }
         }
     }
 
     private fun observeCategoryData() {
-        viewModel.categoryCandidates.observe(this) {
-            it?.let {
-                if (categoryId == DEFAULT_CATEGORY_ID) {
-                    visitedAtSelectionFragment.initCalendarByPeriod()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.allCategories.collect {
+                    if (categoryId == DEFAULT_CATEGORY_ID) {
+                        visitedAtSelectionFragment.initCalendarByPeriod()
+                    }
+                    viewModel.initCategoryAndVisitedAt(categoryId, LocalDateTime.now())
                 }
-                viewModel.initCategoryAndVisitedAt(categoryId, LocalDateTime.now())
             }
         }
-        viewModel.selectedCategory.observe(this) {
-            it?.let {
-                if (categoryId != DEFAULT_CATEGORY_ID) {
-                    visitedAtSelectionFragment.initCalendarByPeriod(
-                        it.startAt,
-                        it.endAt,
-                    )
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.selectedCategory.collect {
+                    it?.let {
+                        if (categoryId != DEFAULT_CATEGORY_ID) {
+                            visitedAtSelectionFragment.initCalendarByPeriod(
+                                it.startAt,
+                                it.endAt,
+                            )
+                        }
+                    }
                 }
             }
         }

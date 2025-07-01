@@ -15,7 +15,6 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.MainDispatcherRule
-import com.on.staccato.presentation.getOrAwaitValue
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.InjectMockKs
@@ -68,7 +67,7 @@ class StaccatoCreationViewModelTest {
             advanceUntilIdle()
 
             // then
-            val actualCategoryCandidates = viewModel.categoryCandidates.getOrAwaitValue()
+            val actualCategoryCandidates = viewModel.allCategories.value
             assertEquals(dummyCategoryCandidates, actualCategoryCandidates)
         }
 
@@ -84,9 +83,9 @@ class StaccatoCreationViewModelTest {
             viewModel.initCategoryAndVisitedAt(0L, currentLocalDate)
 
             // then
-            val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
-            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
-            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualVisitedAt = viewModel.selectedVisitedAt.value
+            val actualSelectableCategories = viewModel.selectableCategories.value
+            val actualSelectedCategory = viewModel.selectedCategory.value
 
             val selectableCategories = dummyCategoryCandidates.filterBy(middleDateOf2024)
             val selectedCategory = selectableCategories.findByIdOrFirst(null)
@@ -108,9 +107,9 @@ class StaccatoCreationViewModelTest {
             viewModel.initCategoryAndVisitedAt(TARGET_CATEGORY_ID, currentVisitedAt)
 
             // then
-            val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
-            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
-            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualVisitedAt = viewModel.selectedVisitedAt.value
+            val actualSelectableCategories = viewModel.selectableCategories.value
+            val actualSelectedCategory = viewModel.selectedCategory.value
 
             val closestVisitedAt = targetCategoryCandidate.getClosestDateTime(currentVisitedAt)
             val fixedSelectableCategories = CategoryCandidates.from(targetCategoryCandidate)
@@ -138,8 +137,8 @@ class StaccatoCreationViewModelTest {
             val expectedSelectableCategories = CategoryCandidates.from(categoryCandidateWithId1)
             val expectedSelectedCategory = categoryCandidateWithId1
 
-            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
-            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualSelectableCategories = viewModel.selectableCategories.value
+            val actualSelectedCategory = viewModel.selectedCategory.value
 
             assertEquals(expectedSelectableCategories, actualSelectableCategories)
             assertEquals(expectedSelectedCategory, actualSelectedCategory)

@@ -33,6 +33,8 @@ import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -71,17 +73,17 @@ class StaccatoCreationViewModel
         private val _longitude = MutableLiveData<Double?>()
         private val longitude: LiveData<Double?> get() = _longitude
 
-        private val _selectedCategory = MutableLiveData<CategoryCandidate>()
-        override val selectedCategory: LiveData<CategoryCandidate> get() = _selectedCategory
+        private val _allCategories = MutableStateFlow(emptyCategoryCandidates)
+        val allCategories: StateFlow<CategoryCandidates> get() = _allCategories
 
-        private val _selectableCategories = MutableLiveData<CategoryCandidates>()
-        override val selectableCategories: LiveData<CategoryCandidates> get() = _selectableCategories
+        private val _selectableCategories = MutableStateFlow(emptyCategoryCandidates)
+        override val selectableCategories: StateFlow<CategoryCandidates> get() = _selectableCategories
 
-        private val _categoryCandidates = MutableLiveData<CategoryCandidates>()
-        val categoryCandidates: LiveData<CategoryCandidates> get() = _categoryCandidates
+        private val _selectedCategory = MutableStateFlow<CategoryCandidate?>(null)
+        override val selectedCategory: StateFlow<CategoryCandidate?> get() = _selectedCategory
 
-        private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
-        val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
+        private val _selectedVisitedAt = MutableStateFlow<LocalDateTime?>(null)
+        val selectedVisitedAt: StateFlow<LocalDateTime?> get() = _selectedVisitedAt
 
         private val _isCurrentLocationLoading = MutableLiveData<Boolean>(false)
         val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
@@ -180,9 +182,7 @@ class StaccatoCreationViewModel
         fun fetchCategoryCandidates() {
             viewModelScope.launch {
                 categoryRepository.getCategoryCandidates()
-                    .onSuccess {
-                        _categoryCandidates.value = it
-                    }
+                    .onSuccess { _allCategories.value = it }
                     .onException(::handleCategoryCandidatesException)
                     .onServerError(::handleServerError)
             }
@@ -206,19 +206,15 @@ class StaccatoCreationViewModel
         }
 
         fun updateCategorySelectionBy(visitedAt: LocalDateTime) {
-            val filteredCategories =
-                categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
+            val filteredCategories = allCategories.value.filterBy(visitedAt.toLocalDate())
             _selectableCategories.value = filteredCategories
-            // TODO: 리팩터링
-            _selectedCategory.value =
-                filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId) ?: return
+            _selectedCategory.value = filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
         }
 
         private fun updateCategorySelectionBy(categoryId: Long) {
-            val selectedCategory =
-                categoryCandidates.value?.findBy(categoryId) ?: throw IllegalArgumentException()
-            _selectableCategories.value = CategoryCandidates.from(selectedCategory)
+            val selectedCategory = allCategories.value.findBy(categoryId)
             _selectedCategory.value = selectedCategory
+            selectedCategory?.let { _selectableCategories.value = CategoryCandidates.from(it) }
         }
 
         private fun setClosestDateTimeAs(visitedAt: LocalDateTime) {
