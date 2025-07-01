@@ -14,7 +14,6 @@ import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.map.model.LocationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -100,8 +99,8 @@ class SharedViewModel
             viewModelScope.launch {
                 myPageRepository.getMemberProfile()
                     .onSuccess(::setMemberProfile)
-                    .onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    .onServerError { changeMessageEvent(MessageEvent.from(it)) }
+                    .onException { changeMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -109,8 +108,8 @@ class SharedViewModel
             viewModelScope.launch {
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
-                    .onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    .onServerError { changeMessageEvent(MessageEvent.from(it)) }
+                    .onException { changeMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -177,8 +176,8 @@ class SharedViewModel
             isDragging.value = state
         }
 
-        fun updateException(state: ExceptionType) {
-            _messageEvent.postValue(convertMessageEvent(state))
+        fun updateException(exceptionType: ExceptionType) {
+            _messageEvent.postValue(MessageEvent.from(exceptionType))
         }
 
         fun updateIsRetry() {
@@ -191,7 +190,7 @@ class SharedViewModel
             _memberProfile.value = memberProfile
         }
 
-        private fun <T> updateMessageEvent(message: T) {
-            _messageEvent.postValue(convertMessageEvent(message))
+        private fun changeMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.postValue(messageEvent)
         }
     }
