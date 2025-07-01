@@ -18,9 +18,11 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
+import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
 import com.on.staccato.presentation.common.photo.PhotoUiModel
 import com.on.staccato.presentation.common.photo.PhotosUiModel
@@ -102,18 +104,15 @@ class StaccatoCreationViewModel
         private val _isFromPlaceSearch = MutableSingleLiveData(false)
         val isFromPlaceSearch: SingleLiveData<Boolean> get() = _isFromPlaceSearch
 
-        private val _warningMessage = MutableSingleLiveData<String>()
-        val warningMessage: SingleLiveData<String> get() = _warningMessage
-
-        private val _exceptionMessage = MutableSingleLiveData<Int>()
-        val exceptionMessage: SingleLiveData<Int> get() = _exceptionMessage
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
 
         private val _error = MutableSingleLiveData<StaccatoCreationError>()
         val error: SingleLiveData<StaccatoCreationError> get() = _error
 
         override fun onAddClicked() {
             if ((currentPhotos.value?.size ?: 0) == MAX_PHOTO_NUMBER) {
-                _warningMessage.postValue(MAX_PHOTO_NUMBER_MESSAGE)
+                _messageEvent.setValue(convertMessageEvent(MAX_PHOTO_NUMBER_MESSAGE))
             } else {
                 _isAddPhotoClicked.postValue(true)
             }
@@ -275,7 +274,7 @@ class StaccatoCreationViewModel
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
             return CoroutineExceptionHandler { _, throwable ->
-                _warningMessage.postValue(throwable.message ?: FAIL_IMAGE_UPLOAD_MESSAGE)
+                _messageEvent.setValue(convertMessageEvent(throwable.message ?: FAIL_IMAGE_UPLOAD_MESSAGE))
             }
         }
 
@@ -289,12 +288,12 @@ class StaccatoCreationViewModel
 
         private fun handleServerError(errorMessage: String) {
             _isPosting.value = false
-            _warningMessage.postValue(errorMessage)
+            _messageEvent.setValue(convertMessageEvent(errorMessage))
         }
 
         private fun handleException(exceptionState: ExceptionState = ExceptionState.RequiredValuesMissing) {
             _isPosting.value = false
-            _warningMessage.setValue(exceptionState.message)
+            _messageEvent.setValue(convertMessageEvent(exceptionState.message))
         }
 
         private fun handlePhotoServerError(
@@ -302,7 +301,7 @@ class StaccatoCreationViewModel
             message: String,
         ) {
             _currentPhotos.value = currentPhotos.value?.updatePhoto(photo)
-            _warningMessage.setValue(message)
+            _messageEvent.setValue(convertMessageEvent(message))
         }
 
         private fun handlePhotoException(
@@ -310,7 +309,7 @@ class StaccatoCreationViewModel
             messageId: Int,
         ) {
             _currentPhotos.value = currentPhotos.value?.updatePhoto(photo)
-            _exceptionMessage.setValue(messageId)
+            _messageEvent.setValue(convertMessageEvent(messageId))
         }
 
         private fun handleCategoryCandidatesException(exceptionState: ExceptionType) {

@@ -19,9 +19,11 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
+import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
 import com.on.staccato.presentation.common.photo.PhotoUiModel
 import com.on.staccato.presentation.common.photo.PhotosUiModel
@@ -101,18 +103,15 @@ class StaccatoUpdateViewModel
 
         private val photoJobs = mutableMapOf<String, Job>()
 
-        private val _warningMessage = MutableSingleLiveData<String>()
-        val warningMessage: SingleLiveData<String> get() = _warningMessage
-
-        private val _exceptionMessage = MutableSingleLiveData<Int>()
-        val exceptionMessage: SingleLiveData<Int> get() = _exceptionMessage
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
 
         private val _error = MutableSingleLiveData<StaccatoUpdateError>()
         val error: SingleLiveData<StaccatoUpdateError> get() = _error
 
         override fun onAddClicked() {
             if ((currentPhotos.value?.size ?: 0) == MAX_PHOTO_NUMBER) {
-                _warningMessage.postValue(StaccatoCreationViewModel.MAX_PHOTO_NUMBER_MESSAGE)
+                _messageEvent.setValue(convertMessageEvent(StaccatoCreationViewModel.MAX_PHOTO_NUMBER_MESSAGE))
             } else {
                 _isAddPhotoClicked.postValue(true)
             }
@@ -295,7 +294,7 @@ class StaccatoUpdateViewModel
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
             return CoroutineExceptionHandler { _, throwable ->
-                _warningMessage.postValue(throwable.message ?: FAIL_IMAGE_UPLOAD_MESSAGE)
+                _messageEvent.setValue(convertMessageEvent(throwable.message ?: FAIL_IMAGE_UPLOAD_MESSAGE))
             }
         }
 
@@ -309,7 +308,7 @@ class StaccatoUpdateViewModel
 
         private fun handleServerError(message: String) {
             _isPosting.value = false
-            _warningMessage.setValue(message)
+            _messageEvent.setValue(convertMessageEvent(message))
         }
 
         private fun handlePhotoServerError(
@@ -317,32 +316,32 @@ class StaccatoUpdateViewModel
             message: String,
         ) {
             _currentPhotos.value = currentPhotos.value?.updatePhoto(photo)
-            _warningMessage.setValue(message)
+            _messageEvent.setValue(convertMessageEvent(message))
         }
 
         private fun handlePhotoException(
             photo: PhotoUiModel,
-            message: ExceptionType,
+            exceptionType: ExceptionType,
         ) {
             _currentPhotos.value = currentPhotos.value?.updatePhoto(photo)
-            _exceptionMessage.setValue(message.toMessageId())
+            _messageEvent.setValue(convertMessageEvent(exceptionType.toMessageId()))
         }
 
-        private fun handleException(state: ExceptionType = ExceptionType.REQUIRED_VALUES) {
+        private fun handleException(exceptionType: ExceptionType = ExceptionType.REQUIRED_VALUES) {
             _isPosting.value = false
-            _exceptionMessage.setValue(state.toMessageId())
+            _messageEvent.setValue(convertMessageEvent(exceptionType.toMessageId()))
         }
 
-        private fun handleCategoryCandidatesException(exceptionState: ExceptionType) {
-            _error.setValue(StaccatoUpdateError.CategoryCandidates(exceptionState.toMessageId()))
+        private fun handleCategoryCandidatesException(exceptionType: ExceptionType) {
+            _error.setValue(StaccatoUpdateError.CategoryCandidates(exceptionType.toMessageId()))
         }
 
-        private fun handleInitializeException(state: ExceptionType) {
-            _error.setValue(StaccatoUpdateError.StaccatoInitialize(state.toMessageId()))
+        private fun handleInitializeException(exceptionType: ExceptionType) {
+            _error.setValue(StaccatoUpdateError.StaccatoInitialize(exceptionType.toMessageId()))
         }
 
-        private fun handleUpdateException(state: ExceptionType = ExceptionType.REQUIRED_VALUES) {
+        private fun handleUpdateException(exceptionType: ExceptionType = ExceptionType.REQUIRED_VALUES) {
             _isPosting.value = false
-            _error.setValue(StaccatoUpdateError.StaccatoUpdate(state.toMessageId()))
+            _error.setValue(StaccatoUpdateError.StaccatoUpdate(exceptionType.toMessageId()))
         }
     }

@@ -23,6 +23,7 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_TITLE_KEY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionFragment
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModelProvider
 import com.on.staccato.presentation.common.location.GPSManager
@@ -106,8 +107,7 @@ class StaccatoCreationActivity :
         initVisitedAtSelectionFragment()
         observeViewModelData()
         initGooglePlaceSearch()
-        showExceptionMessage()
-        showWarningMessage()
+        observeMessageEvent()
         handleError()
     }
 
@@ -411,17 +411,15 @@ class StaccatoCreationActivity :
         }
     }
 
-    private fun showWarningMessage() {
-        viewModel.warningMessage.observe(this) { message ->
+    private fun observeMessageEvent() {
+        viewModel.messageEvent.observe(this) { event ->
             window.clearFlags(FLAG_NOT_TOUCHABLE)
-            showToast(message)
-        }
-    }
-
-    private fun showExceptionMessage() {
-        viewModel.exceptionMessage.observe(this) { messageId ->
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
-            showToast(getString(messageId))
+            showToast(
+                when (event) {
+                    is MessageEvent.FromResource -> getString(event.messageId)
+                    is MessageEvent.Plain -> event.message
+                },
+            )
         }
     }
 
