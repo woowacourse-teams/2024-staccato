@@ -14,7 +14,6 @@ import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.mypage.MemberProfileHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,7 +55,7 @@ class MyPageViewModel
             if (memberProfile != null) {
                 _uuidCode.setValue(memberProfile.uuidCode)
             } else {
-                _messageEvent.setValue(convertMessageEvent(ERROR_NO_MEMBER_PROFILE))
+                changeMessageEvent(MessageEvent.from(message = ERROR_NO_MEMBER_PROFILE))
             }
         }
 
@@ -66,8 +65,8 @@ class MyPageViewModel
                     .onSuccess {
                         _memberProfile.value = memberProfile.value?.copy(profileImageUrl = it)
                         hasProfileUpdated = true
-                    }.onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    }.onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -75,8 +74,8 @@ class MyPageViewModel
             viewModelScope.launch {
                 myPageRepository.getMemberProfile()
                     .onSuccess { _memberProfile.value = it }
-                    .onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -84,8 +83,8 @@ class MyPageViewModel
             viewModelScope.launch {
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
-                    .onServerError(::updateMessageEvent)
-                    .onException(::updateMessageEvent)
+                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -93,8 +92,8 @@ class MyPageViewModel
             hasTimelineUpdated = true
         }
 
-        private fun <T> updateMessageEvent(message: T) {
-            _messageEvent.setValue(convertMessageEvent(message))
+        private fun changeMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
 
         companion object {
