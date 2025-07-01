@@ -2,7 +2,7 @@ package com.on.staccato.presentation.mapper
 
 import com.on.staccato.domain.model.TimeLineCategory
 import com.on.staccato.domain.model.Timeline
-import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.color.CategoryColor
 import com.on.staccato.presentation.timeline.model.ParticipantsUiModel
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 

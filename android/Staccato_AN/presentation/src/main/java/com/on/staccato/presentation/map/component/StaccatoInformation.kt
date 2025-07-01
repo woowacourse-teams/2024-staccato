@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.on.staccato.presentation.common.toYearMonthDay
+import com.on.staccato.presentation.common.format.toYearMonthDay
 import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 import com.on.staccato.presentation.map.model.dummyStaccatoMarkerUiModel
 import com.on.staccato.theme.SemiBold16

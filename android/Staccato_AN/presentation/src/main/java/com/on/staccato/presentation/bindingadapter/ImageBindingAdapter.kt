@@ -15,7 +15,7 @@ import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.on.staccato.presentation.R
-import com.on.staccato.presentation.common.photo.PhotoUploadState
+import com.on.staccato.presentation.photo.PhotoUploadState
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.util.dpToPx
 

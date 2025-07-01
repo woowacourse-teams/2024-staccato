@@ -144,7 +144,7 @@
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/autocomplete_fragment"
-                    android:name="com.on.staccato.presentation.common.CustomAutocompleteSupportFragment"
+                    android:name="com.on.staccato.presentation.place.CustomAutocompleteSupportFragment"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginHorizontal="24dp"

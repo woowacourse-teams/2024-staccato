@@ -2,10 +2,10 @@ package com.on.staccato.presentation.staccatocreation.adapter
 
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
-import com.on.staccato.presentation.common.photo.PhotoUiModel
 import com.on.staccato.presentation.databinding.ItemAddPhotoBinding
 import com.on.staccato.presentation.databinding.ItemAttachedPhotoBinding
+import com.on.staccato.presentation.photo.AttachedPhotoHandler
+import com.on.staccato.presentation.photo.PhotoUiModel
 
 sealed class PhotoAttachViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
     class AddPhotoViewHolder(

@@ -3,8 +3,8 @@ package com.on.staccato.presentation.timeline.component
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.on.staccato.presentation.R
-import com.on.staccato.presentation.common.toMonthDay
-import com.on.staccato.presentation.common.toYearMonthDay
+import com.on.staccato.presentation.common.format.toMonthDay
+import com.on.staccato.presentation.common.format.toYearMonthDay
 import java.time.LocalDate
 
 @Composable

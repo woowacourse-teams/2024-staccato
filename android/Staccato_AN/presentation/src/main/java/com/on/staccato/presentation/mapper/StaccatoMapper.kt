@@ -5,7 +5,7 @@ import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.StaccatoMarker
 import com.on.staccato.presentation.R
-import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.color.CategoryColor
 import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 import com.on.staccato.presentation.staccato.comments.CommentUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel

@@ -8,7 +8,7 @@ import androidx.databinding.BindingAdapter
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.category.model.CategoryStaccatoUiModel
 import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
-import com.on.staccato.presentation.common.photo.PhotoUploadState
+import com.on.staccato.presentation.photo.PhotoUploadState
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 

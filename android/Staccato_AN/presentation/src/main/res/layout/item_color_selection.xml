@@ -7,11 +7,11 @@
 
         <variable
             name="handler"
-            type="com.on.staccato.presentation.common.color.recyclerview.ColorSelectionHandler" />
+            type="com.on.staccato.presentation.color.recyclerview.ColorSelectionHandler" />
 
         <variable
             name="categoryColor"
-            type="com.on.staccato.presentation.common.color.CategoryColor" />
+            type="com.on.staccato.presentation.color.CategoryColor" />
 
         <variable
             name="isSelected"

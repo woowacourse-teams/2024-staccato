@@ -11,7 +11,7 @@
 
         <variable
             name="toolbarHandler"
-            type="com.on.staccato.presentation.common.CloseToolbarHandler" />
+            type="com.on.staccato.presentation.common.toolbar.CloseToolbarHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

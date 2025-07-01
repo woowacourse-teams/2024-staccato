@@ -3,7 +3,7 @@ package com.on.staccato.presentation.mapper
 import android.content.Context
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.R
-import com.on.staccato.presentation.common.InputState
+import com.on.staccato.presentation.common.input.InputState
 
 fun NicknameState.toInputState(context: Context): InputState {
     return when (this) {

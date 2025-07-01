@@ -27,10 +27,10 @@ import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity.Companion.KEY_IS_CATEGORY_CREATED
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity.Companion.KEY_IS_CATEGORY_UPDATED
-import com.on.staccato.presentation.common.DeleteDialogFragment
-import com.on.staccato.presentation.common.DialogHandler
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.ToolbarHandler
+import com.on.staccato.presentation.common.dialog.DeleteDialogFragment
+import com.on.staccato.presentation.common.dialog.DialogHandler
+import com.on.staccato.presentation.common.toolbar.ToolbarHandler
 import com.on.staccato.presentation.databinding.FragmentCategoryBinding
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel

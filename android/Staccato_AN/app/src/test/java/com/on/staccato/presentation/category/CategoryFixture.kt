@@ -9,7 +9,7 @@ import com.on.staccato.presentation.category.invite.model.InviteState
 import com.on.staccato.presentation.category.invite.model.MemberUiModel
 import com.on.staccato.presentation.category.invite.model.MembersUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel
-import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.color.CategoryColor
 
 const val VALID_ID = 1L
 const val INVALID_ID = 0L

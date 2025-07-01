@@ -2,7 +2,7 @@ package com.on.staccato.presentation.map.model
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
-import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.color.CategoryColor
 import java.time.LocalDateTime
 
 data class StaccatoMarkerUiModel(

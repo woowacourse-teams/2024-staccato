@@ -20,13 +20,13 @@ import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.clipboard.ClipboardHelper
-import com.on.staccato.presentation.common.photo.PhotoAttachFragment
 import com.on.staccato.presentation.component.DefaultDivider
 import com.on.staccato.presentation.databinding.ActivityMypageBinding
 import com.on.staccato.presentation.invitation.InvitationManagementActivity
 import com.on.staccato.presentation.invitation.InvitationManagementActivity.Companion.RESULT_INVITATION_ACCEPTED
 import com.on.staccato.presentation.mypage.component.MyPageMenuButton
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
+import com.on.staccato.presentation.photo.PhotoAttachFragment
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.convertUriToFile
 import com.on.staccato.presentation.util.showToast
