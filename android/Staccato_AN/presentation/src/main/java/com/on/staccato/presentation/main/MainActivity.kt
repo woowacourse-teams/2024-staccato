@@ -296,11 +296,11 @@ class MainActivity :
         sharedViewModel.messageEvent.observe(this) { event ->
             when (event) {
                 is MessageEvent.ResId -> {
-                    showSnackBar(getString(event.messageId))
+                    showSnackBar(getString(event.value))
                 }
 
                 is MessageEvent.Text -> {
-                    showToast(event.message)
+                    showToast(event.value)
                 }
             }
         }

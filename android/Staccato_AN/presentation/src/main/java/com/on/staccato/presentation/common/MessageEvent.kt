@@ -6,10 +6,10 @@ import com.on.staccato.toMessageId
 
 sealed interface MessageEvent {
     data class ResId(
-        @StringRes val messageId: Int,
+        @StringRes val value: Int,
     ) : MessageEvent
 
-    data class Text(val message: String) : MessageEvent
+    data class Text(val value: String) : MessageEvent
 
     companion object {
         fun from(message: String) = Text(message)

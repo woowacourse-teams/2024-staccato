@@ -168,7 +168,7 @@ class CategoryUpdateActivity :
     private fun observeMessageEvent() {
         viewModel.messageEvent.observe(this) { event ->
             when (event) {
-                is MessageEvent.Text -> showToast(event.message)
+                is MessageEvent.Text -> showToast(event.value)
                 is MessageEvent.ResId -> {}
             }
         }

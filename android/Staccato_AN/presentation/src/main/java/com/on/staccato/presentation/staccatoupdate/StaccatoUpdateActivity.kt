@@ -377,8 +377,8 @@ class StaccatoUpdateActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(
                 when (event) {
-                    is MessageEvent.ResId -> getString(event.messageId)
-                    is MessageEvent.Text -> event.message
+                    is MessageEvent.ResId -> getString(event.value)
+                    is MessageEvent.Text -> event.value
                 },
             )
         }
@@ -398,8 +398,8 @@ class StaccatoUpdateActivity :
         finish()
         showToast(
             when (messageEvent) {
-                is MessageEvent.ResId -> getString(messageEvent.messageId)
-                is MessageEvent.Text -> messageEvent.message
+                is MessageEvent.ResId -> getString(messageEvent.value)
+                is MessageEvent.Text -> messageEvent.value
             },
         )
     }
@@ -408,8 +408,8 @@ class StaccatoUpdateActivity :
         window.clearFlags(FLAG_NOT_TOUCHABLE)
         showExceptionSnackBar(
             when (messageEvent) {
-                is MessageEvent.ResId -> getString(messageEvent.messageId)
-                is MessageEvent.Text -> messageEvent.message
+                is MessageEvent.ResId -> getString(messageEvent.value)
+                is MessageEvent.Text -> messageEvent.value
             },
         ) { reUpdateStaccato() }
     }

@@ -50,8 +50,8 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
     private fun observeMessageEvent() {
         recoveryViewModel.messageEvent.observe(this) { event ->
             when (event) {
-                is MessageEvent.ResId -> showToast(getString(event.messageId))
-                is MessageEvent.Text -> showToast(event.message)
+                is MessageEvent.ResId -> showToast(getString(event.value))
+                is MessageEvent.Text -> showToast(event.value)
             }
         }
     }
