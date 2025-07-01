@@ -32,13 +32,13 @@ import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEF
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity.Companion.KEY_IS_CATEGORY_CREATED
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity.Companion.KEY_IS_CATEGORY_UPDATED
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.notification.NotificationPermissionManager
-import com.on.staccato.presentation.notification.NotificationPermissionRationale
 import com.on.staccato.presentation.databinding.ActivityMainBinding
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.mypage.MyPageActivity.Companion.UPDATED_PROFILE_KEY
 import com.on.staccato.presentation.mypage.MyPageActivity.Companion.UPDATED_TIMELINE_KEY
+import com.on.staccato.presentation.notification.NotificationPermissionManager
+import com.on.staccato.presentation.notification.NotificationPermissionRationale
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.DEFAULT_STACCATO_ID
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
