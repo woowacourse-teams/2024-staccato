@@ -15,7 +15,6 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.MainDispatcherRule
-import com.on.staccato.presentation.getOrAwaitValue
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.InjectMockKs
@@ -32,7 +31,7 @@ import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 @OptIn(ExperimentalCoroutinesApi::class)
-class StaccatoCreationViewModelTest {
+class StaccatoCreateViewModelTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -64,11 +63,11 @@ class StaccatoCreationViewModelTest {
     fun `viewModel 초기화 시 카테고리 후보를 불러온다`() =
         runTest {
             // when
-            viewModel.fetchCategoryCandidates()
+            viewModel.fetchAllCategories()
             advanceUntilIdle()
 
             // then
-            val actualCategoryCandidates = viewModel.categoryCandidates.getOrAwaitValue()
+            val actualCategoryCandidates = viewModel.allCategories.value
             assertEquals(dummyCategoryCandidates, actualCategoryCandidates)
         }
 
@@ -76,7 +75,7 @@ class StaccatoCreationViewModelTest {
     fun `카테고리 ID가 0L일 때는 현재 날짜에서 선택 가능한 카테고리 후보 중 첫번째를 선택한다`() =
         runTest {
             // given
-            viewModel.fetchCategoryCandidates()
+            viewModel.fetchAllCategories()
             advanceUntilIdle()
 
             // when
@@ -84,9 +83,9 @@ class StaccatoCreationViewModelTest {
             viewModel.initCategoryAndVisitedAt(0L, currentLocalDate)
 
             // then
-            val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
-            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
-            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualVisitedAt = viewModel.selectedVisitedAt.value
+            val actualSelectableCategories = viewModel.selectableCategories.value
+            val actualSelectedCategory = viewModel.selectedCategory.value
 
             val selectableCategories = dummyCategoryCandidates.filterBy(middleDateOf2024)
             val selectedCategory = selectableCategories.findByIdOrFirst(null)
@@ -100,7 +99,7 @@ class StaccatoCreationViewModelTest {
     fun `카테고리 ID가 0L이 아닐 때는 id로 카테고리를 선택하고, 현재와 가장 가까운 일시를 선택한다`() =
         runTest {
             // given
-            viewModel.fetchCategoryCandidates()
+            viewModel.fetchAllCategories()
             advanceUntilIdle()
 
             // when
@@ -108,9 +107,9 @@ class StaccatoCreationViewModelTest {
             viewModel.initCategoryAndVisitedAt(TARGET_CATEGORY_ID, currentVisitedAt)
 
             // then
-            val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
-            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
-            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualVisitedAt = viewModel.selectedVisitedAt.value
+            val actualSelectableCategories = viewModel.selectableCategories.value
+            val actualSelectedCategory = viewModel.selectedCategory.value
 
             val closestVisitedAt = targetCategoryCandidate.getClosestDateTime(currentVisitedAt)
             val fixedSelectableCategories = CategoryCandidates.from(targetCategoryCandidate)
@@ -125,7 +124,7 @@ class StaccatoCreationViewModelTest {
     fun `카테고리 ID가 0L일 때는 일시가 바뀌면 categoryCandidate도 바뀐다`() =
         runTest {
             // given
-            viewModel.fetchCategoryCandidates()
+            viewModel.fetchAllCategories()
 
             val oldLocalDate = startDateOf2024.atStartOfDay()
             viewModel.initCategoryAndVisitedAt(TARGET_CATEGORY_ID, oldLocalDate)
@@ -138,8 +137,8 @@ class StaccatoCreationViewModelTest {
             val expectedSelectableCategories = CategoryCandidates.from(categoryCandidateWithId1)
             val expectedSelectedCategory = categoryCandidateWithId1
 
-            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
-            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualSelectableCategories = viewModel.selectableCategories.value
+            val actualSelectedCategory = viewModel.selectedCategory.value
 
             assertEquals(expectedSelectableCategories, actualSelectableCategories)
             assertEquals(expectedSelectedCategory, actualSelectedCategory)

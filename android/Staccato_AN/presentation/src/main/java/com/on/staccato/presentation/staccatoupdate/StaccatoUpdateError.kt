@@ -1,9 +1,11 @@
 package com.on.staccato.presentation.staccatoupdate
 
-sealed interface StaccatoUpdateError {
-    data class CategoryCandidates(val messageId: Int) : StaccatoUpdateError
+import com.on.staccato.presentation.common.MessageEvent
 
-    data class StaccatoInitialize(val messageId: Int) : StaccatoUpdateError
+sealed interface StaccatoUpdateError
 
-    data class StaccatoUpdate(val messageId: Int) : StaccatoUpdateError
-}
+data class AllCandidates(val messageEvent: MessageEvent) : StaccatoUpdateError
+
+data class StaccatoInitialize(val messageEvent: MessageEvent) : StaccatoUpdateError
+
+data class StaccatoUpdate(val messageEvent: MessageEvent) : StaccatoUpdateError

@@ -13,11 +13,11 @@
 
         <variable
             name="state"
-            type="com.on.staccato.presentation.common.photo.AttachedPhotoState" />
+            type="com.on.staccato.presentation.common.photo.PhotoUploadState" />
 
         <variable
             name="attachedPhoto"
-            type="com.on.staccato.presentation.common.photo.AttachedPhotoUiModel" />
+            type="com.on.staccato.presentation.common.photo.PhotoUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -13,10 +13,10 @@ import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.CommentRepository
 import com.on.staccato.domain.repository.MemberRepository
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toCommentUiModel
-import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,13 +44,9 @@ class StaccatoCommentsViewModel
         val isSendingSuccess: SingleLiveData<Boolean>
             get() = _isSendingSuccess
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String>
-            get() = _errorMessage
-
-        private val _exceptionMessage = MutableSingleLiveData<Int>()
-        val exceptionMessage: SingleLiveData<Int>
-            get() = _exceptionMessage
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent>
+            get() = _messageEvent
 
         private var staccatoId: Long = STACCATO_DEFAULT_ID
 
@@ -65,13 +61,15 @@ class StaccatoCommentsViewModel
 
         fun deleteComment() {
             viewModelScope.launch {
-                commentRepository.deleteComment(selectedComment?.id ?: return@launch handleException(ExceptionType.UNKNOWN))
+                commentRepository.deleteComment(
+                    selectedComment?.id ?: return@launch handleMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN)),
+                )
                     .onSuccess {
                         fetchComments(staccatoId)
                         _isDeleteSuccess.postValue(true)
                     }
-                    .onServerError(::handleServerError)
-                    .onException(::handleException)
+                    .onServerError { handleMessageEvent(MessageEvent.from(it)) }
+                    .onException { handleMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -80,8 +78,8 @@ class StaccatoCommentsViewModel
             viewModelScope.launch {
                 commentRepository.fetchComments(id)
                     .onSuccess(::updateComments)
-                    .onServerError(::handleServerError)
-                    .onException(::handleException)
+                    .onServerError { handleMessageEvent(MessageEvent.from(it)) }
+                    .onException { handleMessageEvent(MessageEvent.from(it)) }
             }
         }
 
@@ -90,8 +88,8 @@ class StaccatoCommentsViewModel
         }
 
         fun sendComment() {
-            commentInput.value?.let {
-                val newComment = NewComment(staccatoId, it)
+            commentInput.value?.let { commentText ->
+                val newComment = NewComment(staccatoId, commentText)
                 commentInput.value = ""
                 viewModelScope.launch {
                     commentRepository.createComment(newComment)
@@ -99,8 +97,8 @@ class StaccatoCommentsViewModel
                             fetchComments(staccatoId)
                             _isSendingSuccess.postValue(true)
                         }
-                        .onServerError(::handleServerError)
-                        .onException(::handleException)
+                        .onServerError { handleMessageEvent(MessageEvent.from(it)) }
+                        .onException { handleMessageEvent(MessageEvent.from(it)) }
                 }
             }
         }
@@ -109,9 +107,7 @@ class StaccatoCommentsViewModel
             viewModelScope.launch {
                 memberRepository.getMemberId()
                     .onSuccess { myMemberId = it }
-                    .onFailure {
-                        handleException(ExceptionType.UNKNOWN)
-                    }
+                    .onFailure { handleMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN)) }
             }
         }
 
@@ -129,12 +125,8 @@ class StaccatoCommentsViewModel
             }
         }
 
-        private fun handleServerError(message: String) {
-            _errorMessage.postValue(message)
-        }
-
-        private fun handleException(state: ExceptionType) {
-            _exceptionMessage.postValue(state.toMessageId())
+        private fun handleMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
 
         companion object {

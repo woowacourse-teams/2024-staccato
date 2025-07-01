@@ -12,13 +12,13 @@ import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.domain.repository.StaccatoRepository
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoIndex
 import com.on.staccato.presentation.mapper.toStaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoShareEvent
-import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -41,11 +41,8 @@ class StaccatoViewModel
         private val _isDeleted = MutableSingleLiveData(false)
         val isDeleted: SingleLiveData<Boolean> get() = _isDeleted
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String> get() = _errorMessage
-
-        private val _exceptionMessageId: MutableSingleLiveData<Int> = MutableSingleLiveData()
-        val exceptionMessageId: SingleLiveData<Int> get() = _exceptionMessageId
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
 
         private val _shareEvent = MutableSingleLiveData<StaccatoShareEvent>()
         val shareEvent: SingleLiveData<StaccatoShareEvent> get() = _shareEvent
@@ -56,7 +53,7 @@ class StaccatoViewModel
         fun createStaccatoShareLink() {
             val staccatoId = staccatoDetail.value?.id
             if (staccatoId == null) {
-                handleException(ExceptionType.UNKNOWN)
+                handleMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN))
                 return
             }
             getUserNickname(staccatoId)
@@ -69,11 +66,8 @@ class StaccatoViewModel
         private fun getUserNickname(staccatoId: Long) {
             viewModelScope.launch {
                 memberRepository.getNickname()
-                    .onSuccess {
-                        shareStaccato(staccatoId, it)
-                    }.onFailure {
-                        handleException(ExceptionType.UNKNOWN)
-                    }
+                    .onSuccess { shareStaccato(staccatoId, it) }
+                    .onFailure { handleMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN)) }
             }
         }
 
@@ -85,8 +79,8 @@ class StaccatoViewModel
                 .onSuccess {
                     postShareEvent(nickName, it)
                 }
-                .onException(::handleException)
-                .onServerError(::handleServerError)
+                .onException { handleMessageEvent(MessageEvent.from(it)) }
+                .onServerError { handleMessageEvent(MessageEvent.from(it)) }
         }
 
         private fun postShareEvent(
@@ -112,8 +106,9 @@ class StaccatoViewModel
                 staccatoRepository.deleteStaccato(staccatoId)
                     .onSuccess {
                         _isDeleted.postValue(true)
-                    }.onException(::handleException)
-                    .onServerError(::handleServerError)
+                    }
+                    .onException { handleMessageEvent(MessageEvent.from(it)) }
+                    .onServerError { handleMessageEvent(MessageEvent.from(it)) }
             }
 
         private fun fetchStaccatoData(staccatoId: Long) {
@@ -122,16 +117,13 @@ class StaccatoViewModel
                     .onSuccess { staccato ->
                         _staccatoDetail.value = staccato.toStaccatoDetailUiModel()
                         _feeling.value = staccato.feeling
-                    }.onException(::handleException)
-                    .onServerError(::handleServerError)
+                    }
+                    .onException { handleMessageEvent(MessageEvent.from(it)) }
+                    .onServerError { handleMessageEvent(MessageEvent.from(it)) }
             }
         }
 
-        private fun handleServerError(errorMessage: String) {
-            _errorMessage.postValue(errorMessage)
-        }
-
-        private fun handleException(state: ExceptionType) {
-            _exceptionMessageId.postValue(state.toMessageId())
+        private fun handleMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
     }

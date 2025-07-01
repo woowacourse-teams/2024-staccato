@@ -3,7 +3,7 @@ package com.on.staccato.presentation.staccatocreation.adapter
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
-import com.on.staccato.presentation.common.photo.AttachedPhotoUiModel
+import com.on.staccato.presentation.common.photo.PhotoUiModel
 import com.on.staccato.presentation.databinding.ItemAddPhotoBinding
 import com.on.staccato.presentation.databinding.ItemAttachedPhotoBinding
 
@@ -22,7 +22,7 @@ sealed class PhotoAttachViewHolder(binding: ViewDataBinding) : RecyclerView.View
         private val binding: ItemAttachedPhotoBinding,
         private val attachedPhotoHandler: AttachedPhotoHandler,
     ) : PhotoAttachViewHolder(binding) {
-        fun bind(item: AttachedPhotoUiModel) {
+        fun bind(item: PhotoUiModel) {
             binding.attachedPhoto = item
             binding.selectedPhotoHandler = attachedPhotoHandler
         }
