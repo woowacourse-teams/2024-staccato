@@ -19,7 +19,7 @@ import com.on.staccato.theme.White
 fun StaccatosDialog(
     staccatos: List<StaccatoMarkerUiModel>,
     onDismissRequest: () -> Unit,
-    onStaccatoClicked: (Long) -> Unit,
+    onStaccatoClick: (Long) -> Unit,
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -40,7 +40,7 @@ fun StaccatosDialog(
         ) {
             Column {
                 StaccatosTopBar(onDismissRequest = onDismissRequest)
-                Staccatos(staccatos = staccatos, onStaccatoClicked = onStaccatoClicked)
+                Staccatos(staccatos = staccatos, onStaccatoClicked = onStaccatoClick)
             }
         }
     }
@@ -52,6 +52,6 @@ private fun StaccatosDialogPreview() {
     StaccatosDialog(
         staccatos = dummyStaccatoMarkerUiModels,
         onDismissRequest = {},
-        onStaccatoClicked = {},
+        onStaccatoClick = {},
     )
 }

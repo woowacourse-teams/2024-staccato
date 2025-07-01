@@ -9,7 +9,7 @@ import com.on.staccato.presentation.map.viewmodel.MapsViewModel
 
 @Composable
 fun StaccatosScreen(
-    onStaccatoClicked: (staccatoId: Long) -> Unit,
+    onStaccatoClick: (staccatoId: Long) -> Unit,
     mapsViewModel: MapsViewModel = hiltViewModel(),
 ) {
     val isClusterMode by mapsViewModel.isClusterMode.collectAsState()
@@ -23,7 +23,7 @@ fun StaccatosScreen(
                     isClusterMode = false,
                 )
             },
-            onStaccatoClicked = onStaccatoClicked,
+            onStaccatoClick = onStaccatoClick,
         )
     }
 }

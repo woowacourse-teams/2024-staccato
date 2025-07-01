@@ -115,7 +115,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private fun setupBinding() {
         binding.cvMapsStaccatos.setContent {
             StaccatosScreen(
-                onStaccatoClicked = { onStaccatoClicked(it) },
+                onStaccatoClick = ::onStaccatoClicked,
             )
         }
     }
