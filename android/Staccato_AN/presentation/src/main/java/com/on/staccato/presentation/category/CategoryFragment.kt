@@ -32,6 +32,7 @@ import com.on.staccato.presentation.common.dialog.DeleteDialogFragment
 import com.on.staccato.presentation.common.dialog.DialogHandler
 import com.on.staccato.presentation.common.toolbar.ToolbarHandler
 import com.on.staccato.presentation.databinding.FragmentCategoryBinding
+import com.on.staccato.presentation.main.HomeRefresh
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
@@ -88,8 +89,11 @@ class CategoryFragment :
     ) {
         viewModel.updateCategoryId(categoryId)
 
-        if (isCategoryCreated || isCategoryUpdated) sharedViewModel.updateIsTimelineUpdated(true)
-        if (isCategoryUpdated) viewModel.loadCategory(categoryId)
+        if (isCategoryCreated) sharedViewModel.updateHomeRefresh(HomeRefresh.Timeline)
+        if (isCategoryUpdated) {
+            viewModel.loadCategory(categoryId)
+            sharedViewModel.updateHomeRefresh(HomeRefresh.All)
+        }
 
         initBinding()
         initToolbar()
@@ -218,10 +222,10 @@ class CategoryFragment :
     }
 
     private fun observeIsStaccatosUpdated() {
-        sharedViewModel.isStaccatosUpdated.observe(viewLifecycleOwner) { isUpdated ->
-            if (isUpdated) {
+        sharedViewModel.homeRefresh.observe(viewLifecycleOwner) {
+            if (it is HomeRefresh.Map || it is HomeRefresh.All) {
                 viewModel.loadCategory(categoryId)
-                sharedViewModel.updateIsStaccatosUpdated(false)
+                sharedViewModel.updateHomeRefresh(HomeRefresh.None)
             }
         }
     }
@@ -247,7 +251,7 @@ class CategoryFragment :
         when (state) {
             is CategoryEvent.Deleted -> {
                 if (state.success) {
-                    sharedViewModel.updateIsTimelineUpdated(true)
+                    sharedViewModel.updateHomeRefresh(HomeRefresh.All)
                     showToast(getString(R.string.category_delete_complete))
                 } else {
                     showToast(getString(R.string.category_delete_error))
@@ -256,7 +260,7 @@ class CategoryFragment :
             }
 
             is CategoryEvent.Exited -> {
-                sharedViewModel.updateIsTimelineUpdated(true)
+                sharedViewModel.updateHomeRefresh(HomeRefresh.All)
                 showToast(getString(R.string.category_exit_complete))
                 findNavController().popBackStack()
             }

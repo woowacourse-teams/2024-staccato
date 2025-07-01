@@ -18,6 +18,7 @@ import com.on.staccato.presentation.common.dialog.DeleteDialogFragment
 import com.on.staccato.presentation.common.share.ShareManager
 import com.on.staccato.presentation.databinding.FragmentStaccatoBinding
 import com.on.staccato.presentation.main.MainActivity
+import com.on.staccato.presentation.main.HomeRefresh
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.photo.originalphoto.OriginalPhotoHandler
 import com.on.staccato.presentation.photo.originalphoto.OriginalPhotoIndex
@@ -86,7 +87,8 @@ class StaccatoFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        if (isStaccatoCreated || isStaccatoUpdated) sharedViewModel.updateIsStaccatosUpdated(true)
+        if (isStaccatoCreated) sharedViewModel.updateHomeRefresh(HomeRefresh.All)
+        if (isStaccatoUpdated) sharedViewModel.updateHomeRefresh(HomeRefresh.Map)
         setUpBinding()
         setUpComments()
         loadStaccato()
@@ -217,7 +219,7 @@ class StaccatoFragment :
     private fun observeStaccatoDelete() {
         staccatoViewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
             if (isDeleted) {
-                sharedViewModel.updateIsStaccatosUpdated(true)
+                sharedViewModel.updateHomeRefresh(HomeRefresh.All)
                 findNavController().popBackStack()
             }
         }

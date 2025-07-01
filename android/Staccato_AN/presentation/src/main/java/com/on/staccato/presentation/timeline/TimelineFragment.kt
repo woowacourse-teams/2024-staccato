@@ -15,6 +15,7 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.databinding.FragmentTimelineBinding
+import com.on.staccato.presentation.main.HomeRefresh
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.timeline.model.SortType
@@ -96,7 +97,7 @@ class TimelineFragment :
     private fun initObserving() {
         observeMessageEvent()
         observeIsRetry()
-        observeIsTimelineUpdated()
+        observeHomeRefresh()
         observeMemberNickname()
         observeIsBottomSheetExpanded()
         observeIsAtTop()
@@ -121,15 +122,11 @@ class TimelineFragment :
         }
     }
 
-    private fun observeIsTimelineUpdated() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.isTimelineUpdated.collect { isUpdated ->
-                    if (isUpdated) {
-                        timelineViewModel.loadTimeline()
-                        sharedViewModel.updateIsTimelineUpdated(false)
-                    }
-                }
+    private fun observeHomeRefresh() {
+        sharedViewModel.homeRefresh.observe(viewLifecycleOwner) {
+            if (it is HomeRefresh.Timeline || it is HomeRefresh.All) {
+                timelineViewModel.loadTimeline()
+                sharedViewModel.updateHomeRefresh(HomeRefresh.None)
             }
         }
     }

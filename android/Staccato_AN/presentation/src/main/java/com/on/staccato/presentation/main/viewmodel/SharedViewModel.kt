@@ -13,6 +13,7 @@ import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.event.MutableSingleLiveData
 import com.on.staccato.presentation.common.event.SingleLiveData
+import com.on.staccato.presentation.main.HomeRefresh
 import com.on.staccato.presentation.map.model.LocationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -46,11 +47,8 @@ class SharedViewModel
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile> get() = _memberProfile
 
-        private val _isTimelineUpdated = MutableStateFlow(false)
-        val isTimelineUpdated: StateFlow<Boolean> = _isTimelineUpdated.asStateFlow()
-
-        private val _isStaccatosUpdated = MutableLiveData<Boolean>(false)
-        val isStaccatosUpdated: LiveData<Boolean> get() = _isStaccatosUpdated
+        private val _homeRefresh = MutableLiveData<HomeRefresh>(HomeRefresh.None)
+        val homeRefresh: LiveData<HomeRefresh> get() = _homeRefresh
 
         private val _isPermissionCanceled = MutableLiveData(false)
         val isPermissionCanceled: LiveData<Boolean> get() = _isPermissionCanceled
@@ -128,17 +126,8 @@ class SharedViewModel
             _latestIsDraggable.value = _isDraggable.value
         }
 
-        fun updateIsTimelineUpdated(value: Boolean) {
-            viewModelScope.launch {
-                _isTimelineUpdated.emit(value)
-            }
-        }
-
-        fun updateIsStaccatosUpdated(value: Boolean) {
-            viewModelScope.launch {
-                _isTimelineUpdated.emit(true)
-            }
-            _isStaccatosUpdated.value = value
+        fun updateHomeRefresh(state: HomeRefresh) {
+            _homeRefresh.value = state
         }
 
         fun updateIsPermissionCanceled() {
