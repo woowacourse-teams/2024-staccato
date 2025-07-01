@@ -98,7 +98,7 @@ class StaccatoCreationActivity :
     private var currentSnackBar: Snackbar? = null
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        viewModel.fetchCategoryCandidates()
+        viewModel.fetchAllCategories()
         setupPermissionRequestLauncher()
         initBinding()
         initAdapter()
@@ -426,20 +426,30 @@ class StaccatoCreationActivity :
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
-                is StaccatoCreationError.CategoryCandidates -> handleCategoryCandidatesFail(error)
-                is StaccatoCreationError.StaccatoCreation -> handleStaccatoCreateFail(error)
+                is AllCandidates -> handleCategoryCandidatesFail(error.messageEvent)
+                is StaccatoCreate -> handleStaccatoCreateFail(error.messageEvent)
             }
         }
     }
 
-    private fun handleCategoryCandidatesFail(error: StaccatoCreationError.CategoryCandidates) {
+    private fun handleCategoryCandidatesFail(messageEvent: MessageEvent) {
         finish()
-        showToast(getString(error.messageId))
+        showToast(
+            when (messageEvent) {
+                is MessageEvent.FromResource -> getString(messageEvent.messageId)
+                is MessageEvent.Plain -> messageEvent.message
+            },
+        )
     }
 
-    private fun handleStaccatoCreateFail(error: StaccatoCreationError.StaccatoCreation) {
+    private fun handleStaccatoCreateFail(messageEvent: MessageEvent) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(getString(error.messageId)) { recreateStaccato() }
+        showExceptionSnackBar(
+            when (messageEvent) {
+                is MessageEvent.FromResource -> getString(messageEvent.messageId)
+                is MessageEvent.Plain -> messageEvent.message
+            },
+        ) { recreateStaccato() }
     }
 
     private fun recreateStaccato() {

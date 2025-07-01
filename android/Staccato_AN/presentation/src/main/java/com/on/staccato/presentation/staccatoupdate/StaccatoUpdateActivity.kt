@@ -388,26 +388,31 @@ class StaccatoUpdateActivity :
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
-                is StaccatoUpdateError.CategoryCandidates -> handleCategoryCandidatesFail(error)
-                is StaccatoUpdateError.StaccatoInitialize -> handleInitializeFail(error)
-                is StaccatoUpdateError.StaccatoUpdate -> handleStaccatoUpdateFail(error)
+                is AllCandidates -> showToastAndFinish(error.messageEvent)
+                is StaccatoInitialize -> showToastAndFinish(error.messageEvent)
+                is StaccatoUpdate -> clearFlagsAndShowSnackBar(error.messageEvent)
             }
         }
     }
 
-    private fun handleCategoryCandidatesFail(error: StaccatoUpdateError.CategoryCandidates) {
+    private fun showToastAndFinish(messageEvent: MessageEvent) {
         finish()
-        showToast(getString(error.messageId))
+        showToast(
+            when (messageEvent) {
+                is MessageEvent.FromResource -> getString(messageEvent.messageId)
+                is MessageEvent.Plain -> messageEvent.message
+            },
+        )
     }
 
-    private fun handleInitializeFail(error: StaccatoUpdateError.StaccatoInitialize) {
-        finish()
-        showToast(getString(error.messageId))
-    }
-
-    private fun handleStaccatoUpdateFail(error: StaccatoUpdateError.StaccatoUpdate) {
+    private fun clearFlagsAndShowSnackBar(messageEvent: MessageEvent) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(getString(error.messageId)) { reUpdateStaccato() }
+        showExceptionSnackBar(
+            when (messageEvent) {
+                is MessageEvent.FromResource -> getString(messageEvent.messageId)
+                is MessageEvent.Plain -> messageEvent.message
+            },
+        ) { reUpdateStaccato() }
     }
 
     private fun reUpdateStaccato() {

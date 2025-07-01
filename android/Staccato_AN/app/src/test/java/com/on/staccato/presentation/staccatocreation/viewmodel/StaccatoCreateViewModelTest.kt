@@ -31,7 +31,7 @@ import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 @OptIn(ExperimentalCoroutinesApi::class)
-class StaccatoCreationViewModelTest {
+class StaccatoCreateViewModelTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -63,7 +63,7 @@ class StaccatoCreationViewModelTest {
     fun `viewModel 초기화 시 카테고리 후보를 불러온다`() =
         runTest {
             // when
-            viewModel.fetchCategoryCandidates()
+            viewModel.fetchAllCategories()
             advanceUntilIdle()
 
             // then
@@ -75,7 +75,7 @@ class StaccatoCreationViewModelTest {
     fun `카테고리 ID가 0L일 때는 현재 날짜에서 선택 가능한 카테고리 후보 중 첫번째를 선택한다`() =
         runTest {
             // given
-            viewModel.fetchCategoryCandidates()
+            viewModel.fetchAllCategories()
             advanceUntilIdle()
 
             // when
@@ -99,7 +99,7 @@ class StaccatoCreationViewModelTest {
     fun `카테고리 ID가 0L이 아닐 때는 id로 카테고리를 선택하고, 현재와 가장 가까운 일시를 선택한다`() =
         runTest {
             // given
-            viewModel.fetchCategoryCandidates()
+            viewModel.fetchAllCategories()
             advanceUntilIdle()
 
             // when
@@ -124,7 +124,7 @@ class StaccatoCreationViewModelTest {
     fun `카테고리 ID가 0L일 때는 일시가 바뀌면 categoryCandidate도 바뀐다`() =
         runTest {
             // given
-            viewModel.fetchCategoryCandidates()
+            viewModel.fetchAllCategories()
 
             val oldLocalDate = startDateOf2024.atStartOfDay()
             viewModel.initCategoryAndVisitedAt(TARGET_CATEGORY_ID, oldLocalDate)
