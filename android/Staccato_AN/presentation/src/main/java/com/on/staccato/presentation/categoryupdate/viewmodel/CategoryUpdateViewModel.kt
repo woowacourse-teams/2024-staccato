@@ -17,10 +17,10 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
+import com.on.staccato.presentation.color.CategoryColor
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.MutableSingleLiveData
-import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.common.event.MutableSingleLiveData
+import com.on.staccato.presentation.common.event.SingleLiveData
 import com.on.staccato.presentation.util.toLocalDate
 import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -85,7 +85,7 @@ class CategoryUpdateViewModel
                 val result = categoryRepository.getCategory(categoryId)
                 result
                     .onSuccess(::initializeCategory)
-                    .onServerError(::updateMessageEvent)
+                    .onServerError(::emitMessageEvent)
                     .onException(::handleInitializeCategoryException)
             }
         }
@@ -195,7 +195,7 @@ class CategoryUpdateViewModel
                     imageRepository.convertImageFileToUrl(file)
                 result
                     .onSuccess(::setThumbnailUrl)
-                    .onServerError(::updateMessageEvent)
+                    .onServerError(::emitMessageEvent)
                     .onException { state ->
                         handlePhotoException(state, uri, file)
                     }
@@ -207,7 +207,7 @@ class CategoryUpdateViewModel
             _isPhotoPosting.value = false
         }
 
-        private fun updateMessageEvent(message: String) {
+        private fun emitMessageEvent(message: String) {
             _messageEvent.setValue(MessageEvent.from(message))
         }
 
@@ -227,7 +227,7 @@ class CategoryUpdateViewModel
 
         private fun handleUpdateError(message: String) {
             _isPosting.value = false
-            updateMessageEvent(message)
+            emitMessageEvent(message)
         }
 
         private fun handleUpdateException(type: ExceptionType) {

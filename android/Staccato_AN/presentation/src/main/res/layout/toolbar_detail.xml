@@ -10,7 +10,7 @@
 
         <variable
             name="toolbarHandler"
-            type="com.on.staccato.presentation.common.ToolbarHandler" />
+            type="com.on.staccato.presentation.common.toolbar.ToolbarHandler" />
     </data>
 
     <com.google.android.material.appbar.MaterialToolbar

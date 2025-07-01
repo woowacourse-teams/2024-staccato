@@ -11,8 +11,8 @@ import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.MutableSingleLiveData
-import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.event.MutableSingleLiveData
+import com.on.staccato.presentation.common.event.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -58,9 +58,6 @@ class SharedViewModel
         private val _isSettingClicked = MutableLiveData(false)
         val isSettingClicked: LiveData<Boolean> get() = _isSettingClicked
 
-        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
-        val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
-
         private val _isBottomSheetExpanded = MutableLiveData<Boolean>(false)
         val isBottomSheetExpanded: LiveData<Boolean> get() = _isBottomSheetExpanded
 
@@ -84,6 +81,9 @@ class SharedViewModel
         private val _categoryRefreshEvent = MutableSingleLiveData<Boolean>()
         val categoryRefreshEvent: SingleLiveData<Boolean> get() = _categoryRefreshEvent
 
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
+
         fun updateCategoryRefreshEvent() {
             _categoryRefreshEvent.setValue(true)
         }
@@ -96,11 +96,10 @@ class SharedViewModel
 
         fun fetchMemberProfile() {
             viewModelScope.launch {
-                val result = myPageRepository.getMemberProfile()
-                result
+                myPageRepository.getMemberProfile()
                     .onSuccess(::setMemberProfile)
-                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
-                    .onException { updateMessageEvent(MessageEvent.from(it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -108,8 +107,8 @@ class SharedViewModel
             viewModelScope.launch {
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
-                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
-                    .onException { updateMessageEvent(MessageEvent.from(it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -176,7 +175,7 @@ class SharedViewModel
             isDragging.value = state
         }
 
-        fun updateMessageEvent(messageEvent: MessageEvent) {
+        fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.setValue(messageEvent)
         }
 

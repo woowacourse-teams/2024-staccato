@@ -26,10 +26,10 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.clustering.ClusterManager
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.location.GPSManager
-import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.KEY_HAS_VISITED_SETTINGS
-import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.databinding.FragmentMapsBinding
+import com.on.staccato.presentation.location.GPSManager
+import com.on.staccato.presentation.location.LocationDialogFragment.Companion.KEY_HAS_VISITED_SETTINGS
+import com.on.staccato.presentation.location.LocationPermissionManager
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.cluster.ClusterDrawManager
 import com.on.staccato.presentation.map.cluster.StaccatoMarkerClusterRenderer
@@ -347,8 +347,8 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private fun observeMessageEvent() {
         mapsViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is MessageEvent.Plain -> {}
-                is MessageEvent.FromResource -> sharedViewModel.updateMessageEvent(event)
+                is MessageEvent.Text -> {}
+                is MessageEvent.ResId -> sharedViewModel.emitMessageEvent(event)
             }
         }
     }

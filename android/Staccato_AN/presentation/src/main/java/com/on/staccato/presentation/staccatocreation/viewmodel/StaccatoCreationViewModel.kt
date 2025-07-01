@@ -18,15 +18,15 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
+import com.on.staccato.presentation.categoryselection.CategorySelectionViewModel
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.MutableSingleLiveData
-import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
-import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
-import com.on.staccato.presentation.common.photo.PhotoUiModel
-import com.on.staccato.presentation.common.photo.PhotosUiModel
-import com.on.staccato.presentation.common.photo.PhotosUiModel.Companion.MAX_PHOTO_NUMBER
+import com.on.staccato.presentation.common.event.MutableSingleLiveData
+import com.on.staccato.presentation.common.event.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
+import com.on.staccato.presentation.photo.AttachedPhotoHandler
+import com.on.staccato.presentation.photo.PhotoUiModel
+import com.on.staccato.presentation.photo.PhotosUiModel
+import com.on.staccato.presentation.photo.PhotosUiModel.Companion.MAX_PHOTO_NUMBER
 import com.on.staccato.presentation.staccatocreation.AllCandidates
 import com.on.staccato.presentation.staccatocreation.StaccatoCreate
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity.Companion.DEFAULT_CATEGORY_ID
@@ -111,7 +111,7 @@ class StaccatoCreationViewModel
 
         override fun onAddClicked() {
             if ((currentPhotos.value?.size ?: 0) == MAX_PHOTO_NUMBER) {
-                handleMessageEvent(MessageEvent.from(MAX_PHOTO_NUMBER_MESSAGE))
+                emitMessageEvent(MessageEvent.from(MAX_PHOTO_NUMBER_MESSAGE))
             } else {
                 _isAddPhotoClicked.setValue(true)
             }
@@ -179,8 +179,8 @@ class StaccatoCreationViewModel
             viewModelScope.launch {
                 categoryRepository.getCategoryCandidates()
                     .onSuccess { _allCategories.value = it }
-                    .onException { updateError(AllCandidates(MessageEvent.from(it))) }
-                    .onServerError { updateError(AllCandidates(MessageEvent.from(it))) }
+                    .onException { updateError(AllCandidates(MessageEvent.from(exceptionType = it))) }
+                    .onServerError { updateError(AllCandidates(MessageEvent.from(message = it))) }
             }
         }
 
@@ -249,8 +249,8 @@ class StaccatoCreationViewModel
                     categoryId = selectedCategory.value!!.categoryId,
                     staccatoImageUrls = currentPhotos.value?.imageUrls() ?: emptyList(),
                 ).onSuccess { _createdStaccatoId.setValue(it) }
-                    .onException { updateError(StaccatoCreate(MessageEvent.from(it))) }
-                    .onServerError { updateError(StaccatoCreate(MessageEvent.from(it))) }
+                    .onException { updateError(StaccatoCreate(MessageEvent.from(exceptionType = it))) }
+                    .onServerError { updateError(StaccatoCreate(MessageEvent.from(message = it))) }
                 _isPosting.value = false
             }
 
@@ -260,8 +260,8 @@ class StaccatoCreationViewModel
         ) = viewModelScope.launch(buildCoroutineExceptionHandler(photo)) {
             imageRepository.convertImageFileToUrl(file)
                 .onSuccess { updatePhotoWithUrl(photo, it) }
-                .onException { if (isActive) handlePhotoError(photo.toRetry(), MessageEvent.from(it)) }
-                .onServerError { if (isActive) handlePhotoError(photo.toFail(), MessageEvent.from(it)) }
+                .onException { if (isActive) handlePhotoError(photo.toRetry(), MessageEvent.from(exceptionType = it)) }
+                .onServerError { if (isActive) handlePhotoError(photo.toFail(), MessageEvent.from(message = it)) }
         }
 
         private fun buildCoroutineExceptionHandler(photo: PhotoUiModel): CoroutineExceptionHandler {
@@ -288,15 +288,15 @@ class StaccatoCreationViewModel
             messageEvent: MessageEvent,
         ) {
             _currentPhotos.value = currentPhotos.value?.updatePhoto(photo)
-            handleMessageEvent(messageEvent)
+            emitMessageEvent(messageEvent)
         }
 
         private fun requireValues() {
             _isPosting.value = false
-            handleMessageEvent(MessageEvent.from(ExceptionType.REQUIRED_VALUES))
+            emitMessageEvent(MessageEvent.from(ExceptionType.REQUIRED_VALUES))
         }
 
-        private fun handleMessageEvent(messageEvent: MessageEvent) {
+        private fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.setValue(messageEvent)
         }
 

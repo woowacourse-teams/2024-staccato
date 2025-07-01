@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-kapt")
     alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.androidJUnit5)
 }
 
 android {
@@ -15,6 +16,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["runnerBuilder"] =
             "de.mannodermaus.junit5.AndroidJUnit5Builder"
+
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -52,13 +54,36 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+
+    // JUnit5
+    testImplementation(libs.junit5)
+    testRuntimeOnly(libs.junit.vintage.engine)
+
+    // AssertJ
+    testImplementation(libs.assertj.core)
+
+    // Android LiveData Test
+    testImplementation(libs.androidx.arch.core)
+
+    // Android Test Runner
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+
+    // Android JUnit5
+    androidTestImplementation(libs.junit5.android.test.core)
+    androidTestRuntimeOnly(libs.junit5.android.test.runner)
+
+    // Coroutines Test
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    // Mockk
+    testImplementation(libs.mockk)
+    testImplementation(libs.mockk.agent)
+    androidTestImplementation(libs.mockk.agent)
+    androidTestImplementation(libs.mockk.android)
 
     // Lifecycle
     implementation(libs.lifecycle.viewmodel)

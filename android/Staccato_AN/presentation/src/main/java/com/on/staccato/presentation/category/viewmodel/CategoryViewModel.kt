@@ -31,8 +31,8 @@ import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.category.model.defaultCategoryUiModel
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.MutableSingleLiveData
-import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.event.MutableSingleLiveData
+import com.on.staccato.presentation.common.event.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -101,8 +101,8 @@ class CategoryViewModel
                     .onSuccess {
                         updateToInviteSuccessEvent(count = ids.size)
                         toggleInviteMode(false)
-                    }.onServerError { updateMessageEvent(MessageEvent.from(it)) }
-                    .onException { updateMessageEvent(MessageEvent.from(it)) }
+                    }.onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -125,8 +125,8 @@ class CategoryViewModel
                         .onSuccess {
                             searchedMembers.emit(it)
                         }
-                        .onServerError { updateMessageEvent(MessageEvent.from(it)) }
-                        .onException { updateMessageEvent(MessageEvent.from(it)) }
+                        .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                        .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
                 }
             }
         }
@@ -140,13 +140,13 @@ class CategoryViewModel
 
         fun loadCategory(id: Long) {
             if (id <= DEFAULT_CATEGORY_ID) {
-                updateMessageEvent(MessageEvent.FromResource(ExceptionType.UNKNOWN.toMessageId()))
+                emitMessageEvent(MessageEvent.ResId(ExceptionType.UNKNOWN.toMessageId()))
             } else {
                 viewModelScope.launch {
                     categoryRepository.getCategory(id)
                         .onSuccess { updateCategory(it) }
-                        .onServerError { updateMessageEvent(MessageEvent.from(it)) }
-                        .onException { updateMessageEvent(MessageEvent.from(it)) }
+                        .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                        .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
                 }
             }
         }
@@ -161,8 +161,8 @@ class CategoryViewModel
 
                 val result: ApiResult<Unit> = categoryRepository.deleteCategory(id)
                 result.onSuccess { updateToDeletedEvent(true) }
-                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
-                    .onException { updateMessageEvent(MessageEvent.from(it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -194,8 +194,8 @@ class CategoryViewModel
                 }
                 categoryRepository.leaveCategory(id)
                     .onSuccess { updateToExitEvent() }
-                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
-                    .onException { updateMessageEvent(MessageEvent.from(it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
             dismissDialog()
         }
@@ -232,7 +232,7 @@ class CategoryViewModel
             _categoryEvent.emit(CategoryEvent.InviteSuccess(count))
         }
 
-        private fun updateMessageEvent(messageEvent: MessageEvent) {
+        private fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.setValue(messageEvent)
         }
     }

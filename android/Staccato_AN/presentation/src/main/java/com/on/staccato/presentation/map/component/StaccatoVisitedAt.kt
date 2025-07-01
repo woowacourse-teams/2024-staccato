@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.staccato.presentation.R
-import com.on.staccato.presentation.common.toYearMonthDay
+import com.on.staccato.presentation.common.format.toYearMonthDay
 import com.on.staccato.theme.Body4
 import java.time.LocalDateTime
 

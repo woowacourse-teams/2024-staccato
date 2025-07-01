@@ -11,8 +11,8 @@ import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.MutableSingleLiveData
-import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.event.MutableSingleLiveData
+import com.on.staccato.presentation.common.event.SingleLiveData
 import com.on.staccato.presentation.mapper.toTimelineUiModel
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
@@ -69,8 +69,8 @@ class TimelineViewModel
                     sort = sortType.value?.name,
                     filter = filterType.value?.name,
                 ).onSuccess(::setTimelineUiModels)
-                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
-                    .onException { updateMessageEvent(MessageEvent.from(it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -89,7 +89,7 @@ class TimelineViewModel
             _isTimelineLoading.value = false
         }
 
-        private fun updateMessageEvent(messageEvent: MessageEvent) {
+        private fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.setValue(messageEvent)
         }
     }

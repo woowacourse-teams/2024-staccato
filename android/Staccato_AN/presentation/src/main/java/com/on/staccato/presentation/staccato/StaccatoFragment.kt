@@ -12,16 +12,16 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingFragment
-import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.ShareManager
 import com.on.staccato.presentation.common.clipboard.ClipboardHelper
-import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoHandler
-import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoIndex
-import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoScreen
+import com.on.staccato.presentation.common.dialog.DeleteDialogFragment
+import com.on.staccato.presentation.common.share.ShareManager
 import com.on.staccato.presentation.databinding.FragmentStaccatoBinding
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
+import com.on.staccato.presentation.photo.originalphoto.OriginalPhotoHandler
+import com.on.staccato.presentation.photo.originalphoto.OriginalPhotoIndex
+import com.on.staccato.presentation.photo.originalphoto.OriginalPhotoScreen
 import com.on.staccato.presentation.staccato.comments.CommentHandler
 import com.on.staccato.presentation.staccato.comments.CommentsAdapter
 import com.on.staccato.presentation.staccato.comments.StaccatoCommentsViewModel
@@ -309,8 +309,8 @@ class StaccatoFragment :
         commentsViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
             showToast(
                 when (event) {
-                    is MessageEvent.FromResource -> getString(event.messageId)
-                    is MessageEvent.Plain -> event.message
+                    is MessageEvent.ResId -> getString(event.value)
+                    is MessageEvent.Text -> event.value
                 },
             )
         }
@@ -319,20 +319,20 @@ class StaccatoFragment :
     private fun observeMessageEvent() {
         staccatoViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is MessageEvent.FromResource -> {
+                is MessageEvent.ResId -> {
                     handleMessageEventWithRetryAction(event)
                 }
-                is MessageEvent.Plain -> {
-                    showToast(event.message)
+                is MessageEvent.Text -> {
+                    showToast(event.value)
                     findNavController().popBackStack()
                 }
             }
         }
     }
 
-    private fun handleMessageEventWithRetryAction(event: MessageEvent.FromResource) {
+    private fun handleMessageEventWithRetryAction(event: MessageEvent.ResId) {
         view?.showSnackBarWithAction(
-            message = getString(event.messageId),
+            message = getString(event.value),
             actionLabel = R.string.all_retry,
             onAction = ::onRetryAction,
             Snackbar.LENGTH_INDEFINITE,

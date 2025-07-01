@@ -14,8 +14,8 @@ import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.CommentRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.MutableSingleLiveData
-import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.event.MutableSingleLiveData
+import com.on.staccato.presentation.common.event.SingleLiveData
 import com.on.staccato.presentation.mapper.toCommentUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

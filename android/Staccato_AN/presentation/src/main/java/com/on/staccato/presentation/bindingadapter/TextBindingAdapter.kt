@@ -10,12 +10,12 @@ import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.R
-import com.on.staccato.presentation.common.InputState
-import com.on.staccato.presentation.common.getFormattedLocalDateTime
-import com.on.staccato.presentation.common.photo.PhotoUploadState
-import com.on.staccato.presentation.common.toMonthDay
-import com.on.staccato.presentation.common.toYearMonthDay
+import com.on.staccato.presentation.common.format.getFormattedLocalDateTime
+import com.on.staccato.presentation.common.format.toMonthDay
+import com.on.staccato.presentation.common.format.toYearMonthDay
+import com.on.staccato.presentation.common.input.InputState
 import com.on.staccato.presentation.mapper.toInputState
+import com.on.staccato.presentation.photo.PhotoUploadState
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel

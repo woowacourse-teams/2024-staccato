@@ -6,12 +6,12 @@ import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.on.staccato.presentation.R
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.databinding.ActivityLoginBinding
 import com.on.staccato.presentation.login.viewmodel.LoginViewModel
 import com.on.staccato.presentation.main.MainActivity
@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity(), LoginHandler {
     private lateinit var binding: ActivityLoginBinding
     private val loginViewModel: LoginViewModel by viewModels()
-
     private val inputManager: InputMethodManager by lazy {
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
     }
@@ -34,10 +33,9 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         super.onCreate(savedInstanceState)
         val splashScreen = installSplashScreen()
         checkIfLoggedIn(splashScreen)
-        setBinding()
+        setBindings()
         observeLoginState()
-        observeErrorEvent()
-        observeExceptionEvent()
+        observeMessageEvent()
     }
 
     override fun onStartClicked() {
@@ -49,23 +47,8 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         hideKeyboardAndClearFocus()
     }
 
-    private fun hideKeyboardAndClearFocus() {
-        currentFocus?.let {
-            inputManager.hideSoftInputFromWindow(
-                it.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS,
-            )
-            it.clearFocus()
-        }
-    }
-
     override fun onRecoveryClicked() {
         navigateToRecoveryActivity()
-    }
-
-    private fun navigateToRecoveryActivity() {
-        val intent = Intent(this, RecoveryActivity::class.java)
-        startActivity(intent)
     }
 
     private fun checkIfLoggedIn(splashScreen: SplashScreen) {
@@ -92,19 +75,11 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
 
     private fun navigateToMainActivity() {
         loginViewModel.registerCurrentFcmToken()
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val options =
-            ActivityOptionsCompat.makeCustomAnimation(
-                this,
-                R.anim.anim_fade_in,
-                R.anim.anim_fade_out,
-            )
-        startActivity(intent, options.toBundle())
+        MainActivity.launch(startContext = this)
         finish()
     }
 
-    private fun setBinding() {
+    private fun setBindings() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.lifecycleOwner = this
         binding.viewModel = loginViewModel
@@ -117,28 +92,38 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
 
     private fun checkLoginSuccess(success: Boolean) {
         if (success) {
-            showToast(LOGIN_SUCCESS_MESSAGE)
+            showToast(getString(R.string.login_success))
             navigateToMainActivity()
             window.clearFlags(FLAG_NOT_TOUCHABLE)
         }
     }
 
-    private fun observeErrorEvent() {
-        loginViewModel.errorMessage.observe(this) { message ->
-            showToast(message)
+    private fun observeMessageEvent() {
+        loginViewModel.messageEvent.observe(this) { event ->
+            when (event) {
+                is MessageEvent.ResId -> showToast(getString(event.value))
+                is MessageEvent.Text -> showToast(event.value)
+            }
             window.clearFlags(FLAG_NOT_TOUCHABLE)
         }
     }
 
-    private fun observeExceptionEvent() {
-        loginViewModel.exceptionMessage.observe(this) { messageId ->
-            showToast(getString(messageId))
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
+    private fun hideKeyboardAndClearFocus() {
+        currentFocus?.let {
+            inputManager.hideSoftInputFromWindow(
+                it.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS,
+            )
+            it.clearFocus()
         }
+    }
+
+    private fun navigateToRecoveryActivity() {
+        val intent = Intent(this, RecoveryActivity::class.java)
+        startActivity(intent)
     }
 
     companion object {
-        private const val LOGIN_SUCCESS_MESSAGE = "스타카토에 찾아오신걸 환영해요!"
-        private const val SPLASH_SCREEN_DURATION = 2000L
+        private const val SPLASH_SCREEN_DURATION = 1500L
     }
 }

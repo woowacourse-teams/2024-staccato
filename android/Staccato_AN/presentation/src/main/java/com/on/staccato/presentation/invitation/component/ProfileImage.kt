@@ -21,6 +21,7 @@ fun ProfileImage(
         bitmapPixelSize = 150,
         url = url,
         placeHolder = R.drawable.icon_member,
+        errorImageRes = R.drawable.icon_member,
         contentDescription = R.string.all_member_profile_image_description,
     )
 }

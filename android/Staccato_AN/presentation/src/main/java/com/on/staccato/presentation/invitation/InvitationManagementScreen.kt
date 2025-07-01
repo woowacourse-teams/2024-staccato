@@ -12,13 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.invitation.component.InvitationDialogs
 import com.on.staccato.presentation.invitation.component.InvitationManagement
 import com.on.staccato.presentation.invitation.component.InvitationManagementTopBar
 import com.on.staccato.presentation.invitation.model.InvitationTabMenu
 import com.on.staccato.presentation.invitation.model.InvitationTabMenu.RECEIVED_INVITATION
 import com.on.staccato.presentation.invitation.model.InvitationTabMenu.SENT_INVITATION
-import com.on.staccato.presentation.invitation.model.ToastMessage
 import com.on.staccato.presentation.invitation.viewmodel.InvitationViewModel
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.theme.White
@@ -37,19 +37,13 @@ fun InvitationManagementScreen(
     var selectedMenu by remember { mutableStateOf(defaultSelectedMenu) }
 
     LaunchedEffect(Unit) {
-        invitationViewModel.toastMessage.collect {
+        invitationViewModel.messageEvent.collect { event ->
             val message =
-                when (it) {
-                    is ToastMessage.FromResource -> context.getString(it.messageId)
-                    is ToastMessage.Plain -> it.errorMessage
+                when (event) {
+                    is MessageEvent.ResId -> context.getString(event.value)
+                    is MessageEvent.Text -> event.value
                 }
             context.showToast(message)
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        invitationViewModel.exceptionState.collect { state ->
-            context.showToast(context.getString(state))
         }
     }
 

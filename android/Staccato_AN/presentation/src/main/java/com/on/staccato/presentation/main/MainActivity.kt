@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.main
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -9,8 +10,8 @@ import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -31,13 +32,13 @@ import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEF
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity.Companion.KEY_IS_CATEGORY_CREATED
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity.Companion.KEY_IS_CATEGORY_UPDATED
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.notification.NotificationPermissionManager
-import com.on.staccato.presentation.common.notification.NotificationPermissionRationale
 import com.on.staccato.presentation.databinding.ActivityMainBinding
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.mypage.MyPageActivity.Companion.UPDATED_PROFILE_KEY
 import com.on.staccato.presentation.mypage.MyPageActivity.Companion.UPDATED_TIMELINE_KEY
+import com.on.staccato.presentation.notification.NotificationPermissionManager
+import com.on.staccato.presentation.notification.NotificationPermissionRationale
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.DEFAULT_STACCATO_ID
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
@@ -67,19 +68,11 @@ class MainActivity :
     override val layoutResourceId: Int
         get() = R.layout.activity_main
 
-    private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
-    private lateinit var navHostFragment: NavHostFragment
-    private lateinit var navController: NavController
-
     @Inject
     lateinit var loggingManager: LoggingManager
 
     @Inject
     lateinit var notificationPermissionManager: NotificationPermissionManager
-
-    private var previousBottomSheetStateTime: Long = currentTimeMillis()
-
-    private val sharedViewModel: SharedViewModel by viewModels()
 
     val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleCategoryCreationResult()
     val categoryUpdateLauncher: ActivityResultLauncher<Intent> = handleCategoryUpdateResult()
@@ -87,16 +80,24 @@ class MainActivity :
     val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoUpdateResult()
     private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
 
+    private val sharedViewModel: SharedViewModel by viewModels()
+
+    private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var navHostFragment: NavHostFragment
+    private lateinit var navController: NavController
+
+    private var previousBottomSheetStateTime: Long = currentTimeMillis()
+
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
-        loadMemberProfile()
-        observeMessageEvent()
-        observeRetryEvent()
         setupBottomSheetController()
-        setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
         setUpBottomSheetStateListener()
         updateBottomSheetIsDraggable()
+        setupBackPressedHandler()
+        observeMessageEvent()
+        observeRetryEvent()
+        loadMemberProfile()
         registerAndLaunchNotificationPermission()
     }
 
@@ -122,12 +123,6 @@ class MainActivity :
         )
     }
 
-    private fun initBinding() {
-        binding.lifecycleOwner = this
-        binding.sharedViewModel = sharedViewModel
-        binding.handler = this
-    }
-
     override fun onMyPageClicked() {
         MyPageActivity.startWithResultLauncher(this, myPageLauncher)
     }
@@ -136,41 +131,85 @@ class MainActivity :
         sharedViewModel.updateCurrentLocationEvent()
     }
 
-    private fun loadMemberProfile() {
-        sharedViewModel.fetchMemberProfile()
+    private fun initBinding() {
+        binding.lifecycleOwner = this
+        binding.sharedViewModel = sharedViewModel
+        binding.handler = this
     }
 
-    private fun observeMessageEvent() {
-        sharedViewModel.messageEvent.observe(this) { event ->
-            when (event) {
-                is MessageEvent.Plain -> {}
-                is MessageEvent.FromResource -> showSnackBar(event.messageId)
-            }
+    private fun setupBottomSheetController() {
+        behavior =
+            BottomSheetBehavior.from(binding.constraintMainBottomSheet)
+                .apply { setState(STATE_HALF_EXPANDED) }
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container_view_main_bottom_sheet) as NavHostFragment
+        navController = navHostFragment.navController
+    }
+
+    private fun setUpBottomSheetBehaviorAction() {
+        behavior.apply {
+            changeSkipCollapsed()
+            addBottomSheetCallback(
+                object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(
+                        bottomSheet: View,
+                        newState: Int,
+                    ) {
+                        when (newState) {
+                            STATE_EXPANDED -> {
+                                sharedViewModel.updateBottomSheetState(isExpanded = true, isHalfExpanded = false)
+                                changeSkipCollapsed(skipCollapsed = false)
+                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_EXPANDED)
+                            }
+
+                            STATE_HALF_EXPANDED -> {
+                                sharedViewModel.updateBottomSheetState(isExpanded = false, isHalfExpanded = true)
+                                currentFocus?.let { clearFocusAndHideKeyboard(it) }
+                                changeSkipCollapsed()
+                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_HALF_EXPANDED)
+                            }
+
+                            STATE_COLLAPSED -> {
+                                sharedViewModel.updateBottomSheetState(isExpanded = false, isHalfExpanded = false)
+                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_COLLAPSED)
+                            }
+
+                            else -> {
+                                currentFocus?.let { clearFocusAndHideKeyboard(it) }
+                            }
+                        }
+                    }
+
+                    override fun onSlide(
+                        view: View,
+                        slideOffset: Float,
+                    ) {
+                        sharedViewModel.updateIsDragging(state == STATE_DRAGGING)
+                        if (slideOffset < 0.05) {
+                            changeSkipCollapsed(isHideable = false)
+                            state = STATE_COLLAPSED
+                        }
+                    }
+                },
+            )
         }
     }
 
-    private fun showSnackBar(
-        @StringRes messageId: Int,
+    private fun BottomSheetBehavior<ConstraintLayout>.changeSkipCollapsed(
+        isHideable: Boolean = true,
+        skipCollapsed: Boolean = true,
     ) {
-        binding.root.showSnackBarWithAction(
-            message = getString(messageId),
-            actionLabel = R.string.all_retry,
-            onAction = ::onRetryAction,
-            length = Snackbar.LENGTH_INDEFINITE,
-        )
+        this.isHideable = isHideable
+        this.skipCollapsed = skipCollapsed
     }
 
-    private fun onRetryAction() {
-        sharedViewModel.updateIsRetry()
-    }
-
-    private fun observeRetryEvent() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.retryEvent.collect {
-                    sharedViewModel.fetchNotificationExistence()
-                }
-            }
+    private fun setUpBottomSheetStateListener() {
+        supportFragmentManager.setFragmentResultListener(
+            BOTTOM_SHEET_STATE_REQUEST_KEY,
+            this,
+        ) { _, bundle ->
+            val newState = bundle.getInt(BOTTOM_SHEET_NEW_STATE)
+            behavior.state = newState
         }
     }
 
@@ -253,13 +292,67 @@ class MainActivity :
         return currentTime
     }
 
-    private fun setupBottomSheetController() {
-        behavior =
-            BottomSheetBehavior.from(binding.constraintMainBottomSheet)
-                .apply { setState(STATE_HALF_EXPANDED) }
-        navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragment_container_view_main_bottom_sheet) as NavHostFragment
-        navController = navHostFragment.navController
+    private fun observeMessageEvent() {
+        sharedViewModel.messageEvent.observe(this) { event ->
+            when (event) {
+                is MessageEvent.ResId -> {
+                    showSnackBar(getString(event.value))
+                }
+
+                is MessageEvent.Text -> {
+                    showToast(event.value)
+                }
+            }
+        }
+    }
+
+    private fun showSnackBar(message: String) {
+        binding.root.showSnackBarWithAction(
+            message = message,
+            actionLabel = R.string.all_retry,
+            onAction = ::onRetryAction,
+            length = Snackbar.LENGTH_INDEFINITE,
+        )
+    }
+
+    private fun onRetryAction() {
+        sharedViewModel.updateIsRetry()
+    }
+
+    private fun observeRetryEvent() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.retryEvent.collect {
+                    sharedViewModel.fetchNotificationExistence()
+                }
+            }
+        }
+    }
+
+    private fun loadMemberProfile() {
+        sharedViewModel.fetchMemberProfile()
+    }
+
+    private fun registerAndLaunchNotificationPermission() {
+        notificationPermissionManager.register(
+            caller = this,
+            activity = this,
+            showRationale = ::showNotificationPermissionRationale,
+        )
+        notificationPermissionManager.launch()
+    }
+
+    private fun showNotificationPermissionRationale() {
+        binding.cvMainNotificationRationaleDialog.setContent {
+            NotificationPermissionRationale(::moveToNotificationSetting)
+        }
+    }
+
+    private fun moveToNotificationSetting() {
+        val intent =
+            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+        startActivity(intent)
     }
 
     private fun handleCategoryCreationResult() =
@@ -341,63 +434,6 @@ class MainActivity :
         .setPopUpTo(popUpToId, inclusive)
         .build()
 
-    private fun setUpBottomSheetBehaviorAction() {
-        behavior.apply {
-            changeSkipCollapsed()
-            addBottomSheetCallback(
-                object : BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onStateChanged(
-                        bottomSheet: View,
-                        newState: Int,
-                    ) {
-                        when (newState) {
-                            STATE_EXPANDED -> {
-                                sharedViewModel.updateBottomSheetState(isExpanded = true, isHalfExpanded = false)
-                                changeSkipCollapsed(skipCollapsed = false)
-                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_EXPANDED)
-                            }
-
-                            STATE_HALF_EXPANDED -> {
-                                sharedViewModel.updateBottomSheetState(isExpanded = false, isHalfExpanded = true)
-                                currentFocus?.let { clearFocusAndHideKeyboard(it) }
-                                changeSkipCollapsed()
-                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_HALF_EXPANDED)
-                            }
-
-                            STATE_COLLAPSED -> {
-                                sharedViewModel.updateBottomSheetState(isExpanded = false, isHalfExpanded = false)
-                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_COLLAPSED)
-                            }
-
-                            else -> {
-                                currentFocus?.let { clearFocusAndHideKeyboard(it) }
-                            }
-                        }
-                    }
-
-                    override fun onSlide(
-                        view: View,
-                        slideOffset: Float,
-                    ) {
-                        sharedViewModel.updateIsDragging(state == STATE_DRAGGING)
-                        if (slideOffset < 0.05) {
-                            changeSkipCollapsed(isHideable = false)
-                            state = STATE_COLLAPSED
-                        }
-                    }
-                },
-            )
-        }
-    }
-
-    private fun BottomSheetBehavior<ConstraintLayout>.changeSkipCollapsed(
-        isHideable: Boolean = true,
-        skipCollapsed: Boolean = true,
-    ) {
-        this.isHideable = isHideable
-        this.skipCollapsed = skipCollapsed
-    }
-
     private fun logEventForBottomSheet(stateParam: String) {
         loggingManager.logEvent(
             NAME_BOTTOM_SHEET,
@@ -406,14 +442,11 @@ class MainActivity :
         )
     }
 
-    private fun setUpBottomSheetStateListener() {
-        supportFragmentManager.setFragmentResultListener(
-            BOTTOM_SHEET_STATE_REQUEST_KEY,
-            this,
-        ) { _, bundle ->
-            val newState = bundle.getInt(BOTTOM_SHEET_NEW_STATE)
-            behavior.state = newState
-        }
+    private fun calculateBottomSheetTimeDuration(): Double {
+        val currentTime = currentTimeMillis()
+        val timeDuration = currentTime - previousBottomSheetStateTime
+        previousBottomSheetStateTime = currentTime
+        return timeDuration / MILLISECONDS_TO_SECONDS
     }
 
     private fun clearFocusAndHideKeyboard(view: View) {
@@ -428,38 +461,23 @@ class MainActivity :
         )
     }
 
-    private fun calculateBottomSheetTimeDuration(): Double {
-        val currentTime = currentTimeMillis()
-        val timeDuration = currentTime - previousBottomSheetStateTime
-        previousBottomSheetStateTime = currentTime
-        return timeDuration / MILLISECONDS_TO_SECONDS
-    }
-
-    private fun registerAndLaunchNotificationPermission() {
-        notificationPermissionManager.register(
-            caller = this,
-            activity = this,
-            showRationale = ::showNotificationPermissionRationale,
-        )
-        notificationPermissionManager.launch()
-    }
-
-    private fun showNotificationPermissionRationale() {
-        binding.cvMainNotificationRationaleDialog.setContent {
-            NotificationPermissionRationale(::moveToNotificationSetting)
-        }
-    }
-
-    private fun moveToNotificationSetting() {
-        val intent =
-            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
-        startActivity(intent)
-    }
-
     companion object {
         private const val BOTTOM_SHEET_STATE_REQUEST_KEY = "requestKey"
         private const val BOTTOM_SHEET_NEW_STATE = "newState"
         private const val MILLISECONDS_TO_SECONDS = 1000.0
+
+        fun launch(startContext: Context) {
+            val intent =
+                Intent(startContext, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+            val animationOption =
+                ActivityOptionsCompat.makeCustomAnimation(
+                    startContext,
+                    R.anim.anim_fade_in,
+                    R.anim.anim_fade_out,
+                )
+            startContext.startActivity(intent, animationOption.toBundle())
+        }
     }
 }

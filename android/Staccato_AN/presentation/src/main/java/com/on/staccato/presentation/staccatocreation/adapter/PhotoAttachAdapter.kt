@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
-import com.on.staccato.presentation.common.photo.PhotoUiModel
-import com.on.staccato.presentation.common.photo.PhotoUploadState
 import com.on.staccato.presentation.databinding.ItemAddPhotoBinding
 import com.on.staccato.presentation.databinding.ItemAttachedPhotoBinding
+import com.on.staccato.presentation.photo.AttachedPhotoHandler
+import com.on.staccato.presentation.photo.PhotoUiModel
+import com.on.staccato.presentation.photo.PhotoUploadState
 
 class PhotoAttachAdapter(
     private val attachedPhotoHandler: AttachedPhotoHandler,

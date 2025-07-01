@@ -1,11 +1,10 @@
 package com.on.staccato.presentation.recovery
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.app.ActivityOptionsCompat
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.databinding.ActivityRecoveryBinding
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.recovery.viewmodel.RecoveryViewModel
@@ -19,53 +18,41 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
     private val recoveryViewModel: RecoveryViewModel by viewModels()
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        setBinding()
-        observeViewModel()
-        navigateToLogin()
+        setBindings()
+        observeRecoverySuccess()
+        observeMessageEvent()
     }
 
-    private fun setBinding() {
+    private fun setBindings() {
         binding.lifecycleOwner = this
         binding.viewModel = recoveryViewModel
         binding.handler = recoveryViewModel
+        binding.toolbarRecovery.setNavigationOnClickListener { finish() }
     }
 
-    private fun observeViewModel() {
+    private fun observeRecoverySuccess() {
         recoveryViewModel.isRecoverySuccess.observe(this, ::checkRecoverySuccess)
-        recoveryViewModel.errorMessage.observe(this, ::showToast)
-        recoveryViewModel.exceptionMessage.observe(this) {
-            showToast(getString(it))
-        }
     }
 
     private fun checkRecoverySuccess(success: Boolean) {
         if (success) {
-            showToast(RECOVERY_SUCCESS_MESSAGE)
+            showToast(getString(R.string.recovery_success))
             navigateToMainActivity()
         }
     }
 
     private fun navigateToMainActivity() {
         recoveryViewModel.registerCurrentFcmToken()
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val options =
-            ActivityOptionsCompat.makeCustomAnimation(
-                this,
-                R.anim.anim_fade_in,
-                R.anim.anim_fade_out,
-            )
-        startActivity(intent, options.toBundle())
+        MainActivity.launch(startContext = this)
         finish()
     }
 
-    private fun navigateToLogin() {
-        binding.toolbarRecovery.setNavigationOnClickListener {
-            finish()
+    private fun observeMessageEvent() {
+        recoveryViewModel.messageEvent.observe(this) { event ->
+            when (event) {
+                is MessageEvent.ResId -> showToast(getString(event.value))
+                is MessageEvent.Text -> showToast(event.value)
+            }
         }
-    }
-
-    companion object {
-        private const val RECOVERY_SUCCESS_MESSAGE = "이전 데이터를 불러오는데 성공했어요!"
     }
 }

@@ -180,12 +180,14 @@
     <string name="login_nickname_error_message_length">%d~%d 사이의 길이로 입력해 주세요.</string>
     <string name="login_recovery_click_here_if_need_recovery"><u>이전 기록을 불러오려면 여기를 눌러주세요</u></string>
     <string name="login_staccato_logo_description">스타카토 로고</string>
+    <string name="login_success">스타카토에 찾아오신걸 환영해요!</string>
 
     // activity_recovery
     <string name="recovery_title">이전 기록을 불러올게요</string>
     <string name="recovery_subtitle">고유 코드를 입력해 주세요</string>
     <string name="recovery_code_hint">ex) bt2hnhd4-07kght-0pp2ln</string>
     <string name="recovery_load">불러오기</string>
+    <string name="recovery_success">이전 데이터를 불러오는데 성공했어요!</string>
 
     // activity_mypage
     <string name="mypage_title">마이페이지</string>

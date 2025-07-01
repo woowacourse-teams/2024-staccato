@@ -13,9 +13,9 @@ import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.LoginRepository
 import com.on.staccato.domain.repository.NotificationRepository
-import com.on.staccato.presentation.common.MutableSingleLiveData
-import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.toMessageId
+import com.on.staccato.presentation.common.MessageEvent
+import com.on.staccato.presentation.common.event.MutableSingleLiveData
+import com.on.staccato.presentation.common.event.SingleLiveData
 import com.on.staccato.util.launchOnce
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class LoginViewModel
     @Inject
     constructor(
-        private val repository: LoginRepository,
+        private val loginRepository: LoginRepository,
         private val notificationRepository: NotificationRepository,
     ) : ViewModel() {
         val nickname = MutableLiveData("")
@@ -36,30 +36,25 @@ class LoginViewModel
 
         val nicknameMaxLength = Nickname.MAX_LENGTH
 
-        private val token: MutableLiveData<String?> = MutableLiveData(null)
+        private var token: String? = null
 
         private val _isLoggedIn = MutableSingleLiveData(false)
         val isLoggedIn: SingleLiveData<Boolean> = _isLoggedIn
 
         private val _isLoginSuccess = MutableSingleLiveData(false)
-        val isLoginSuccess: SingleLiveData<Boolean>
-            get() = _isLoginSuccess
+        val isLoginSuccess: SingleLiveData<Boolean> get() = _isLoginSuccess
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String> get() = _errorMessage
-
-        private val _exceptionMessage = MutableSingleLiveData<Int>()
-        val exceptionMessage: SingleLiveData<Int>
-            get() = _exceptionMessage
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
 
         fun requestLogin() {
             val nickname = nicknameState.value
             if (nickname is NicknameState.Valid) {
                 viewModelScope.launch {
-                    repository.loginWithNickname(nickname.value)
+                    loginRepository.loginWithNickname(nickname.value)
                         .onSuccess { updateIsLoginSuccess() }
-                        .onServerError(::handleError)
-                        .onException(::handleException)
+                        .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                        .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
                 }
             }
         }
@@ -72,12 +67,10 @@ class LoginViewModel
 
         fun fetchToken() {
             viewModelScope.launch {
-                repository.getToken()
-                    .onSuccess { token.value = it }
-                    .onFailure {
-                        handleException(ExceptionType.UNKNOWN)
-                    }
-                _isLoggedIn.setValue(!token.value.isNullOrEmpty())
+                loginRepository.getToken()
+                    .onSuccess { token = it }
+                    .onFailure { emitMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN)) }
+                _isLoggedIn.setValue(!token.isNullOrEmpty())
             }
         }
 
@@ -85,11 +78,7 @@ class LoginViewModel
             _isLoginSuccess.postValue(true)
         }
 
-        private fun handleError(errorMessage: String) {
-            _errorMessage.postValue(errorMessage)
-        }
-
-        private fun handleException(state: ExceptionType) {
-            _exceptionMessage.postValue(state.toMessageId())
+        private fun emitMessageEvent(messageEvent: MessageEvent) {
+            _messageEvent.setValue(messageEvent)
         }
     }

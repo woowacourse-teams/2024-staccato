@@ -6,7 +6,7 @@
 
         <variable
             name="handler"
-            type="com.on.staccato.presentation.common.location.LocationDialogHandler" />
+            type="com.on.staccato.presentation.location.LocationDialogHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout style="@style/DialogBackgroundStyle">

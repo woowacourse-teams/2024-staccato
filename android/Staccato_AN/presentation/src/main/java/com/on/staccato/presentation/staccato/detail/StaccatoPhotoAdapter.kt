@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoHandler
 import com.on.staccato.presentation.databinding.ItemStaccatoPhotoBinding
+import com.on.staccato.presentation.photo.originalphoto.OriginalPhotoHandler
 
 class StaccatoPhotoAdapter(private val handler: OriginalPhotoHandler) :
     ListAdapter<String, StaccatoPhotoViewHolder>(diffUtil) {

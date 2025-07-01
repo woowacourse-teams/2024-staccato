@@ -1,6 +1,6 @@
 package com.on.staccato.presentation.timeline.model
 
-import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.color.CategoryColor
 import java.time.LocalDate
 
 data class TimelineUiModel(

@@ -11,7 +11,7 @@
 
         <variable
             name="handler"
-            type="com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoHandler" />
+            type="com.on.staccato.presentation.photo.originalphoto.OriginalPhotoHandler" />
 
         <variable
             name="photoUrl"

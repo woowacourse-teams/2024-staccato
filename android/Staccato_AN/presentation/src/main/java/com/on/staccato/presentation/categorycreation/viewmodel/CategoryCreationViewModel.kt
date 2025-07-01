@@ -16,10 +16,10 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.presentation.categorycreation.model.CategoryCreationError
 import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
+import com.on.staccato.presentation.color.CategoryColor
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.MutableSingleLiveData
-import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.common.event.MutableSingleLiveData
+import com.on.staccato.presentation.common.event.SingleLiveData
 import com.on.staccato.presentation.util.toLocalDate
 import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -152,7 +152,7 @@ class CategoryCreationViewModel
                     imageRepository.convertImageFileToUrl(file)
                 result
                     .onSuccess(::setThumbnailUrl)
-                    .onServerError(::updateMessageEvent)
+                    .onServerError(::emitMessageEvent)
                     .onException { type ->
                         handlePhotoException(type, uri, file)
                     }
@@ -188,7 +188,7 @@ class CategoryCreationViewModel
             }
         }
 
-        private fun updateMessageEvent(message: String) {
+        private fun emitMessageEvent(message: String) {
             _messageEvent.setValue(MessageEvent.from(message))
         }
 
@@ -204,7 +204,7 @@ class CategoryCreationViewModel
 
         private fun updateCreateServerError(message: String) {
             _isPosting.value = false
-            updateMessageEvent(message)
+            emitMessageEvent(message)
         }
 
         private fun handleCreateException(type: ExceptionType) {

@@ -21,19 +21,19 @@ import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_TITLE_KEY
-import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
-import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
+import com.on.staccato.presentation.categoryselection.CategorySelectionFragment
+import com.on.staccato.presentation.categoryselection.CategorySelectionViewModelProvider
 import com.on.staccato.presentation.common.MessageEvent
-import com.on.staccato.presentation.common.categoryselection.CategorySelectionFragment
-import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModelProvider
-import com.on.staccato.presentation.common.location.GPSManager
-import com.on.staccato.presentation.common.location.LocationPermissionManager
-import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
-import com.on.staccato.presentation.common.photo.PhotoAttachFragment
-import com.on.staccato.presentation.common.photo.PhotosUiModel.Companion.MAX_PHOTO_NUMBER
 import com.on.staccato.presentation.databinding.ActivityStaccatoUpdateBinding
+import com.on.staccato.presentation.location.GPSManager
+import com.on.staccato.presentation.location.LocationPermissionManager
+import com.on.staccato.presentation.location.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.model.LocationUiModel
+import com.on.staccato.presentation.photo.PhotoAttachFragment
+import com.on.staccato.presentation.photo.PhotosUiModel.Companion.MAX_PHOTO_NUMBER
+import com.on.staccato.presentation.place.CustomAutocompleteSupportFragment
+import com.on.staccato.presentation.place.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.CurrentLocationHandler
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
@@ -377,8 +377,8 @@ class StaccatoUpdateActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(
                 when (event) {
-                    is MessageEvent.FromResource -> getString(event.messageId)
-                    is MessageEvent.Plain -> event.message
+                    is MessageEvent.ResId -> getString(event.value)
+                    is MessageEvent.Text -> event.value
                 },
             )
         }
@@ -398,8 +398,8 @@ class StaccatoUpdateActivity :
         finish()
         showToast(
             when (messageEvent) {
-                is MessageEvent.FromResource -> getString(messageEvent.messageId)
-                is MessageEvent.Plain -> messageEvent.message
+                is MessageEvent.ResId -> getString(messageEvent.value)
+                is MessageEvent.Text -> messageEvent.value
             },
         )
     }
@@ -408,8 +408,8 @@ class StaccatoUpdateActivity :
         window.clearFlags(FLAG_NOT_TOUCHABLE)
         showExceptionSnackBar(
             when (messageEvent) {
-                is MessageEvent.FromResource -> getString(messageEvent.messageId)
-                is MessageEvent.Plain -> messageEvent.message
+                is MessageEvent.ResId -> getString(messageEvent.value)
+                is MessageEvent.Text -> messageEvent.value
             },
         ) { reUpdateStaccato() }
     }

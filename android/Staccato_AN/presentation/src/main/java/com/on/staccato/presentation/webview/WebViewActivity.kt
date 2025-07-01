@@ -7,7 +7,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingActivity
-import com.on.staccato.presentation.common.CloseToolbarHandler
+import com.on.staccato.presentation.common.toolbar.CloseToolbarHandler
 import com.on.staccato.presentation.databinding.ActivityWebviewBinding
 import com.on.staccato.presentation.util.showToast
 

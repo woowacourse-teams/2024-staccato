@@ -8,10 +8,10 @@ import com.google.android.material.button.MaterialButton
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.R
-import com.on.staccato.presentation.common.InputState
-import com.on.staccato.presentation.common.color.CategoryColor
-import com.on.staccato.presentation.common.photo.PhotosUiModel
+import com.on.staccato.presentation.color.CategoryColor
+import com.on.staccato.presentation.common.input.InputState
 import com.on.staccato.presentation.mapper.toInputState
+import com.on.staccato.presentation.photo.PhotosUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 
