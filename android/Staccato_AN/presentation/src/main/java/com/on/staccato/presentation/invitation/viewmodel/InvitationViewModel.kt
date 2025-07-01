@@ -20,7 +20,6 @@ import com.on.staccato.presentation.invitation.model.InvitationDialogState.None
 import com.on.staccato.presentation.invitation.model.InvitationDialogState.Reject
 import com.on.staccato.presentation.invitation.model.ReceivedInvitationUiModel
 import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
-import com.on.staccato.presentation.invitation.model.ToastMessage.FromResource
 import com.on.staccato.presentation.mapper.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
