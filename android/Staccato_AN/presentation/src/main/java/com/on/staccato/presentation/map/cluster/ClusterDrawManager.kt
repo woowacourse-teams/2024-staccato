@@ -36,8 +36,7 @@ class ClusterDrawManager
             }
 
         private fun Canvas.drawClusterBackground(clusterColor: ClusterColor) {
-            val innerRadiusRatio = calculateInnerRadiusRatio()
-            val innerRadius = OUTER_RADIUS * innerRadiusRatio
+            val innerRadius = OUTER_RADIUS * INNER_RADIUS_RATIO
             val outerPaint: Paint = createBackgroundPaint(clusterColor.outerCircle)
             val innerPaint: Paint = createBackgroundPaint(clusterColor.innerCircle)
 
@@ -69,8 +68,6 @@ class ClusterDrawManager
                 isAntiAlias = true
             }
 
-        private fun calculateInnerRadiusRatio() = (PI * INNER_RADIUS * INNER_RADIUS) / (PI * OUTER_RADIUS * OUTER_RADIUS)
-
         companion object {
             private val CLUSTER_SMALL = 2..9
             private val CLUSTER_MEDIUM = 10..99
@@ -78,5 +75,6 @@ class ClusterDrawManager
             private const val OUTER_RADIUS = BITMAP_SIZE / 2.0f
             private const val INNER_RADIUS = 73
             private const val PI = 3.14f
+            private const val INNER_RADIUS_RATIO = (PI * INNER_RADIUS * INNER_RADIUS) / (PI * OUTER_RADIUS * OUTER_RADIUS)
         }
     }
