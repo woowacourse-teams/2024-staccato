@@ -278,7 +278,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun ClusterManager<StaccatoMarkerUiModel>.setup(googleMap: GoogleMap) {
         renderer = createStaccatoMarkerClusterRenderer(googleMap)
-        onClickedClustered()
+        onClusterClicked()
         googleMap.setOnCameraIdleListener(clusterManager)
     }
 
@@ -290,7 +290,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             clusterDrawManager = clusterDrawManager,
         )
 
-    private fun ClusterManager<StaccatoMarkerUiModel>.onClickedClustered() {
+    private fun ClusterManager<StaccatoMarkerUiModel>.onClusterClicked() {
         setOnClusterClickListener {
             mapsViewModel.switchClusterMode(
                 isClusterMode = true,
