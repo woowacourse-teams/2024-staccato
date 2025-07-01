@@ -22,8 +22,8 @@ class ClusterDrawManager
             val canvas = Canvas(bitmap)
             val clusterColor: ClusterColor = getClusterColor(staccatoCount)
 
-            drawClusterBackground(clusterColor, canvas)
-            drawStaccatoCount(canvas, staccatoCount)
+            canvas.drawClusterBackground(clusterColor)
+            canvas.drawStaccatoCount(staccatoCount)
 
             return BitmapDescriptorFactory.fromBitmap(bitmap)
         }
@@ -35,26 +35,20 @@ class ClusterDrawManager
                 else -> ClusterColor.INDIGO
             }
 
-        private fun drawClusterBackground(
-            clusterColor: ClusterColor,
-            canvas: Canvas,
-        ) {
+        private fun Canvas.drawClusterBackground(clusterColor: ClusterColor) {
             val innerRadiusRatio = calculateInnerRadiusRatio()
             val innerRadius = OUTER_RADIUS * innerRadiusRatio
             val outerPaint: Paint = createBackgroundPaint(clusterColor.outerCircle)
             val innerPaint: Paint = createBackgroundPaint(clusterColor.innerCircle)
 
-            canvas.drawCircle(OUTER_RADIUS, OUTER_RADIUS, OUTER_RADIUS, outerPaint)
-            canvas.drawCircle(OUTER_RADIUS, OUTER_RADIUS, innerRadius, innerPaint)
+            drawCircle(OUTER_RADIUS, OUTER_RADIUS, OUTER_RADIUS, outerPaint)
+            drawCircle(OUTER_RADIUS, OUTER_RADIUS, innerRadius, innerPaint)
         }
 
-        private fun drawStaccatoCount(
-            canvas: Canvas,
-            staccatoCount: Int,
-        ) {
+        private fun Canvas.drawStaccatoCount(staccatoCount: Int) {
             val textPaint = createTextPaint()
             val textY = (OUTER_RADIUS - (textPaint.descent() + textPaint.ascent()) / 2)
-            canvas.drawText(context.getString(R.string.cluster_staccato_count, staccatoCount), OUTER_RADIUS, textY, textPaint)
+            drawText(context.getString(R.string.cluster_staccato_count, staccatoCount), OUTER_RADIUS, textY, textPaint)
         }
 
         private fun createBackgroundPaint(
