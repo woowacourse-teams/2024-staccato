@@ -12,8 +12,10 @@ import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.domain.repository.StaccatoRepository
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoIndex
 import com.on.staccato.presentation.mapper.toStaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
@@ -41,11 +43,8 @@ class StaccatoViewModel
         private val _isDeleted = MutableSingleLiveData(false)
         val isDeleted: SingleLiveData<Boolean> get() = _isDeleted
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String> get() = _errorMessage
-
-        private val _exceptionMessageId: MutableSingleLiveData<Int> = MutableSingleLiveData()
-        val exceptionMessageId: SingleLiveData<Int> get() = _exceptionMessageId
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
 
         private val _shareEvent = MutableSingleLiveData<StaccatoShareEvent>()
         val shareEvent: SingleLiveData<StaccatoShareEvent> get() = _shareEvent
@@ -127,11 +126,11 @@ class StaccatoViewModel
             }
         }
 
-        private fun handleServerError(errorMessage: String) {
-            _errorMessage.postValue(errorMessage)
+        private fun handleServerError(message: String) {
+            _messageEvent.setValue(convertMessageEvent(message))
         }
 
-        private fun handleException(state: ExceptionType) {
-            _exceptionMessageId.postValue(state.toMessageId())
+        private fun handleException(exceptionType: ExceptionType) {
+            _messageEvent.setValue(convertMessageEvent(exceptionType.toMessageId()))
         }
     }

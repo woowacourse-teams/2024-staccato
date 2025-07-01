@@ -13,8 +13,10 @@ import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.CommentRepository
 import com.on.staccato.domain.repository.MemberRepository
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.convertMessageEvent
 import com.on.staccato.presentation.mapper.toCommentUiModel
 import com.on.staccato.toMessageId
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,13 +46,9 @@ class StaccatoCommentsViewModel
         val isSendingSuccess: SingleLiveData<Boolean>
             get() = _isSendingSuccess
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String>
-            get() = _errorMessage
-
-        private val _exceptionMessage = MutableSingleLiveData<Int>()
-        val exceptionMessage: SingleLiveData<Int>
-            get() = _exceptionMessage
+        private val _messageEvent = MutableSingleLiveData<MessageEvent>()
+        val messageEvent: SingleLiveData<MessageEvent>
+            get() = _messageEvent
 
         private var staccatoId: Long = STACCATO_DEFAULT_ID
 
@@ -130,11 +128,11 @@ class StaccatoCommentsViewModel
         }
 
         private fun handleServerError(message: String) {
-            _errorMessage.postValue(message)
+            _messageEvent.setValue(convertMessageEvent(message))
         }
 
-        private fun handleException(state: ExceptionType) {
-            _exceptionMessage.postValue(state.toMessageId())
+        private fun handleException(exceptionType: ExceptionType) {
+            _messageEvent.setValue(convertMessageEvent(exceptionType.toMessageId()))
         }
 
         companion object {

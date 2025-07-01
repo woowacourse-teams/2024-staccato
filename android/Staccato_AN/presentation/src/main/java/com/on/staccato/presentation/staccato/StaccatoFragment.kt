@@ -13,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
+import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.ShareManager
 import com.on.staccato.presentation.common.clipboard.ClipboardHelper
 import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoHandler
@@ -93,8 +94,8 @@ class StaccatoFragment :
         observeStaccatoViewModel()
         observeCommentsViewModel()
         setStaccatoFeelingFragment(savedInstanceState)
-        showErrorToast()
-        showExceptionSnackBar()
+        observeCommentMessageEvent()
+        observeMessageEvent()
         logAccess()
     }
 
@@ -304,28 +305,38 @@ class StaccatoFragment :
             .commit()
     }
 
-    private fun showErrorToast() {
-        staccatoViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
-            showToast(message)
-            findNavController().popBackStack()
-        }
-        commentsViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
-            showToast(message)
-        }
-        commentsViewModel.exceptionMessage.observe(viewLifecycleOwner) { messageId ->
-            showToast(getString(messageId))
+    private fun observeCommentMessageEvent() {
+        commentsViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
+            showToast(
+                when (event) {
+                    is MessageEvent.FromResource -> getString(event.messageId)
+                    is MessageEvent.Plain -> event.message
+                },
+            )
         }
     }
 
-    private fun showExceptionSnackBar() {
-        staccatoViewModel.exceptionMessageId.observe(viewLifecycleOwner) { messageId ->
-            view?.showSnackBarWithAction(
-                message = getString(messageId),
-                actionLabel = R.string.all_retry,
-                onAction = ::onRetryAction,
-                Snackbar.LENGTH_INDEFINITE,
-            )
+    private fun observeMessageEvent() {
+        staccatoViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is MessageEvent.FromResource -> {
+                    handleMessageEventWithRetryAction(event)
+                }
+                is MessageEvent.Plain -> {
+                    showToast(event.message)
+                    findNavController().popBackStack()
+                }
+            }
         }
+    }
+
+    private fun handleMessageEventWithRetryAction(event: MessageEvent.FromResource) {
+        view?.showSnackBarWithAction(
+            message = getString(event.messageId),
+            actionLabel = R.string.all_retry,
+            onAction = ::onRetryAction,
+            Snackbar.LENGTH_INDEFINITE,
+        )
     }
 
     private fun onRetryAction() {
