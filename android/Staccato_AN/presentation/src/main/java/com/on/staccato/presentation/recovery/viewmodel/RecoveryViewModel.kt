@@ -49,8 +49,8 @@ class RecoveryViewModel
             viewModelScope.launch {
                 repository.fetchTokenWithRecoveryCode(code)
                     .onSuccess { updateIsRecoverySuccess() }
-                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -58,7 +58,7 @@ class RecoveryViewModel
             _isRecoverySuccess.postValue(true)
         }
 
-        private fun changeMessageEvent(messageEvent: MessageEvent) {
+        private fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.setValue(messageEvent)
         }
     }

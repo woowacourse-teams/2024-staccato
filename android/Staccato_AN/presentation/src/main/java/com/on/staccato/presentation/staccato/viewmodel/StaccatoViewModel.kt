@@ -53,7 +53,7 @@ class StaccatoViewModel
         fun createStaccatoShareLink() {
             val staccatoId = staccatoDetail.value?.id
             if (staccatoId == null) {
-                handleMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN))
+                emitMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN))
                 return
             }
             getUserNickname(staccatoId)
@@ -67,7 +67,7 @@ class StaccatoViewModel
             viewModelScope.launch {
                 memberRepository.getNickname()
                     .onSuccess { shareStaccato(staccatoId, it) }
-                    .onFailure { handleMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN)) }
+                    .onFailure { emitMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN)) }
             }
         }
 
@@ -79,8 +79,8 @@ class StaccatoViewModel
                 .onSuccess {
                     postShareEvent(nickName, it)
                 }
-                .onException { handleMessageEvent(MessageEvent.from(it)) }
-                .onServerError { handleMessageEvent(MessageEvent.from(it)) }
+                .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
+                .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
         }
 
         private fun postShareEvent(
@@ -107,8 +107,8 @@ class StaccatoViewModel
                     .onSuccess {
                         _isDeleted.postValue(true)
                     }
-                    .onException { handleMessageEvent(MessageEvent.from(it)) }
-                    .onServerError { handleMessageEvent(MessageEvent.from(it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
             }
 
         private fun fetchStaccatoData(staccatoId: Long) {
@@ -118,12 +118,12 @@ class StaccatoViewModel
                         _staccatoDetail.value = staccato.toStaccatoDetailUiModel()
                         _feeling.value = staccato.feeling
                     }
-                    .onException { handleMessageEvent(MessageEvent.from(it)) }
-                    .onServerError { handleMessageEvent(MessageEvent.from(it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
             }
         }
 
-        private fun handleMessageEvent(messageEvent: MessageEvent) {
+        private fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.setValue(messageEvent)
         }
     }

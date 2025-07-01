@@ -55,7 +55,7 @@ class MyPageViewModel
             if (memberProfile != null) {
                 _uuidCode.setValue(memberProfile.uuidCode)
             } else {
-                changeMessageEvent(MessageEvent.from(message = ERROR_NO_MEMBER_PROFILE))
+                emitMessageEvent(MessageEvent.from(message = ERROR_NO_MEMBER_PROFILE))
             }
         }
 
@@ -65,8 +65,8 @@ class MyPageViewModel
                     .onSuccess {
                         _memberProfile.value = memberProfile.value?.copy(profileImageUrl = it)
                         hasProfileUpdated = true
-                    }.onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    }.onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -74,8 +74,8 @@ class MyPageViewModel
             viewModelScope.launch {
                 myPageRepository.getMemberProfile()
                     .onSuccess { _memberProfile.value = it }
-                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -83,8 +83,8 @@ class MyPageViewModel
             viewModelScope.launch {
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
-                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -92,7 +92,7 @@ class MyPageViewModel
             hasTimelineUpdated = true
         }
 
-        private fun changeMessageEvent(messageEvent: MessageEvent) {
+        private fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.setValue(messageEvent)
         }
 

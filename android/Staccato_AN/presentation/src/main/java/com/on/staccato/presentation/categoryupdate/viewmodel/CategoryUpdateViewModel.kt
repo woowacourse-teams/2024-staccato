@@ -85,7 +85,7 @@ class CategoryUpdateViewModel
                 val result = categoryRepository.getCategory(categoryId)
                 result
                     .onSuccess(::initializeCategory)
-                    .onServerError(::updateMessageEvent)
+                    .onServerError(::emitMessageEvent)
                     .onException(::handleInitializeCategoryException)
             }
         }
@@ -195,7 +195,7 @@ class CategoryUpdateViewModel
                     imageRepository.convertImageFileToUrl(file)
                 result
                     .onSuccess(::setThumbnailUrl)
-                    .onServerError(::updateMessageEvent)
+                    .onServerError(::emitMessageEvent)
                     .onException { state ->
                         handlePhotoException(state, uri, file)
                     }
@@ -207,7 +207,7 @@ class CategoryUpdateViewModel
             _isPhotoPosting.value = false
         }
 
-        private fun updateMessageEvent(message: String) {
+        private fun emitMessageEvent(message: String) {
             _messageEvent.setValue(MessageEvent.from(message))
         }
 
@@ -227,7 +227,7 @@ class CategoryUpdateViewModel
 
         private fun handleUpdateError(message: String) {
             _isPosting.value = false
-            updateMessageEvent(message)
+            emitMessageEvent(message)
         }
 
         private fun handleUpdateException(type: ExceptionType) {

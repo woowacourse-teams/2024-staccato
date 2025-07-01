@@ -106,7 +106,7 @@ class TimelineFragment :
         timelineViewModel.messageEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is MessageEvent.Plain -> showToast(event.message)
-                is MessageEvent.FromResource -> sharedViewModel.updateMessageEvent(event)
+                is MessageEvent.FromResource -> sharedViewModel.emitMessageEvent(event)
             }
         }
     }

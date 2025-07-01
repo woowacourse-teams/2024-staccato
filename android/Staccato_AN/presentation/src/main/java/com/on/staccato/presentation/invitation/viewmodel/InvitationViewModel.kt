@@ -61,8 +61,8 @@ class InvitationViewModel
                 val result = invitationRepository.getReceivedInvitations()
                 result
                     .onSuccess(::updateReceivedInvitations)
-                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -75,8 +75,8 @@ class InvitationViewModel
                         updateHasInvitationAccepted()
                         _messageEvent.emit(MessageEvent.FromResource(R.string.invitation_management_accept_success))
                     }
-                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -93,8 +93,8 @@ class InvitationViewModel
                 val result = invitationRepository.getSentInvitations()
                 result
                     .onSuccess(::updateSentInvitations)
-                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -124,8 +124,8 @@ class InvitationViewModel
                 val result = invitationRepository.rejectInvitation(invitationId)
                 result
                     .onSuccess { fetchReceivedInvitations() }
-                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -139,12 +139,12 @@ class InvitationViewModel
                 val result = invitationRepository.cancelInvitation(invitationId)
                 result
                     .onSuccess { fetchSentInvitations() }
-                    .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
-        private suspend fun changeMessageEvent(messageEvent: MessageEvent) {
+        private suspend fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.emit(messageEvent)
         }
     }

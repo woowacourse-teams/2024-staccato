@@ -69,8 +69,8 @@ class TimelineViewModel
                     sort = sortType.value?.name,
                     filter = filterType.value?.name,
                 ).onSuccess(::setTimelineUiModels)
-                    .onServerError { updateMessageEvent(MessageEvent.from(it)) }
-                    .onException { updateMessageEvent(MessageEvent.from(it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -89,7 +89,7 @@ class TimelineViewModel
             _isTimelineLoading.value = false
         }
 
-        private fun updateMessageEvent(messageEvent: MessageEvent) {
+        private fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.setValue(messageEvent)
         }
     }

@@ -98,8 +98,8 @@ class SharedViewModel
             viewModelScope.launch {
                 myPageRepository.getMemberProfile()
                     .onSuccess(::setMemberProfile)
-                    .onServerError { updateMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { updateMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -107,8 +107,8 @@ class SharedViewModel
             viewModelScope.launch {
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
-                    .onServerError { updateMessageEvent(MessageEvent.from(message = it)) }
-                    .onException { updateMessageEvent(MessageEvent.from(exceptionType = it)) }
+                    .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                    .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
             }
         }
 
@@ -175,7 +175,7 @@ class SharedViewModel
             isDragging.value = state
         }
 
-        fun updateMessageEvent(messageEvent: MessageEvent) {
+        fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.setValue(messageEvent)
         }
 

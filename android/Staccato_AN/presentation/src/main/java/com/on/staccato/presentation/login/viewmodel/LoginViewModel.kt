@@ -53,8 +53,8 @@ class LoginViewModel
                 viewModelScope.launch {
                     loginRepository.loginWithNickname(nickname.value)
                         .onSuccess { updateIsLoginSuccess() }
-                        .onServerError { changeMessageEvent(MessageEvent.from(message = it)) }
-                        .onException { changeMessageEvent(MessageEvent.from(exceptionType = it)) }
+                        .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
+                        .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
                 }
             }
         }
@@ -69,7 +69,7 @@ class LoginViewModel
             viewModelScope.launch {
                 loginRepository.getToken()
                     .onSuccess { token = it }
-                    .onFailure { changeMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN)) }
+                    .onFailure { emitMessageEvent(MessageEvent.from(ExceptionType.UNKNOWN)) }
                 _isLoggedIn.setValue(!token.isNullOrEmpty())
             }
         }
@@ -78,7 +78,7 @@ class LoginViewModel
             _isLoginSuccess.postValue(true)
         }
 
-        private fun changeMessageEvent(messageEvent: MessageEvent) {
+        private fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.setValue(messageEvent)
         }
     }

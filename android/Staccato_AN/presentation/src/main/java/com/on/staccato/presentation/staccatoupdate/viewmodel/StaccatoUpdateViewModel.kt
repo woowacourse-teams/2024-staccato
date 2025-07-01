@@ -112,7 +112,7 @@ class StaccatoUpdateViewModel
 
         override fun onAddClicked() {
             if ((currentPhotos.value?.size ?: 0) == MAX_PHOTO_NUMBER) {
-                updateMessageEvent(MessageEvent.from(StaccatoCreationViewModel.MAX_PHOTO_NUMBER_MESSAGE))
+                emitMessageEvent(MessageEvent.from(StaccatoCreationViewModel.MAX_PHOTO_NUMBER_MESSAGE))
             } else {
                 _isAddPhotoClicked.setValue(true)
             }
@@ -227,8 +227,8 @@ class StaccatoUpdateViewModel
                     categoryId = selectedCategory.value?.categoryId ?: return@launch requireValues(),
                     staccatoImageUrls = currentPhotos.value?.imageUrls() ?: emptyList(),
                 ).onSuccess { _isUpdateCompleted.value = true }
-                    .onException { updateError(StaccatoUpdate(MessageEvent.from(it))) }
-                    .onServerError { updateError(StaccatoUpdate(MessageEvent.from(it))) }
+                    .onException { updateError(StaccatoUpdate(MessageEvent.from(exceptionType = it))) }
+                    .onServerError { updateError(StaccatoUpdate(MessageEvent.from(message = it))) }
                 _isPosting.value = false
             }
         }
@@ -236,8 +236,8 @@ class StaccatoUpdateViewModel
         private suspend fun fetchCategoryCandidates() {
             categoryRepository.getCategoryCandidates()
                 .onSuccess { _allCategories.value = it }
-                .onException { updateError(AllCandidates(MessageEvent.from(it))) }
-                .onServerError { updateError(AllCandidates(MessageEvent.from(it))) }
+                .onException { updateError(AllCandidates(MessageEvent.from(exceptionType = it))) }
+                .onServerError { updateError(AllCandidates(MessageEvent.from(message = it))) }
         }
 
         private suspend fun fetchStaccatoBy(staccatoId: Long) {
@@ -248,8 +248,8 @@ class StaccatoUpdateViewModel
                     selectVisitedAt(staccato.visitedAt)
                     initializePlaceBy(staccato)
                     initializeSelectedCategory(staccato)
-                }.onException { updateError(StaccatoInitialize(MessageEvent.from(it))) }
-                .onServerError { updateError(StaccatoInitialize(MessageEvent.from(it))) }
+                }.onException { updateError(StaccatoInitialize(MessageEvent.from(exceptionType = it))) }
+                .onServerError { updateError(StaccatoInitialize(MessageEvent.from(message = it))) }
         }
 
         private fun initializePlaceBy(staccato: Staccato) {
@@ -284,8 +284,8 @@ class StaccatoUpdateViewModel
         ) = viewModelScope.launch(buildCoroutineExceptionHandler(photo)) {
             imageRepository.convertImageFileToUrl(file)
                 .onSuccess { updatePhotoWithUrl(photo, it) }
-                .onException { if (isActive) handlePhotoError(photo.toRetry(), MessageEvent.from(it)) }
-                .onServerError { if (isActive) handlePhotoError(photo.toFail(), MessageEvent.from(it)) }
+                .onException { if (isActive) handlePhotoError(photo.toRetry(), MessageEvent.from(exceptionType = it)) }
+                .onServerError { if (isActive) handlePhotoError(photo.toFail(), MessageEvent.from(message = it)) }
         }
 
         private fun buildCoroutineExceptionHandler(photo: PhotoUiModel): CoroutineExceptionHandler {
@@ -312,15 +312,15 @@ class StaccatoUpdateViewModel
             messageEvent: MessageEvent,
         ) {
             _currentPhotos.value = currentPhotos.value?.updatePhoto(photo)
-            updateMessageEvent(messageEvent)
+            emitMessageEvent(messageEvent)
         }
 
         private fun requireValues() {
             _isPosting.value = false
-            updateMessageEvent(MessageEvent.from(ExceptionType.REQUIRED_VALUES))
+            emitMessageEvent(MessageEvent.from(ExceptionType.REQUIRED_VALUES))
         }
 
-        private fun updateMessageEvent(messageEvent: MessageEvent) {
+        private fun emitMessageEvent(messageEvent: MessageEvent) {
             _messageEvent.setValue(messageEvent)
         }
     }

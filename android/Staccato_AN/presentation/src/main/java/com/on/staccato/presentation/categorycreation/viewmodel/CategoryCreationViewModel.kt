@@ -152,7 +152,7 @@ class CategoryCreationViewModel
                     imageRepository.convertImageFileToUrl(file)
                 result
                     .onSuccess(::setThumbnailUrl)
-                    .onServerError(::updateMessageEvent)
+                    .onServerError(::emitMessageEvent)
                     .onException { type ->
                         handlePhotoException(type, uri, file)
                     }
@@ -188,7 +188,7 @@ class CategoryCreationViewModel
             }
         }
 
-        private fun updateMessageEvent(message: String) {
+        private fun emitMessageEvent(message: String) {
             _messageEvent.setValue(MessageEvent.from(message))
         }
 
@@ -204,7 +204,7 @@ class CategoryCreationViewModel
 
         private fun updateCreateServerError(message: String) {
             _isPosting.value = false
-            updateMessageEvent(message)
+            emitMessageEvent(message)
         }
 
         private fun handleCreateException(type: ExceptionType) {
