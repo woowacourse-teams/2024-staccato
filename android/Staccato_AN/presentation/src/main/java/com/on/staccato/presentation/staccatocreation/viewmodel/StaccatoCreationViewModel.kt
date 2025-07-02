@@ -223,7 +223,7 @@ class StaccatoCreationViewModel
             _pendingPhotos.setValue(updatedPhotos.getLoadingPhotosWithoutUrls())
         }
 
-        fun setUrisWithNewOrder(list: List<PhotoUiModel>) {
+        fun updatePhotosWithNewOrder(list: List<PhotoUiModel>) {
             _currentPhotos.value = PhotosUiModel(list)
         }
 
