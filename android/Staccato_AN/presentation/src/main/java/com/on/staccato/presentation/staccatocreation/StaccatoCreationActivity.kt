@@ -234,7 +234,7 @@ class StaccatoCreationActivity :
 
     private fun initAdapter() {
         photoAttachAdapter =
-            PhotoAttachAdapter(viewModel) { viewModel.setUrisWithNewOrder(it) }
+            PhotoAttachAdapter(viewModel) { viewModel.updatePhotosWithNewOrder(it) }
         binding.rvPhotoAttach.adapter = photoAttachAdapter
     }
 
