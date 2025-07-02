@@ -127,7 +127,11 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Unit Test
-        run: ./gradlew testDebugUnitTest --stacktrace --no-build-cache --no-parallel
+        run: ./gradlew testDebugUnitTest --stacktrace --no-build-cache --no-parallel --info
+
+      - name: Run Unit Test(:domain)
+        run: ./gradlew :domain:test --stacktrace --no-build-cache --no-parallel --info
+
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
