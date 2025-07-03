@@ -7,11 +7,10 @@ import com.google.firebase.messaging.RemoteMessage
 import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.notification.model.NotificationType
 import com.on.staccato.presentation.notification.model.StaccatoNotification
+import com.on.staccato.util.launchOnce
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,12 +22,8 @@ class StaccatoFirebaseMessagingService :
     @Inject
     lateinit var staccatoNotificationManager: StaccatoNotificationManager
 
-    private var _job: Job? = null
-    private val job get() = requireNotNull(_job)
-
     override fun onNewToken(token: String) {
-        _job = SupervisorJob()
-        CoroutineScope(job).launch {
+        CoroutineScope(SupervisorJob()).launchOnce {
             notificationRepository.updateFcmToken(token)
         }
     }
@@ -51,11 +46,6 @@ class StaccatoFirebaseMessagingService :
         val type = NotificationType.from(typeValue) ?: return
         val staccatoNotification = StaccatoNotification.from(type, data) ?: return
         staccatoNotificationManager.notify(staccatoNotification)
-    }
-
-    override fun onDestroy() {
-        _job?.cancel()
-        super.onDestroy()
     }
 
     companion object {
