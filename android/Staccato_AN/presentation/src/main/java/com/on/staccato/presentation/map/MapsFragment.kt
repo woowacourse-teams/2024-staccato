@@ -3,7 +3,6 @@ package com.on.staccato.presentation.map
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -325,7 +324,6 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private fun observeHomeRefreshEvent() {
         sharedViewModel.homeRefresh.observe(viewLifecycleOwner) {
             if (it is HomeRefresh.All || it is HomeRefresh.Map) {
-                Log.d("hye", "지도 화면: $it")
                 mapsViewModel.loadStaccatoMarkers()
             }
         }

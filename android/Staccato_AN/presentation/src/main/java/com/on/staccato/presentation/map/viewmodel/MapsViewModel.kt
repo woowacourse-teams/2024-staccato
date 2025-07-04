@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.map.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -94,7 +93,6 @@ class MapsViewModel
         }
 
         private fun updateStaccatoMarkers(markers: List<StaccatoMarker>) {
-            Log.d("hye", "지도 뷰모델: 마커 로딩")
             _staccatoMarkers.value = markers.map { it.toUiModel() }
         }
 

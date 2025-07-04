@@ -1,7 +1,6 @@
 package com.on.staccato.presentation.category
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
@@ -103,7 +102,6 @@ class CategoryFragment :
     private fun handleCategoryState() {
         when {
             isCategoryUpdated -> {
-                Log.d("hye", "카테고리 업데이트 isCategoryUpdated")
                 viewModel.updateCategoryId(categoryId)
                 sharedViewModel.updateHomeRefresh(HomeRefresh.All)
             }
@@ -173,12 +171,6 @@ class CategoryFragment :
         }
     }
 
-    override fun onCategoryRefreshClicked() {
-        // TODO: 스타카토 목록 동일하면 갱신하지 않도록 리팩터링
-        Log.d("hye", "카테고리 refresh 클릭됨")
-        sharedViewModel.updateCategoryRefresh(CategoryRefresh.All)
-    }
-
     private fun navigateToStaccatoCreation(
         category: CategoryUiModel,
         isPermissionCanceled: Boolean,
@@ -200,6 +192,9 @@ class CategoryFragment :
         binding.categoryHandler = this
         binding.cvMemberInvite.setContent { InviteScreen() }
         binding.cvCategoryExitDialog.setContent { ExitDialogScreen() }
+        binding.btnCategoryRefreshStaccatos.setDebounceClickListener(interval = 3000L) {
+            sharedViewModel.updateCategoryRefresh(CategoryRefresh.All)
+        }
         observeIsPermissionCanceled()
     }
 
@@ -238,7 +233,6 @@ class CategoryFragment :
     private fun observeCategoryRefresh() {
         sharedViewModel.categoryRefresh.observe(viewLifecycleOwner) {
             if (it is CategoryRefresh.All) {
-                Log.d("hye", "카테고리 프래그먼트 $it")
                 viewModel.loadCategory(categoryId)
                 sharedViewModel.updateCategoryRefresh(CategoryRefresh.None)
             }

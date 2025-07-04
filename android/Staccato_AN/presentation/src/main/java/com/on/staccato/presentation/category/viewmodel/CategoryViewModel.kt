@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.category.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -134,7 +133,6 @@ class CategoryViewModel
 
         fun updateCategoryId(id: Long) {
             if (categoryId != id) {
-                Log.d("hye", "카테고리 업데이트 updateCategoryId")
                 categoryId = id
                 loadCategory(id)
             }
@@ -146,10 +144,7 @@ class CategoryViewModel
             } else {
                 viewModelScope.launch {
                     categoryRepository.getCategory(id)
-                        .onSuccess {
-                            Log.d("hye", "카테고리 뷰 모델: 카테고리 로드")
-                            updateCategory(it)
-                        }
+                        .onSuccess { updateCategory(it) }
                         .onServerError { emitMessageEvent(MessageEvent.from(message = it)) }
                         .onException { emitMessageEvent(MessageEvent.from(exceptionType = it)) }
                 }

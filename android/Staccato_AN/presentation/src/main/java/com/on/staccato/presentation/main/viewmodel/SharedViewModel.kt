@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.main.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -125,12 +124,10 @@ class SharedViewModel
         }
 
         fun updateHomeRefresh(state: HomeRefresh) {
-            Log.d("hye", "공유 뷰모델: HomeRefresh 상태 변경 $state")
             _homeRefresh.value = state
         }
 
         fun updateCategoryRefresh(state: CategoryRefresh) {
-            Log.d("hye", "공유 뷰모델: CategoryRefresh 상태 변경 $state")
             _categoryRefresh.setValue(state)
         }
 
