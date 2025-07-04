@@ -12,18 +12,21 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.map.model.ClusterColor
+import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
 class ClusterDrawManager
     @Inject
-    constructor(private val context: Context) {
+    constructor(
+        @ActivityContext private val context: Context,
+    ) {
         fun generateClusterIcon(staccatoCount: Int): BitmapDescriptor {
             val bitmap: Bitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
             val clusterColor: ClusterColor = getClusterColor(staccatoCount)
 
-            drawClusterBackground(clusterColor, canvas)
-            drawStaccatoCount(canvas, staccatoCount)
+            canvas.drawClusterBackground(clusterColor)
+            canvas.drawStaccatoCount(staccatoCount)
 
             return BitmapDescriptorFactory.fromBitmap(bitmap)
         }
@@ -35,26 +38,19 @@ class ClusterDrawManager
                 else -> ClusterColor.INDIGO
             }
 
-        private fun drawClusterBackground(
-            clusterColor: ClusterColor,
-            canvas: Canvas,
-        ) {
-            val innerRadiusRatio = calculateInnerRadiusRatio()
-            val innerRadius = OUTER_RADIUS * innerRadiusRatio
+        private fun Canvas.drawClusterBackground(clusterColor: ClusterColor) {
+            val innerRadius = OUTER_RADIUS * INNER_RADIUS_RATIO
             val outerPaint: Paint = createBackgroundPaint(clusterColor.outerCircle)
             val innerPaint: Paint = createBackgroundPaint(clusterColor.innerCircle)
 
-            canvas.drawCircle(OUTER_RADIUS, OUTER_RADIUS, OUTER_RADIUS, outerPaint)
-            canvas.drawCircle(OUTER_RADIUS, OUTER_RADIUS, innerRadius, innerPaint)
+            drawCircle(OUTER_RADIUS, OUTER_RADIUS, OUTER_RADIUS, outerPaint)
+            drawCircle(OUTER_RADIUS, OUTER_RADIUS, innerRadius, innerPaint)
         }
 
-        private fun drawStaccatoCount(
-            canvas: Canvas,
-            staccatoCount: Int,
-        ) {
+        private fun Canvas.drawStaccatoCount(staccatoCount: Int) {
             val textPaint = createTextPaint()
             val textY = (OUTER_RADIUS - (textPaint.descent() + textPaint.ascent()) / 2)
-            canvas.drawText(context.getString(R.string.cluster_staccato_count, staccatoCount), OUTER_RADIUS, textY, textPaint)
+            drawText(context.getString(R.string.cluster_staccato_count, staccatoCount), OUTER_RADIUS, textY, textPaint)
         }
 
         private fun createBackgroundPaint(
@@ -75,8 +71,6 @@ class ClusterDrawManager
                 isAntiAlias = true
             }
 
-        private fun calculateInnerRadiusRatio() = (PI * INNER_RADIUS * INNER_RADIUS) / (PI * OUTER_RADIUS * OUTER_RADIUS)
-
         companion object {
             private val CLUSTER_SMALL = 2..9
             private val CLUSTER_MEDIUM = 10..99
@@ -84,5 +78,6 @@ class ClusterDrawManager
             private const val OUTER_RADIUS = BITMAP_SIZE / 2.0f
             private const val INNER_RADIUS = 73
             private const val PI = 3.14f
+            private const val INNER_RADIUS_RATIO = (PI * INNER_RADIUS * INNER_RADIUS) / (PI * OUTER_RADIUS * OUTER_RADIUS)
         }
     }

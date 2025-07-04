@@ -21,6 +21,7 @@ import com.on.staccato.presentation.category.adapter.StaccatosAdapter
 import com.on.staccato.presentation.category.component.ExitDialogScreen
 import com.on.staccato.presentation.category.invite.InviteScreen
 import com.on.staccato.presentation.category.model.CategoryEvent
+import com.on.staccato.presentation.category.model.CategoryRefresh
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
@@ -32,6 +33,7 @@ import com.on.staccato.presentation.common.dialog.DeleteDialogFragment
 import com.on.staccato.presentation.common.dialog.DialogHandler
 import com.on.staccato.presentation.common.toolbar.ToolbarHandler
 import com.on.staccato.presentation.databinding.FragmentCategoryBinding
+import com.on.staccato.presentation.main.HomeRefresh
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
@@ -86,19 +88,33 @@ class CategoryFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        viewModel.updateCategoryId(categoryId)
-
-        if (isCategoryCreated || isCategoryUpdated) sharedViewModel.updateIsTimelineUpdated(true)
-        if (isCategoryUpdated) viewModel.loadCategory(categoryId)
-
         initBinding()
         initToolbar()
         initAdapter()
         observeCategoryInformation()
-        observeIsStaccatosUpdated()
+        handleCategoryState()
+        observeCategoryRefresh()
         observeCategoryState()
         observeMessageEvent()
         logAccess()
+    }
+
+    private fun handleCategoryState() {
+        when {
+            isCategoryUpdated -> {
+                viewModel.updateCategoryId(categoryId)
+                sharedViewModel.updateHomeRefresh(HomeRefresh.All)
+            }
+
+            isCategoryCreated -> {
+                viewModel.updateCategoryId(categoryId)
+                sharedViewModel.updateHomeRefresh(HomeRefresh.Timeline)
+            }
+
+            else -> {
+                viewModel.updateCategoryId(categoryId)
+            }
+        }
     }
 
     override fun onUpdateClicked() {
@@ -155,12 +171,6 @@ class CategoryFragment :
         }
     }
 
-    override fun onCategoryRefreshClicked() {
-        viewModel.loadCategory(categoryId)
-        // TODO: 스타카토 목록 동일하면 갱신하지 않도록 리팩터링
-        sharedViewModel.updateCategoryRefreshEvent()
-    }
-
     private fun navigateToStaccatoCreation(
         category: CategoryUiModel,
         isPermissionCanceled: Boolean,
@@ -182,6 +192,9 @@ class CategoryFragment :
         binding.categoryHandler = this
         binding.cvMemberInvite.setContent { InviteScreen() }
         binding.cvCategoryExitDialog.setContent { ExitDialogScreen() }
+        binding.btnCategoryRefreshStaccatos.setDebounceClickListener(interval = 3000L) {
+            sharedViewModel.updateCategoryRefresh(CategoryRefresh.All)
+        }
         observeIsPermissionCanceled()
     }
 
@@ -217,11 +230,11 @@ class CategoryFragment :
         }
     }
 
-    private fun observeIsStaccatosUpdated() {
-        sharedViewModel.isStaccatosUpdated.observe(viewLifecycleOwner) { isUpdated ->
-            if (isUpdated) {
+    private fun observeCategoryRefresh() {
+        sharedViewModel.categoryRefresh.observe(viewLifecycleOwner) {
+            if (it is CategoryRefresh.All) {
                 viewModel.loadCategory(categoryId)
-                sharedViewModel.updateIsStaccatosUpdated(false)
+                sharedViewModel.updateCategoryRefresh(CategoryRefresh.None)
             }
         }
     }
@@ -247,7 +260,7 @@ class CategoryFragment :
         when (state) {
             is CategoryEvent.Deleted -> {
                 if (state.success) {
-                    sharedViewModel.updateIsTimelineUpdated(true)
+                    sharedViewModel.updateHomeRefresh(HomeRefresh.All)
                     showToast(getString(R.string.category_delete_complete))
                 } else {
                     showToast(getString(R.string.category_delete_error))
@@ -256,7 +269,7 @@ class CategoryFragment :
             }
 
             is CategoryEvent.Exited -> {
-                sharedViewModel.updateIsTimelineUpdated(true)
+                sharedViewModel.updateHomeRefresh(HomeRefresh.All)
                 showToast(getString(R.string.category_exit_complete))
                 findNavController().popBackStack()
             }

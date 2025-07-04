@@ -409,7 +409,7 @@ class MainActivity :
                 result.data?.let {
                     val hasTimelineUpdated = it.getBooleanExtra(UPDATED_TIMELINE_KEY, false)
                     val hasProfileUpdated = it.getBooleanExtra(UPDATED_PROFILE_KEY, false)
-                    if (hasTimelineUpdated) sharedViewModel.updateIsTimelineUpdated(true)
+                    if (hasTimelineUpdated) sharedViewModel.updateHomeRefresh(HomeRefresh.All)
                     if (hasProfileUpdated) loadMemberProfile()
                 }
             }

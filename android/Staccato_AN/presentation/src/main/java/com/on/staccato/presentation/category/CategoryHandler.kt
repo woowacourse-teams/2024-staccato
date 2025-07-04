@@ -9,6 +9,4 @@ interface CategoryHandler {
         category: CategoryUiModel?,
         isPermissionCanceled: Boolean,
     )
-
-    fun onCategoryRefreshClicked()
 }

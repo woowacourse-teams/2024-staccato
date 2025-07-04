@@ -10,9 +10,11 @@ import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.domain.repository.NotificationRepository
+import com.on.staccato.presentation.category.model.CategoryRefresh
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.event.MutableSingleLiveData
 import com.on.staccato.presentation.common.event.SingleLiveData
+import com.on.staccato.presentation.main.HomeRefresh
 import com.on.staccato.presentation.map.model.LocationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -46,11 +48,11 @@ class SharedViewModel
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile> get() = _memberProfile
 
-        private val _isTimelineUpdated = MutableStateFlow(false)
-        val isTimelineUpdated: StateFlow<Boolean> = _isTimelineUpdated.asStateFlow()
+        private val _homeRefresh = MutableLiveData<HomeRefresh>(HomeRefresh.None)
+        val homeRefresh: LiveData<HomeRefresh> get() = _homeRefresh
 
-        private val _isStaccatosUpdated = MutableLiveData<Boolean>(false)
-        val isStaccatosUpdated: LiveData<Boolean> get() = _isStaccatosUpdated
+        private val _categoryRefresh = MutableSingleLiveData<CategoryRefresh>(CategoryRefresh.None)
+        val categoryRefresh: SingleLiveData<CategoryRefresh> get() = _categoryRefresh
 
         private val _isPermissionCanceled = MutableLiveData(false)
         val isPermissionCanceled: LiveData<Boolean> get() = _isPermissionCanceled
@@ -78,15 +80,8 @@ class SharedViewModel
         private val _currentLocationEvent = MutableSharedFlow<Unit>()
         val currentLocationEvent: SharedFlow<Unit> get() = _currentLocationEvent.asSharedFlow()
 
-        private val _categoryRefreshEvent = MutableSingleLiveData<Boolean>()
-        val categoryRefreshEvent: SingleLiveData<Boolean> get() = _categoryRefreshEvent
-
         private val _messageEvent = MutableSingleLiveData<MessageEvent>()
         val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
-
-        fun updateCategoryRefreshEvent() {
-            _categoryRefreshEvent.setValue(true)
-        }
 
         fun updateCurrentLocationEvent() {
             viewModelScope.launch {
@@ -128,17 +123,12 @@ class SharedViewModel
             _latestIsDraggable.value = _isDraggable.value
         }
 
-        fun updateIsTimelineUpdated(value: Boolean) {
-            viewModelScope.launch {
-                _isTimelineUpdated.emit(value)
-            }
+        fun updateHomeRefresh(state: HomeRefresh) {
+            _homeRefresh.value = state
         }
 
-        fun updateIsStaccatosUpdated(value: Boolean) {
-            viewModelScope.launch {
-                _isTimelineUpdated.emit(true)
-            }
-            _isStaccatosUpdated.value = value
+        fun updateCategoryRefresh(state: CategoryRefresh) {
+            _categoryRefresh.setValue(state)
         }
 
         fun updateIsPermissionCanceled() {
