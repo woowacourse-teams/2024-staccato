@@ -38,7 +38,8 @@ fun StaccatosTopBar(
             imageVector = ImageVector.vectorResource(R.drawable.icon_close),
             contentDescription = stringResource(id = R.string.all_cancel),
             modifier =
-                Modifier.size(12.dp)
+                Modifier
+                    .size(12.dp)
                     .align(Alignment.CenterStart)
                     .clickableWithoutRipple(onClick = onDismissRequest),
             tint = Gray3,

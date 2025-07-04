@@ -30,6 +30,7 @@ import com.on.staccato.presentation.databinding.FragmentMapsBinding
 import com.on.staccato.presentation.location.GPSManager
 import com.on.staccato.presentation.location.LocationDialogFragment.Companion.KEY_HAS_VISITED_SETTINGS
 import com.on.staccato.presentation.location.LocationPermissionManager
+import com.on.staccato.presentation.main.HomeRefresh
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.cluster.ClusterDrawManager
 import com.on.staccato.presentation.map.cluster.StaccatoMarkerClusterRenderer
@@ -104,10 +105,8 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         setupPermissionRequestLauncher()
         registerSettingsResultListener()
         observeStaccatoMarkers()
-        observeUpdatedStaccato()
         observeLocation()
-        observeIsTimelineUpdated()
-        observeCategoryRefreshEvent()
+        observeHomeRefreshEvent()
         observeMessageEvent()
         observeIsRetry()
     }
@@ -115,7 +114,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private fun setupBinding() {
         binding.cvMapsStaccatos.setContent {
             StaccatosScreen(
-                onStaccatoClicked = { onStaccatoClicked(it) },
+                onStaccatoClick = ::onStaccatoClicked,
             )
         }
     }
@@ -278,7 +277,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun ClusterManager<StaccatoMarkerUiModel>.setup(googleMap: GoogleMap) {
         renderer = createStaccatoMarkerClusterRenderer(googleMap)
-        onClickedClustered()
+        onClusterClicked()
         googleMap.setOnCameraIdleListener(clusterManager)
     }
 
@@ -290,7 +289,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             clusterDrawManager = clusterDrawManager,
         )
 
-    private fun ClusterManager<StaccatoMarkerUiModel>.onClickedClustered() {
+    private fun ClusterManager<StaccatoMarkerUiModel>.onClusterClicked() {
         setOnClusterClickListener {
             mapsViewModel.switchClusterMode(
                 isClusterMode = true,
@@ -322,25 +321,11 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         }
     }
 
-    private fun observeUpdatedStaccato() {
-        sharedViewModel.isStaccatosUpdated.observe(viewLifecycleOwner) { isUpdated ->
-            if (isUpdated) mapsViewModel.loadStaccatoMarkers()
-        }
-    }
-
-    private fun observeIsTimelineUpdated() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.isTimelineUpdated.collect { isUpdated ->
-                    if (isUpdated) mapsViewModel.loadStaccatoMarkers()
-                }
+    private fun observeHomeRefreshEvent() {
+        sharedViewModel.homeRefresh.observe(viewLifecycleOwner) {
+            if (it is HomeRefresh.All || it is HomeRefresh.Map) {
+                mapsViewModel.loadStaccatoMarkers()
             }
-        }
-    }
-
-    private fun observeCategoryRefreshEvent() {
-        sharedViewModel.categoryRefreshEvent.observe(viewLifecycleOwner) {
-            mapsViewModel.loadStaccatoMarkers()
         }
     }
 

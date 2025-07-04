@@ -12,11 +12,13 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingFragment
+import com.on.staccato.presentation.category.model.CategoryRefresh
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.clipboard.ClipboardHelper
 import com.on.staccato.presentation.common.dialog.DeleteDialogFragment
 import com.on.staccato.presentation.common.share.ShareManager
 import com.on.staccato.presentation.databinding.FragmentStaccatoBinding
+import com.on.staccato.presentation.main.HomeRefresh
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.photo.originalphoto.OriginalPhotoHandler
@@ -86,7 +88,15 @@ class StaccatoFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        if (isStaccatoCreated || isStaccatoUpdated) sharedViewModel.updateIsStaccatosUpdated(true)
+        if (isStaccatoCreated) {
+            sharedViewModel.updateHomeRefresh(HomeRefresh.All)
+            sharedViewModel.updateCategoryRefresh(CategoryRefresh.All)
+        }
+        if (isStaccatoUpdated) {
+            sharedViewModel.updateHomeRefresh(HomeRefresh.Map)
+            sharedViewModel.updateCategoryRefresh(CategoryRefresh.All)
+        }
+
         setUpBinding()
         setUpComments()
         loadStaccato()
@@ -217,7 +227,8 @@ class StaccatoFragment :
     private fun observeStaccatoDelete() {
         staccatoViewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
             if (isDeleted) {
-                sharedViewModel.updateIsStaccatosUpdated(true)
+                sharedViewModel.updateHomeRefresh(HomeRefresh.All)
+                sharedViewModel.updateCategoryRefresh(CategoryRefresh.All)
                 findNavController().popBackStack()
             }
         }
