@@ -27,8 +27,8 @@ android {
         applicationId = "com.on.staccato"
         minSdk = 26
         targetSdk = 34
-        versionCode = 13
-        versionName = "2.1.0"
+        versionCode = 14
+        versionName = "2.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["runnerBuilder"] =
