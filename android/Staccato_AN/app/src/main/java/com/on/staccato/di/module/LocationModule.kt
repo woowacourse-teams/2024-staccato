@@ -7,7 +7,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.Priority
-import com.on.staccato.presentation.common.location.GPSManager
+import com.on.staccato.presentation.location.GPSManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

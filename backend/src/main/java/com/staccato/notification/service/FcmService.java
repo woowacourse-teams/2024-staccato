@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-import org.hibernate.resource.transaction.LocalSynchronizationException;
 import org.springframework.stereotype.Service;
 
 import com.google.api.core.ApiFuture;
@@ -26,14 +25,12 @@ import com.staccato.notification.service.dto.message.PushMessage;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import software.amazon.awssdk.regions.servicemetadata.ApsServiceMetadata;
 
 @Trace
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class FcmService {
-
     private static final int FCM_MULTICAST_LIMIT = 500;
     private static final String SEND_SUCCESS_LOG = "[FCM][전송 완료] ";
     private static final String SEND_FAIL_LOG = "[FCM][전송 실패] ";
@@ -72,9 +69,8 @@ public class FcmService {
                 .setAndroidConfig(ANDROID_CONFIG)
                 .setApnsConfig(APNS_CONFIG)
                 .addAllTokens(tokens)
-                .putData("title", pushMessage.getTitle())
-                .putData("body", pushMessage.getBody())
-                .putAllData(Objects.requireNonNullElse(pushMessage.toMap(), Map.of()))
+                .setNotification(pushMessage.toNotification())
+                .putAllData(Objects.requireNonNullElse(pushMessage.toData(), Map.of()))
                 .build();
     }
 

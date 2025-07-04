@@ -20,4 +20,8 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Staccato_AN"
+
 include(":app")
+include(":data")
+include(":domain")
+include(":presentation")
