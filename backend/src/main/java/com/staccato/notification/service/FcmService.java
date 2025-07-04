@@ -1,8 +1,12 @@
 package com.staccato.notification.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
+
 import org.springframework.stereotype.Service;
+
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
@@ -10,15 +14,15 @@ import com.google.firebase.messaging.AndroidConfig;
 import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.ApnsConfig;
 import com.google.firebase.messaging.Aps;
-import com.google.firebase.messaging.ApsAlert;
 import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.MessagingErrorCode;
 import com.google.firebase.messaging.MulticastMessage;
-import com.google.firebase.messaging.Notification;
 import com.google.firebase.messaging.SendResponse;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.notification.repository.NotificationTokenRepository;
+import com.staccato.notification.service.dto.message.PushMessage;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,56 +31,46 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class FcmService {
+    private static final int FCM_MULTICAST_LIMIT = 500;
+    private static final String SEND_SUCCESS_LOG = "[FCM][전송 완료] ";
+    private static final String SEND_FAIL_LOG = "[FCM][전송 실패] ";
+    private static final String TOKEN_DELETE_LOG = "[FCM][토큰 삭제] ";
+    private static final AndroidConfig ANDROID_CONFIG = AndroidConfig.builder()
+            .setPriority(AndroidConfig.Priority.HIGH)
+            .setNotification(AndroidNotification.builder()
+                    .setClickAction("PUSH_CLICK")
+                    .build())
+            .build();
+    private static final ApnsConfig APNS_CONFIG = ApnsConfig.builder()
+            .setAps(Aps.builder()
+                    .setCategory("PUSH_CLICK")
+                    .build())
+            .build();
 
-    private final int FCM_MULTICAST_LIMIT = 500;
-    private final String SEND_SUCCESS_LOG = "[FCM][전송 완료] ";
-    private final String SEND_FAIL_LOG = "[FCM][전송 실패] ";
-    private final String TOKEN_DELETE_LOG = "[FCM][토큰 삭제] ";
     private final FirebaseMessaging firebaseMessaging;
     private final NotificationTokenRepository notificationTokenRepository;
     private final Executor fcmCallbackExecutor;
 
-    public void sendPush(List<String> tokens, String title, String body) {
+    public void sendPush(List<String> tokens, PushMessage pushMessage) {
         if (tokens == null || tokens.isEmpty()) {
             log.warn(SEND_FAIL_LOG + "FCM 전송 대상 토큰이 없습니다.");
             return;
         }
         for (int i = 0; i < tokens.size(); i += FCM_MULTICAST_LIMIT) {
-            List<String> batch = tokens.subList(i, Math.min(i + FCM_MULTICAST_LIMIT, tokens.size()));
-            MulticastMessage message = createMulticastMessage(batch, title, body);
+            List<String> batchTokens = tokens.subList(i, Math.min(i + FCM_MULTICAST_LIMIT, tokens.size()));
+            MulticastMessage message = createMulticastMessage(batchTokens, pushMessage);
             ApiFuture<BatchResponse> future = firebaseMessaging.sendEachForMulticastAsync(message);
-            registerCallback(future, batch);
+            registerCallback(future, batchTokens);
         }
     }
 
-    private MulticastMessage createMulticastMessage(List<String> tokens, String title, String body) {
+    private MulticastMessage createMulticastMessage(List<String> tokens, PushMessage pushMessage) {
         return MulticastMessage.builder()
-                .setNotification(Notification.builder()
-                        .setTitle(title)
-                        .setBody(body)
-                        .build()
-                )
-                .putData("click_action", "PUSH_CLICK")
-                .setAndroidConfig(AndroidConfig.builder()
-                        .setPriority(AndroidConfig.Priority.HIGH)
-                        .setNotification(AndroidNotification.builder()
-                                .setClickAction("PUSH_CLICK")
-                                .setSound("default")
-                                .build())
-                        .build()
-                )
-                .setApnsConfig(ApnsConfig.builder()
-                        .setAps(Aps.builder()
-                                .setAlert(ApsAlert.builder()
-                                        .setTitle(title)
-                                        .setBody(body)
-                                        .build())
-                                .setSound("default")
-                                .setCategory("PUSH_CLICK")
-                                .build())
-                        .build()
-                )
+                .setAndroidConfig(ANDROID_CONFIG)
+                .setApnsConfig(APNS_CONFIG)
                 .addAllTokens(tokens)
+                .setNotification(pushMessage.toNotification())
+                .putAllData(Objects.requireNonNullElse(pushMessage.toData(), Map.of()))
                 .build();
     }
 

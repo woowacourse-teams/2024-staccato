@@ -35,7 +35,8 @@ public class NotificationEventListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleInvitation(CategoryInvitationEvent event) {
-        notificationService.sendInvitationAlert(event.inviter(), event.invitees(), event.category());
+        List<Member> targetMembers = event.invitees();
+        notificationService.sendInvitationAlert(event.inviter(), event.category(), targetMembers);
     }
 
     @Async
@@ -44,7 +45,7 @@ public class NotificationEventListener {
         Category category = event.category();
         if (category.getIsShared()) {
             List<Member> targetMembers = getTargetMembers(event.category(), event.creator());
-            notificationService.sendNewStaccatoAlert(event.creator(), event.category(), targetMembers);
+            notificationService.sendNewStaccatoAlert(event.creator(), event.category(), event.staccato(), targetMembers);
         }
     }
 
@@ -54,7 +55,7 @@ public class NotificationEventListener {
         Category category = event.category();
         if (category.getIsShared()) {
             List<Member> targetMembers = getTargetMembers(event.category(), event.commenter());
-            notificationService.sendNewCommentAlert(event.commenter(), event.comment(), targetMembers);
+            notificationService.sendNewCommentAlert(event.commenter(), event.comment(), event.staccato(), targetMembers);
         }
     }
 

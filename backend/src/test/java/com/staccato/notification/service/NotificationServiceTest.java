@@ -1,12 +1,18 @@
 package com.staccato.notification.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.verify;
+
 import java.util.List;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
@@ -23,16 +29,15 @@ import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.notification.domain.NotificationToken;
 import com.staccato.notification.repository.NotificationTokenRepository;
+import com.staccato.notification.service.dto.message.AcceptInvitationMessage;
+import com.staccato.notification.service.dto.message.CommentCreatedMessage;
+import com.staccato.notification.service.dto.message.PushMessage;
+import com.staccato.notification.service.dto.message.ReceiveInvitationMessage;
+import com.staccato.notification.service.dto.message.StaccatoCreatedMessage;
 import com.staccato.notification.service.dto.request.NotificationTokenRequest;
 import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 
 class NotificationServiceTest extends ServiceSliceTest {
 
@@ -53,26 +58,38 @@ class NotificationServiceTest extends ServiceSliceTest {
     @MockBean
     private FcmService fcmService;
 
-    private Member sender;
-    private Member receiver1;
-    private Member receiver2;
+    private Member host;
+    private Member guest;
+    private Member other;
     private Category category;
+    private Staccato staccato;
+    private Comment comment;
 
     @BeforeEach
     void setUp() {
-        sender = MemberFixtures.defaultMember().withNickname("sender").buildAndSave(memberRepository);
-        receiver1 = MemberFixtures.defaultMember().withNickname("receiver1").buildAndSave(memberRepository);
-        receiver2 = MemberFixtures.defaultMember().withNickname("receiver2").buildAndSave(memberRepository);
-        category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
+        host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        other = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
+        category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+        staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .buildAndSave(staccatoRepository);
+        comment = CommentFixtures.defaultComment()
+                .withStaccato(staccato)
+                .withMember(host)
+                .buildAndSave(commentRepository);
 
-        NotificationTokenFixtures.defaultNotificationToken(sender)
-                .withToken("senderToken")
+        NotificationTokenFixtures.defaultNotificationToken(host)
+                .withToken("hostToken")
                 .buildAndSave(notificationTokenRepository);
-        NotificationTokenFixtures.defaultNotificationToken(receiver1)
-                .withToken("token1")
+        NotificationTokenFixtures.defaultNotificationToken(guest)
+                .withToken("guestToken")
                 .buildAndSave(notificationTokenRepository);
-        NotificationTokenFixtures.defaultNotificationToken(receiver2)
-                .withToken("token2")
+        NotificationTokenFixtures.defaultNotificationToken(other)
+                .withToken("otherToken")
                 .buildAndSave(notificationTokenRepository);
     }
 
@@ -80,10 +97,10 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void isExistNotifications() {
         // given
-        categoryInvitationRepository.save(CategoryInvitation.invite(category, sender, receiver1));
+        categoryInvitationRepository.save(CategoryInvitation.invite(category, host, other));
 
         // when
-        NotificationExistResponse result = notificationService.isExistNotifications(receiver1);
+        NotificationExistResponse result = notificationService.isExistNotifications(other);
 
         // then
         assertThat(result.isExist()).isTrue();
@@ -93,7 +110,7 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void isNotExistNotifications() {
         // when
-        NotificationExistResponse result = notificationService.isExistNotifications(receiver1);
+        NotificationExistResponse result = notificationService.isExistNotifications(other);
 
         // then
         assertThat(result.isExist()).isFalse();
@@ -103,64 +120,52 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void sendInvitationAlert() {
         // when
-        notificationService.sendInvitationAlert(sender, List.of(receiver1, receiver2), category);
+        notificationService.sendInvitationAlert(host, category, List.of(other));
 
         // then
-        verify(fcmService).sendPush(argThat(tokens -> tokens.containsAll(List.of("token1", "token2"))),
-                eq("sender님이 초대를 보냈어요"),
-                eq(category.getTitle().getTitle())
-        );
+        List<String> expectedTokens = List.of("otherToken");
+        PushMessage expectedMessage = new ReceiveInvitationMessage(host, category);
+
+        verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("초대 수락 알림을 전송한다.")
     @Test
     void sendAcceptAlert() {
         // when
-        notificationService.sendAcceptAlert(receiver1, category, List.of(sender, receiver2));
+        notificationService.sendAcceptAlert(other, category, List.of(host, guest));
 
         // then
-        verify(fcmService).sendPush(
-                argThat(tokens -> tokens.containsAll(List.of("senderToken", "token2"))),
-                eq("receiver1님이 참여했어요"),
-                eq(category.getTitle().getTitle() + "에서 환영해주세요!")
-        );
+        List<String> expectedTokens = List.of("hostToken", "guestToken");
+        PushMessage expectedMessage = new AcceptInvitationMessage(other, category);
+
+        verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("새로운 스타카토 알림을 전송한다.")
     @Test
     void sendNewStaccatoAlert() {
         // when
-        notificationService.sendNewStaccatoAlert(sender, category, List.of(receiver1, receiver2));
+        notificationService.sendNewStaccatoAlert(host, category, staccato, List.of(guest));
 
         // then
-        verify(fcmService).sendPush(
-                argThat(tokens -> tokens.containsAll(List.of("token1", "token2"))),
-                eq("스타카토가 추가됐어요"),
-                eq("sender님이 " + category.getTitle().getTitle() + "에 남긴 스타카토를 확인해보세요")
-        );
+        List<String> expectedTokens = List.of("guestToken");
+        PushMessage expectedMessage = new StaccatoCreatedMessage(host, staccato, category);
+
+        verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }
 
-    @DisplayName("새로운 댓글 알림을 전송한다.")
+    @DisplayName("새로운 코멘트 알림을 전송한다.")
     @Test
     void sendNewCommentAlert() {
-        // given
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
-                .buildAndSave(staccatoRepository);
-        Comment comment = CommentFixtures.defaultComment()
-                .withMember(sender)
-                .withStaccato(staccato)
-                .buildAndSave(commentRepository);
-
         // when
-        notificationService.sendNewCommentAlert(sender, comment, List.of(receiver1, receiver2));
+        notificationService.sendNewCommentAlert(host, comment, staccato, List.of(guest));
 
         // then
-        verify(fcmService).sendPush(
-                argThat(tokens -> tokens.containsAll(List.of("token1", "token2"))),
-                eq("sender님의 코멘트"),
-                eq(comment.getContent())
-        );
+        List<String> expectedTokens = List.of("guestToken");
+        PushMessage expectedMessage = new CommentCreatedMessage(host, staccato, comment);
+
+        verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("토큰이 존재하지 않으면 새로 저장한다.")

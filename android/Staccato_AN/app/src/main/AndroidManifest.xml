@@ -74,7 +74,28 @@
             android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="category"
+                    android:pathPattern="/.*"
+                    android:scheme="staccato" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="staccato"
+                    android:pathPattern="/.*"
+                    android:scheme="staccato" />
+            </intent-filter>
+
+        </activity>
 
         <activity
             android:name=".presentation.staccatoupdate.StaccatoUpdateActivity"
@@ -112,7 +133,7 @@
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".presentation.common.notification.StaccatoFirebaseMessagingService"
+            android:name=".presentation.notification.StaccatoFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
