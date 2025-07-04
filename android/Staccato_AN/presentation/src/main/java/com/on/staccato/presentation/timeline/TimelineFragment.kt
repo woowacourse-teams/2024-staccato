@@ -1,6 +1,7 @@
 package com.on.staccato.presentation.timeline
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
@@ -125,6 +126,7 @@ class TimelineFragment :
     private fun observeHomeRefresh() {
         sharedViewModel.homeRefresh.observe(viewLifecycleOwner) {
             if (it is HomeRefresh.Timeline || it is HomeRefresh.All) {
+                Log.d("hye", "타임라인 화면: $it")
                 timelineViewModel.loadTimeline()
                 sharedViewModel.updateHomeRefresh(HomeRefresh.None)
             }

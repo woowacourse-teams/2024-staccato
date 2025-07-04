@@ -85,6 +85,7 @@ class TimelineViewModel
         }
 
         private fun setTimelineUiModels(timeline: Timeline) {
+            Log.d("hye", "타임라인 뷰모델: 타임라인 로드")
             _timeline.value = timeline.toTimelineUiModel()
             _isTimelineLoading.value = false
         }

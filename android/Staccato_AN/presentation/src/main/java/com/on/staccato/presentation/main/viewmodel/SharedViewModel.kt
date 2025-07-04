@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.main.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import com.on.staccato.domain.onServerError
 import com.on.staccato.domain.onSuccess
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.domain.repository.NotificationRepository
+import com.on.staccato.presentation.category.model.CategoryRefresh
 import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.event.MutableSingleLiveData
 import com.on.staccato.presentation.common.event.SingleLiveData
@@ -50,6 +52,9 @@ class SharedViewModel
         private val _homeRefresh = MutableLiveData<HomeRefresh>(HomeRefresh.None)
         val homeRefresh: LiveData<HomeRefresh> get() = _homeRefresh
 
+        private val _categoryRefresh = MutableSingleLiveData<CategoryRefresh>(CategoryRefresh.None)
+        val categoryRefresh: SingleLiveData<CategoryRefresh> get() = _categoryRefresh
+
         private val _isPermissionCanceled = MutableLiveData(false)
         val isPermissionCanceled: LiveData<Boolean> get() = _isPermissionCanceled
 
@@ -76,15 +81,8 @@ class SharedViewModel
         private val _currentLocationEvent = MutableSharedFlow<Unit>()
         val currentLocationEvent: SharedFlow<Unit> get() = _currentLocationEvent.asSharedFlow()
 
-        private val _categoryRefreshEvent = MutableSingleLiveData<Boolean>()
-        val categoryRefreshEvent: SingleLiveData<Boolean> get() = _categoryRefreshEvent
-
         private val _messageEvent = MutableSingleLiveData<MessageEvent>()
         val messageEvent: SingleLiveData<MessageEvent> get() = _messageEvent
-
-        fun updateCategoryRefreshEvent() {
-            _categoryRefreshEvent.setValue(true)
-        }
 
         fun updateCurrentLocationEvent() {
             viewModelScope.launch {
@@ -127,7 +125,13 @@ class SharedViewModel
         }
 
         fun updateHomeRefresh(state: HomeRefresh) {
+            Log.d("hye", "공유 뷰모델: HomeRefresh 상태 변경 $state")
             _homeRefresh.value = state
+        }
+
+        fun updateCategoryRefresh(state: CategoryRefresh) {
+            Log.d("hye", "공유 뷰모델: CategoryRefresh 상태 변경 $state")
+            _categoryRefresh.setValue(state)
         }
 
         fun updateIsPermissionCanceled() {

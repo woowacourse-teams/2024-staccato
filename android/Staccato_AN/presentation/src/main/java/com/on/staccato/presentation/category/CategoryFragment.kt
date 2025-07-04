@@ -1,6 +1,7 @@
 package com.on.staccato.presentation.category
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
@@ -21,6 +22,7 @@ import com.on.staccato.presentation.category.adapter.StaccatosAdapter
 import com.on.staccato.presentation.category.component.ExitDialogScreen
 import com.on.staccato.presentation.category.invite.InviteScreen
 import com.on.staccato.presentation.category.model.CategoryEvent
+import com.on.staccato.presentation.category.model.CategoryRefresh
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
@@ -87,22 +89,34 @@ class CategoryFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        viewModel.updateCategoryId(categoryId)
-
-        if (isCategoryCreated) sharedViewModel.updateHomeRefresh(HomeRefresh.Timeline)
-        if (isCategoryUpdated) {
-            viewModel.loadCategory(categoryId)
-            sharedViewModel.updateHomeRefresh(HomeRefresh.All)
-        }
-
         initBinding()
         initToolbar()
         initAdapter()
         observeCategoryInformation()
-        observeIsStaccatosUpdated()
+        handleCategoryState()
+        observeCategoryRefresh()
         observeCategoryState()
         observeMessageEvent()
         logAccess()
+    }
+
+    private fun handleCategoryState() {
+        when {
+            isCategoryUpdated -> {
+                Log.d("hye", "카테고리 업데이트 isCategoryUpdated")
+                viewModel.updateCategoryId(categoryId)
+                sharedViewModel.updateHomeRefresh(HomeRefresh.All)
+            }
+
+            isCategoryCreated -> {
+                viewModel.updateCategoryId(categoryId)
+                sharedViewModel.updateHomeRefresh(HomeRefresh.Timeline)
+            }
+
+            else -> {
+                viewModel.updateCategoryId(categoryId)
+            }
+        }
     }
 
     override fun onUpdateClicked() {
@@ -160,9 +174,9 @@ class CategoryFragment :
     }
 
     override fun onCategoryRefreshClicked() {
-        viewModel.loadCategory(categoryId)
         // TODO: 스타카토 목록 동일하면 갱신하지 않도록 리팩터링
-        sharedViewModel.updateCategoryRefreshEvent()
+        Log.d("hye", "카테고리 refresh 클릭됨")
+        sharedViewModel.updateCategoryRefresh(CategoryRefresh.All)
     }
 
     private fun navigateToStaccatoCreation(
@@ -221,11 +235,12 @@ class CategoryFragment :
         }
     }
 
-    private fun observeIsStaccatosUpdated() {
-        sharedViewModel.homeRefresh.observe(viewLifecycleOwner) {
-            if (it is HomeRefresh.Map || it is HomeRefresh.All) {
+    private fun observeCategoryRefresh() {
+        sharedViewModel.categoryRefresh.observe(viewLifecycleOwner) {
+            if (it is CategoryRefresh.All) {
+                Log.d("hye", "카테고리 프래그먼트 $it")
                 viewModel.loadCategory(categoryId)
-                sharedViewModel.updateHomeRefresh(HomeRefresh.None)
+                sharedViewModel.updateCategoryRefresh(CategoryRefresh.None)
             }
         }
     }
