@@ -81,9 +81,3 @@ CREATE TABLE comment (
                          CONSTRAINT fk_comment_member FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE,
                          CONSTRAINT fk_comment_staccato FOREIGN KEY (staccato_id) REFERENCES staccato(id) ON DELETE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
-
-CREATE INDEX idx_nickname ON member (nickname);
-CREATE INDEX idx_code ON member (code);
-CREATE INDEX idx_title ON category (title);
-CREATE INDEX idx_member_id_category_id ON category_member (member_id, category_id);
-CREATE INDEX idx_category_id_visited_at ON staccato (category_id, visited_at);
