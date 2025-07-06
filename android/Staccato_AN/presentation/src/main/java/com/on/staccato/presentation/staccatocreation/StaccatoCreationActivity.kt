@@ -273,7 +273,7 @@ class StaccatoCreationActivity :
         viewModel.pendingPhotos.observe(this) { photos ->
             photos.forEach { photo ->
                 photo.uri?.let { uri ->
-                    val file = convertUriToFile(this, uri)
+                    val file = convertUriToFile(this, uri, System.currentTimeMillis().toString())
                     viewModel.launchPhotoUploadJob(file, photo)
                 }
             }
