@@ -6,7 +6,7 @@ import android.net.Uri
 import com.on.staccato.domain.UploadFile
 import java.io.File
 
-const val DEFAULT_FILE_NAME = "name"
+const val DEFAULT_FILE_NAME = "tempfile"
 
 fun convertUriToFile(
     context: Context,
