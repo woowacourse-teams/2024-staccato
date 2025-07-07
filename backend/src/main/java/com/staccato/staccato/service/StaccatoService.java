@@ -1,6 +1,7 @@
 package com.staccato.staccato.service;
 
 import java.util.List;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
@@ -14,6 +15,7 @@ import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.domain.StaccatoImage;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
+import com.staccato.staccato.service.dto.event.StaccatoCreatedEvent;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
@@ -32,15 +34,16 @@ public class StaccatoService {
     private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
     private final StaccatoImageRepository staccatoImageRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public StaccatoIdResponse createStaccato(StaccatoRequest staccatoRequest, Member member) {
         Category category = getCategoryById(staccatoRequest.categoryId());
         category.validateOwner(member);
-        Staccato staccato = staccatoRequest.toStaccato(category);
+        Staccato staccato = staccatoRequest.toStaccato(category, member);
 
         staccatoRepository.save(staccato);
-
+        eventPublisher.publishEvent(new StaccatoCreatedEvent(member, category, staccato));
         return new StaccatoIdResponse(staccato.getId());
     }
 
@@ -74,9 +77,11 @@ public class StaccatoService {
         Category targetCategory = getCategoryById(staccatoRequest.categoryId());
         targetCategory.validateOwner(member);
 
-        staccato.validateCategoryChangeable(targetCategory);
+        if (staccato.hasDifferentCategoryFrom(targetCategory)) {
+            staccato.validateCategoryChangeable(targetCategory);
+        }
 
-        Staccato newStaccato = staccatoRequest.toStaccato(targetCategory);
+        Staccato newStaccato = staccatoRequest.toStaccato(targetCategory, member);
         List<StaccatoImage> existingImages = staccato.existingImages();
         removeExistingImages(existingImages);
         staccato.update(newStaccato);

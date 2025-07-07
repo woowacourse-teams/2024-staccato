@@ -1,9 +1,11 @@
 package com.staccato;
 
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 
+@Import({FcmTestConfig.class})
 public abstract class ContainerBaseTest {
 
     private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")

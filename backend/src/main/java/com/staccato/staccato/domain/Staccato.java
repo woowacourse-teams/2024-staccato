@@ -22,7 +22,6 @@ import jakarta.persistence.Version;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.config.domain.BaseEntity;
-import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import lombok.AccessLevel;
@@ -57,6 +56,34 @@ public class Staccato extends BaseEntity {
     private StaccatoImages staccatoImages = new StaccatoImages();
     @Version
     private Long version;
+    @Column(nullable = false)
+    private Long createdBy;
+    @Column(nullable = false)
+    private Long modifiedBy;
+
+    public static Staccato create(
+            LocalDateTime visitedAt,
+            String title,
+            String placeName,
+            String address,
+            BigDecimal latitude,
+            BigDecimal longitude,
+            List<String> staccatoImageUrls,
+            Category category,
+            Member auditor
+    ) {
+        return new Staccato(
+                visitedAt,
+                title,
+                placeName,
+                address,
+                latitude,
+                longitude,
+                new StaccatoImages(staccatoImageUrls),
+                category,
+                auditor.getId(),
+                auditor.getId());
+    }
 
     @Builder
     public Staccato(
@@ -67,7 +94,9 @@ public class Staccato extends BaseEntity {
             @NonNull BigDecimal latitude,
             @NonNull BigDecimal longitude,
             @NonNull StaccatoImages staccatoImages,
-            @NonNull Category category
+            @NonNull Category category,
+            Long createdBy,
+            Long modifiedBy
     ) {
         validateIsWithinCategoryTerm(visitedAt, category);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
@@ -75,6 +104,8 @@ public class Staccato extends BaseEntity {
         this.spot = new Spot(placeName, address, latitude, longitude);
         this.staccatoImages.addAll(staccatoImages, this);
         this.category = category;
+        this.createdBy = createdBy;
+        this.modifiedBy = modifiedBy;
     }
 
     private void validateIsWithinCategoryTerm(LocalDateTime visitedAt, Category category) {
@@ -89,6 +120,7 @@ public class Staccato extends BaseEntity {
         this.spot = newStaccato.getSpot();
         this.staccatoImages.update(newStaccato.staccatoImages, this);
         this.category = newStaccato.getCategory();
+        this.modifiedBy = newStaccato.getModifiedBy();
     }
 
     public String thumbnailUrl() {
@@ -107,15 +139,17 @@ public class Staccato extends BaseEntity {
     }
 
     public void validateOwner(Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
+        category.validateOwner(member);
     }
 
     public void validateCategoryChangeable(Category targetCategory) {
         if (category.getIsShared() || targetCategory.getIsShared()) {
             throw new StaccatoException("개인 카테고리 간에만 스타카토를 옮길 수 있어요.");
         }
+    }
+
+    public boolean hasDifferentCategoryFrom(Category targetCategory) {
+        return !category.equals(targetCategory);
     }
 
     @PrePersist

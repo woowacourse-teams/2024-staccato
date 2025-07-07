@@ -2,10 +2,9 @@ package com.staccato.invitation.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
@@ -15,13 +14,14 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
+import com.staccato.invitation.service.dto.event.CategoryInvitationAcceptedEvent;
+import com.staccato.invitation.service.dto.event.CategoryInvitationEvent;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
 import com.staccato.invitation.service.dto.response.CategoryInvitationReceivedResponses;
 import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,37 +35,22 @@ public class InvitationService {
     private final MemberRepository memberRepository;
     private final CategoryInvitationRepository categoryInvitationRepository;
     private final CategoryMemberRepository categoryMemberRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public CategoryInvitationCreateResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryInvitationRequest.categoryId());
-        validateInvitePermission(category, inviter);
+        category.validateOwner(inviter);
+        category.validateHost(inviter);
         List<Member> invitees = memberRepository.findAllByIdIn(categoryInvitationRequest.inviteeIds());
         List<CategoryInvitation> invitations = categoryInvitationRepository.saveAll(createInvitations(category, inviter, invitees));
-
+        eventPublisher.publishEvent(new CategoryInvitationEvent(inviter, invitees, category));
         return CategoryInvitationCreateResponses.from(invitations);
     }
 
     private Category getCategoryById(long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-    }
-
-    private void validateInvitePermission(Category category, Member member) {
-        validateOwner(category, member);
-        validateHost(category, member);
-    }
-
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    private void validateHost(Category category, Member member) {
-        if (category.isGuest(member)) {
-            throw new ForbiddenException();
-        }
     }
 
     private List<CategoryInvitation> createInvitations(Category category, Member inviter, List<Member> invitees) {
@@ -115,13 +100,14 @@ public class InvitationService {
     @Transactional
     public void accept(Member invitee, long invitationId) {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        validateInvitee(invitation, invitee);
+        invitation.validateInvitee(invitee);
         invitation.accept();
 
         Category category = invitation.getCategory();
         if (isInviteeNotInCategory(invitee, category)) {
             category.addGuests(List.of(invitation.getInvitee()));
         }
+        eventPublisher.publishEvent(new CategoryInvitationAcceptedEvent(invitee, category));
     }
 
     private boolean isInviteeNotInCategory(Member invitee, Category category) {
@@ -131,19 +117,13 @@ public class InvitationService {
     @Transactional
     public void reject(Member invitee, long invitationId) {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        validateInvitee(invitation, invitee);
+        invitation.validateInvitee(invitee);
         invitation.reject();
     }
 
     private CategoryInvitation getCategoryInvitationById(long invitationId) {
         return categoryInvitationRepository.findById(invitationId)
                 .orElseThrow(() -> new StaccatoException("요청하신 초대 정보를 찾을 수 없어요."));
-    }
-
-    private void validateInvitee(CategoryInvitation invitation, Member invitee) {
-        if (invitation.isNotInvitee(invitee)) {
-            throw new ForbiddenException();
-        }
     }
 
     public CategoryInvitationReceivedResponses readReceivedInvitations(Member invitee) {

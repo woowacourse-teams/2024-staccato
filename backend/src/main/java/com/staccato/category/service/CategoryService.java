@@ -4,8 +4,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
@@ -30,6 +32,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -71,11 +74,13 @@ public class CategoryService {
         return new CategoryResponsesV3(responses);
     }
 
-    public CategoryNameResponses readAllCategoriesByDateAndIsShared(Member member, LocalDate specificDate, boolean isShared) {
-        List<Category> rawCategories = getCategories(
-                categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(member.getId(), specificDate, isShared));
-        List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER,
-                DEFAULT_CATEGORY_SORT);
+    public CategoryNameResponses readAllCategoriesByMemberAndDateAndPrivateFlag(Member member, LocalDate specificDate, boolean isPrivate) {
+        Boolean isSharedFilter = null;
+        if (isPrivate) {
+            isSharedFilter = Boolean.FALSE;
+        }
+        List<Category> rawCategories = categoryRepository.findAllByMemberIdAndDateAndSharingFilter(member.getId(), specificDate, isSharedFilter);
+        List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER, DEFAULT_CATEGORY_SORT);
 
         return CategoryNameResponses.from(categories);
     }
@@ -94,7 +99,7 @@ public class CategoryService {
     public CategoryDetailResponseV3 readCategoryById(long categoryId, Member member) {
         Category category = categoryRepository.findWithCategoryMembersById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-        validateReadPermission(category, member);
+        category.validateOwner(member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
 
         return new CategoryDetailResponseV3(category, staccatos, member);
@@ -103,7 +108,7 @@ public class CategoryService {
     public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
             Member member, long categoryId, CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest) {
         Category category = getCategoryById(categoryId);
-        validateOwner(category, member);
+        category.validateOwner(member);
         List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRangeAndCategory(
                 member,
                 categoryStaccatoLocationRangeRequest.swLat(),
@@ -119,7 +124,8 @@ public class CategoryService {
     @Transactional
     public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
         Category originCategory = getCategoryById(categoryId);
-        validateModificationPermission(originCategory, member);
+        originCategory.validateOwner(member);
+        originCategory.validateHost(member);
         Category updatedCategory = categoryUpdateRequest.toCategory(originCategory);
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
             validateCategoryTitle(updatedCategory, member);
@@ -131,7 +137,8 @@ public class CategoryService {
     @Transactional
     public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
         Category category = getCategoryById(categoryId);
-        validateModificationPermission(category, member);
+        category.validateOwner(member);
+        category.validateHost(member);
         category.changeColor(categoryColorRequest.toColor());
     }
 
@@ -144,18 +151,10 @@ public class CategoryService {
     @Transactional
     public void deleteCategory(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
-        validateModificationPermission(category, member);
+        category.validateOwner(member);
+        category.validateHost(member);
         deleteAllRelatedCategory(categoryId);
         categoryRepository.deleteById(categoryId);
-    }
-
-    private Category getCategoryById(long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-    }
-
-    private void validateReadPermission(Category category, Member member) {
-        validateOwner(category, member);
     }
 
     private void deleteAllRelatedCategory(long categoryId) {
@@ -170,20 +169,18 @@ public class CategoryService {
         categoryInvitationRepository.deleteAllByCategoryIdInBulk(categoryId);
     }
 
-    private void validateModificationPermission(Category category, Member member) {
-        validateOwner(category, member);
-        validateHost(category, member);
+    @Transactional
+    public void deleteSelfFromCategory(long categoryId, Member member) {
+        Category category = getCategoryById(categoryId);
+        category.validateOwner(member);
+        category.validateMemberCanLeave(member);
+
+        category.removeCategoryMember(member);
+        categoryMemberRepository.deleteByCategoryIdAndMemberId(category.getId(), member.getId());
     }
 
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    private void validateHost(Category category, Member member) {
-        if (category.isGuest(member)) {
-            throw new ForbiddenException();
-        }
+    private Category getCategoryById(long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 }

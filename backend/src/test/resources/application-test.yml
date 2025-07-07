@@ -46,3 +46,6 @@ image:
 staccato:
   share:
     link-prefix: http://localhost:8080/share/
+
+fcm:
+  admin-sdk: mock

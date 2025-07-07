@@ -1,11 +1,11 @@
 package com.staccato.auth.service;
 
-import com.staccato.category.domain.Category;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.auth.service.dto.request.LoginRequest;
-import com.staccato.auth.service.dto.response.LoginResponse;
-import com.staccato.category.domain.Role;
+import com.staccato.auth.service.dto.response.LoginResponseV2;
+import com.staccato.category.domain.Category;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.config.jwt.MemberTokenProvider;
 import com.staccato.config.log.LogForm;
 import com.staccato.config.log.annotation.Trace;
@@ -14,7 +14,6 @@ import com.staccato.exception.UnauthorizedException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.domain.Nickname;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,11 +28,11 @@ public class AuthService {
     private final MemberTokenProvider tokenProvider;
 
     @Transactional
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponseV2 login(LoginRequest loginRequest) {
         Member member = createMember(loginRequest);
         String token = tokenProvider.create(member);
         createBasicCategory(member);
-        return new LoginResponse(token);
+        return new LoginResponseV2(member, token);
     }
 
     private Member createMember(LoginRequest loginRequest) {
@@ -60,10 +59,10 @@ public class AuthService {
         return member;
     }
 
-    public LoginResponse loginByCode(String code) {
+    public LoginResponseV2 loginByCode(String code) {
         Member member = getMemberByCode(code);
         String token = tokenProvider.create(member);
-        return new LoginResponse(token);
+        return new LoginResponseV2(member, token);
     }
 
     private Member getMemberByCode(String code) {

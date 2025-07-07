@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.category.repository.CategoryRepository;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
@@ -257,5 +259,128 @@ class StaccatoTest {
                         .isInstanceOf(StaccatoException.class)
                         .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요.")
         );
+    }
+
+    @Nested
+    @DisplayName("스타카토의 소유자를 검증한다.")
+    class ValidateStaccatoOwner {
+
+        private Member host;
+        private Member guest;
+        private Category category;
+        private Staccato staccato;
+
+        @BeforeEach
+        void setUp() {
+            host = MemberFixtures.defaultMember().withNickname("host").build();
+            guest = MemberFixtures.defaultMember().withNickname("guest").build();
+            category = CategoryFixtures.defaultCategory()
+                    .withHost(host)
+                    .withGuests(List.of(guest))
+                    .build();
+            staccato = StaccatoFixtures.defaultStaccato()
+                    .withCategory(category)
+                    .build();
+        }
+
+        @DisplayName("카테고리의 HOST는 카테고리 안에 있는 스타카토의 소유자이다.")
+        @Test
+        void successValidateOwnerIfMemberIsCategoryHost() {
+            assertDoesNotThrow(() -> staccato.validateOwner(host));
+        }
+
+        @DisplayName("카테고리의 GUEST는 카테고리 안에 있는 스타카토의 소유자이다.")
+        @Test
+        void successValidateOwnerIfMemberIsCategoryGuest() {
+            assertDoesNotThrow(() -> staccato.validateOwner(host));
+        }
+
+        @DisplayName("카테고리의 함께하는 사람이 아니면 카테고리 안에 있는 스타카토의 소유자가 아니다.")
+        @Test
+        void failValidateOwnerIfMemberNotInCategory() {
+            Member other = MemberFixtures.defaultMember().withNickname("other").build();
+            assertThatThrownBy(() -> staccato.validateOwner(other))
+                    .isInstanceOf(ForbiddenException.class);
+        }
+    }
+
+    @DisplayName("Staccato 생성 시 생성자/수정자는 생성한 사람으로 만들어진다.")
+    @Test
+    void createdAndModifiedBySameWhenCreated() {
+        // given
+        Member creator = MemberFixtures.defaultMember().withNickname("creator").build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(creator)
+                .withTerm(null, null)
+                .build();
+
+        // when
+        Staccato staccato = Staccato.create(
+                LocalDateTime.of(2025, 1, 1, 12, 0),
+                "첫 방문",
+                "장소명",
+                "주소",
+                BigDecimal.ONE,
+                BigDecimal.ONE,
+                List.of("https://image.url/1.jpg"),
+                category,
+                creator
+        );
+
+        // then
+        assertAll(
+                () -> assertThat(staccato.getCreatedBy()).isEqualTo(creator.getId()),
+                () -> assertThat(staccato.getModifiedBy()).isEqualTo(creator.getId())
+        );
+    }
+
+    @DisplayName("Staccato update 시 createdBy는 변경되지 않는다.")
+    @Test
+    void createdByDoesNotChangeOnUpdate() {
+        // given
+        Member creator = MemberFixtures.defaultMember().withNickname("creator").build();
+        Member updater = MemberFixtures.defaultMember().withNickname("updater").build();
+        Category category = CategoryFixtures.defaultCategory().withHost(creator).build();
+
+        Staccato original = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withCreator(creator)
+                .build();
+
+        Staccato updateData = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withCreator(updater)
+                .build();
+
+        // when
+        original.update(updateData);
+
+        // then
+        assertThat(original.getCreatedBy()).isEqualTo(creator.getId());
+    }
+
+    @DisplayName("Staccato update 시 modifiedBy는 최근 수정자로 갱신된다.")
+    @Test
+    void modifiedByChangesOnUpdate() {
+        // given
+        Member creator = MemberFixtures.defaultMember().withNickname("creator").build();
+        Member updater = MemberFixtures.defaultMember().withNickname("updater").build();
+        Category category = CategoryFixtures.defaultCategory().withHost(creator).build();
+
+        Staccato original = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withCreator(creator)
+                .build();
+
+        Staccato updateData = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withCreator(updater)
+                .build();
+
+        // when
+        original.update(updateData);
+
+        // then
+        assertThat(original.getModifiedBy()).isEqualTo(updater.getId());
     }
 }

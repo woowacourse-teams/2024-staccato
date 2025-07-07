@@ -1,6 +1,7 @@
 package com.staccato.comment.domain;
 
 import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,10 +11,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
+
 import com.staccato.config.domain.BaseEntity;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -60,7 +64,9 @@ public class Comment extends BaseEntity {
         }
     }
 
-    public boolean isNotOwnedBy(Member member) {
-        return !Objects.equals(this.member, member);
+    public void validateOwner(Member member) {
+        if (!Objects.equals(this.member, member)) {
+            throw new ForbiddenException();
+        }
     }
 }

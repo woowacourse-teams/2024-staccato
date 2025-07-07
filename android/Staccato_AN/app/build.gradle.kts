@@ -27,8 +27,8 @@ android {
         applicationId = "com.on.staccato"
         minSdk = 26
         targetSdk = 34
-        versionCode = 11
-        versionName = "1.4.0"
+        versionCode = 15
+        versionName = "2.1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["runnerBuilder"] =
@@ -77,6 +77,7 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
+                "${project(":domain").projectDir}/consumer-rules.pro",
             )
             if (releaseSigningConfig != null) {
                 signingConfig = releaseSigningConfig
@@ -113,22 +114,12 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
-    // JUnit4
-    testImplementation(libs.junit)
-    testImplementation(libs.junitparams)
-
     // JUnit5
     testImplementation(libs.junit5)
     testRuntimeOnly(libs.junit.vintage.engine)
 
     // AssertJ
     testImplementation(libs.assertj.core)
-
-    // Android Espresso
-    androidTestImplementation(libs.androidx.espresso.core)
-
-    // Android LiveData Test
-    testImplementation(libs.androidx.arch.core)
 
     // Android Test Runner
     androidTestImplementation(libs.androidx.test.runner)
@@ -171,6 +162,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.messaging.ktx)
 
     // Room
     implementation(libs.room)
@@ -181,22 +173,17 @@ dependencies {
     // Fragment
     implementation(libs.androidx.fragment.ktx)
 
-    // Coroutines Test
-    testImplementation(libs.kotlinx.coroutines.test)
-
-    // Mockk
-    testImplementation(libs.mockk)
-    testImplementation(libs.mockk.agent)
-    androidTestImplementation(libs.mockk.agent)
-    androidTestImplementation(libs.mockk.android)
-
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
-    // Google Map
+    // Google Maps SDK
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
+    implementation(libs.maps.ktx)
+
+    // Google Maps SDK for Android utility library
+    implementation(libs.maps.utils.ktx)
 
     // Google Place
     implementation(libs.places)
@@ -237,13 +224,23 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.navigation.compose)
 
-    // coil
+    // Compose Coil
     implementation(libs.coil.compose)
 
     // Compose UI Test
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Compose ViewModel
+    implementation(libs.lifecycle.viewmodel.compose)
+
+    // Compose ConstraintLayout
+    implementation(libs.androidx.constraintlayout.compose)
+
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":presentation"))
 }
 
 secrets {
