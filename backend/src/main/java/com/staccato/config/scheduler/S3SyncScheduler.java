@@ -18,7 +18,7 @@ public class S3SyncScheduler {
 
     private final ImageService imageService;
 
-    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(cron = "0 0 3 1 * *")
     public void deleteOrphanS3Objects() {
         DeletionResult result = imageService.deleteUnusedImages();
         log.info("S3 이미지 삭제 결과: 성공={} 실패={}", result.successCount(), result.failedCount());
