@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Staccato</string>
     <string name="app_name_dev">Staccato-DEV</string>
+    <string name="app_name_benchmark">Staccato-Benchmark</string>
 
     // all
     <string name="all_empty"> </string>

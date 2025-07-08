@@ -44,6 +44,9 @@
         android:usesCleartextTraffic="true"
         tools:replace="label"
         tools:targetApi="31">
+        <profileable
+            android:shell="true"
+            tools:targetApi="29" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
