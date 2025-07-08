@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="absolute_black">#FF000000</color>
+    <color name="absolute_white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="black_20">#33000000</color>
+
+    <color name="white">#FFFFFFFF</color>
+    <color name="white_80">#CCFFFFFF</color>
+
+    <color name="staccato_black">#FF222222</color>
+    <color name="staccato_blue">#FF5969F2</color>
+    <color name="staccato_blue_20">#FFDEE1FC</color>
+    <color name="staccato_blue_30">#4D5969F2</color>
+    <color name="staccato_blue_70">#FF8F9AFF</color>
+
+    <color name="mint_30">#4D0EC4B8</color>
+    <color name="blue_30">#4D00ADEA</color>
+
+    <color name="accents1">#FFD5F2FF</color>
+    <color name="accents3">#FFFFD849</color>
+    <color name="accents4">#FFFB5D67</color>
+
+    <color name="gray1">#FFF4F4F4</color>
+    <color name="gray2">#FFD2D2D2</color>
+    <color name="gray3">#FF949494</color>
+    <color name="gray4">#FF777777</color>
+    <color name="gray5">#FF3E3E3E</color>
+
+    <color name="red">#FFEF4B59</color>
+    <color name="orange">#FFFF8113</color>
+    <color name="yellow">#FFFFB938</color>
+    <color name="green">#FF3DBC1A</color>
+    <color name="mint">#FF0EC4B8</color>
+    <color name="blue">#FF00ADEA</color>
+    <color name="indigo">@color/staccato_blue</color>
+    <color name="purple">#FF8243FB</color>
+    <color name="pink">#FFF25BC4</color>
+    <color name="brown">#FFA85637</color>
+    <color name="gray">@color/gray4</color>
+
+    <color name="light_red">#FFF5939B</color>
+    <color name="light_orange">#FFFFB472</color>
+    <color name="light_yellow">#FFFFD588</color>
+    <color name="light_green">#FF8AD776</color>
+    <color name="light_mint">#FF6FDBD4</color>
+    <color name="light_blue">#FF66CEF2</color>
+    <color name="light_indigo">#FF9CA5F7</color>
+    <color name="light_purple">#FFB48EFD</color>
+    <color name="light_pink">#FFFAB0D2</color>
+    <color name="light_brown">#FFCB9A87</color>
+    <color name="light_gray">#FFADADAD</color>
+</resources>

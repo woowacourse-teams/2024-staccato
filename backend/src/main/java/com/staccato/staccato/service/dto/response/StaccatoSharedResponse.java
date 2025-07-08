@@ -2,13 +2,11 @@ package com.staccato.staccato.service.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.staccato.comment.domain.Comment;
 import com.staccato.config.swagger.SwaggerExamples;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.domain.StaccatoImage;
-
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -40,7 +38,7 @@ public record StaccatoSharedResponse(
                 expiredAt,
                 member.getNickname().getNickname(),
                 toStaccatoImageUrls(staccato.getStaccatoImages().getImages()),
-                staccato.getTitle(),
+                staccato.getTitle().getTitle(),
                 staccato.getSpot().getPlaceName(),
                 staccato.getSpot().getAddress(),
                 staccato.getVisitedAt(),

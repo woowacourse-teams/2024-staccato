@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="myComment"
+            type="com.on.staccato.presentation.staccato.comments.CommentUiModel" />
+
+        <variable
+            name="handler"
+            type="com.on.staccato.presentation.staccato.comments.CommentHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_staccato_my_comment_profile"
+            style="@style/CommentProfileImageStyle"
+            android:contentDescription="@string/staccato_my_comment_profile_image_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            bind:coilCircleImageUrl="@{myComment.memberImageUrl}"
+            bind:coilPlaceHolder="@{@drawable/icon_member}" />
+
+        <TextView
+            android:id="@+id/tv_staccato_my_comment_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{myComment.nickname}"
+            android:textAppearance="@style/Typography.Body4"
+            app:layout_constraintEnd_toEndOf="@id/tv_staccato_my_comment_chat"
+            app:layout_constraintTop_toTopOf="@id/iv_staccato_my_comment_profile"
+            tools:text="username" />
+
+        <TextView
+            android:id="@+id/tv_staccato_my_comment_chat"
+            style="@style/CommentChatBoxStyle.MyComment"
+            android:text="@{myComment.content}"
+            android:textAppearance="@style/Typography.Body3"
+            android:textColor="@color/gray5"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_staccato_my_comment_profile"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_staccato_my_comment_name"
+            tools:text="어어어어어어어어어어어어어어어어어어어어어어어어어어 긴 임시 방문 로그" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

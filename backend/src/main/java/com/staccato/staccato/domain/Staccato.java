@@ -1,10 +1,10 @@
 package com.staccato.staccato.domain;
 
-import com.staccato.category.domain.Category;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -19,11 +19,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
+
+import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
+import com.staccato.member.domain.Member;
+
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -31,18 +36,19 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Staccato extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
     @Column(nullable = false)
     private LocalDateTime visitedAt;
-    @Column(nullable = false)
-    private String title;
+    @Embedded
+    private StaccatoTitle title;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Feeling feeling = Feeling.NOTHING;
-    @Column(nullable = false)
     @Embedded
     private Spot spot;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,6 +56,34 @@ public class Staccato extends BaseEntity {
     private Category category;
     @Embedded
     private StaccatoImages staccatoImages = new StaccatoImages();
+    @Column(nullable = false)
+    private Long createdBy;
+    @Column(nullable = false)
+    private Long modifiedBy;
+
+    public static Staccato create(
+            LocalDateTime visitedAt,
+            String title,
+            String placeName,
+            String address,
+            BigDecimal latitude,
+            BigDecimal longitude,
+            List<String> staccatoImageUrls,
+            Category category,
+            Member auditor
+    ) {
+        return new Staccato(
+                visitedAt,
+                title,
+                placeName,
+                address,
+                latitude,
+                longitude,
+                new StaccatoImages(staccatoImageUrls),
+                category,
+                auditor.getId(),
+                auditor.getId());
+    }
 
     @Builder
     public Staccato(
@@ -60,14 +94,18 @@ public class Staccato extends BaseEntity {
             @NonNull BigDecimal latitude,
             @NonNull BigDecimal longitude,
             @NonNull StaccatoImages staccatoImages,
-            @NonNull Category category
+            @NonNull Category category,
+            Long createdBy,
+            Long modifiedBy
     ) {
         validateIsWithinCategoryTerm(visitedAt, category);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
-        this.title = title.trim();
+        this.title = new StaccatoTitle(title);
         this.spot = new Spot(placeName, address, latitude, longitude);
         this.staccatoImages.addAll(staccatoImages, this);
         this.category = category;
+        this.createdBy = createdBy;
+        this.modifiedBy = modifiedBy;
     }
 
     private void validateIsWithinCategoryTerm(LocalDateTime visitedAt, Category category) {
@@ -82,6 +120,7 @@ public class Staccato extends BaseEntity {
         this.spot = newStaccato.getSpot();
         this.staccatoImages.update(newStaccato.staccatoImages, this);
         this.category = newStaccato.getCategory();
+        this.modifiedBy = newStaccato.getModifiedBy();
     }
 
     public String thumbnailUrl() {
@@ -99,6 +138,20 @@ public class Staccato extends BaseEntity {
         this.feeling = feeling;
     }
 
+    public void validateOwner(Member member) {
+        category.validateOwner(member);
+    }
+
+    public void validateCategoryChangeable(Category targetCategory) {
+        if (category.getIsShared() || targetCategory.getIsShared()) {
+            throw new StaccatoException("개인 카테고리 간에만 스타카토를 옮길 수 있어요.");
+        }
+    }
+
+    public boolean hasDifferentCategoryFrom(Category targetCategory) {
+        return !category.equals(targetCategory);
+    }
+
     @PrePersist
     @PreUpdate
     @PreRemove
@@ -113,7 +166,7 @@ public class Staccato extends BaseEntity {
     public void updateCategoryModifiedDate() {
         category.setUpdatedAt(LocalDateTime.now());
     }
-  
+
     public Color getColor() {
         return category.getColor();
     }

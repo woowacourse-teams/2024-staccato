@@ -7,11 +7,6 @@ val localProperties =
         load(FileInputStream(rootProject.file("local.properties")))
     }
 
-val keystoreProperties =
-    Properties().apply {
-        load(FileInputStream(rootProject.file("app/signing/keystore.properties")))
-    }
-
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -32,8 +27,8 @@ android {
         applicationId = "com.on.staccato"
         minSdk = 26
         targetSdk = 34
-        versionCode = 11
-        versionName = "1.4.0"
+        versionCode = 15
+        versionName = "2.1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["runnerBuilder"] =
@@ -42,19 +37,29 @@ android {
         buildConfigField("String", "TOKEN", "${localProperties["token"]}")
     }
 
-    signingConfigs {
-        create("release") {
-            storeFile = file("${keystoreProperties["store_file"]}")
-            keyAlias = "${keystoreProperties["key_alias"]}"
-            keyPassword = "${keystoreProperties["key_password"]}"
-            storePassword = "${keystoreProperties["keystore_password"]}"
+    val signingFile = rootProject.file("app/.signing/keystore.properties")
+    val releaseSigningConfig =
+        if (signingFile.exists()) {
+            val keystoreProperties =
+                Properties().apply {
+                    load(FileInputStream(signingFile))
+                }
+
+            signingConfigs.create("release") {
+                storeFile = file("${keystoreProperties["store_file"]}")
+                keyAlias = "${keystoreProperties["key_alias"]}"
+                keyPassword = "${keystoreProperties["key_password"]}"
+                storePassword = "${keystoreProperties["keystore_password"]}"
+            }
+        } else {
+            null
         }
-    }
 
     buildFeatures {
         defaultConfig {
             buildConfig = true
         }
+        compose = true
     }
 
     buildTypes {
@@ -72,8 +77,11 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
+                "${project(":domain").projectDir}/consumer-rules.pro",
             )
-            signingConfig = signingConfigs.getByName("release")
+            if (releaseSigningConfig != null) {
+                signingConfig = releaseSigningConfig
+            }
         }
     }
 
@@ -92,6 +100,10 @@ android {
     kapt {
         correctErrorTypes = true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.2"
+    }
 }
 
 dependencies {
@@ -102,22 +114,12 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
-    // JUnit4
-    testImplementation(libs.junit)
-    testImplementation(libs.junitparams)
-
     // JUnit5
     testImplementation(libs.junit5)
     testRuntimeOnly(libs.junit.vintage.engine)
 
     // AssertJ
     testImplementation(libs.assertj.core)
-
-    // Android Espresso
-    androidTestImplementation(libs.androidx.espresso.core)
-
-    // Android LiveData Test
-    testImplementation(libs.androidx.arch.core)
 
     // Android Test Runner
     androidTestImplementation(libs.androidx.test.runner)
@@ -160,6 +162,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.messaging.ktx)
 
     // Room
     implementation(libs.room)
@@ -170,22 +173,17 @@ dependencies {
     // Fragment
     implementation(libs.androidx.fragment.ktx)
 
-    // Coroutines Test
-    testImplementation(libs.kotlinx.coroutines.test)
-
-    // Mockk
-    testImplementation(libs.mockk)
-    testImplementation(libs.mockk.agent)
-    androidTestImplementation(libs.mockk.agent)
-    androidTestImplementation(libs.mockk.android)
-
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
-    // Google Map
+    // Google Maps SDK
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
+    implementation(libs.maps.ktx)
+
+    // Google Maps SDK for Android utility library
+    implementation(libs.maps.utils.ktx)
 
     // Google Place
     implementation(libs.places)
@@ -208,6 +206,41 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.extension)
+
+    // Compose 기본 설정
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+
+    // Material Design 3
+    implementation(libs.androidx.material3)
+
+    // Compose core UI
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.ui.tooling.preview)
+
+    // Hilt & Navigation
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
+
+    // Compose Coil
+    implementation(libs.coil.compose)
+
+    // Compose UI Test
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Compose ViewModel
+    implementation(libs.lifecycle.viewmodel.compose)
+
+    // Compose ConstraintLayout
+    implementation(libs.androidx.constraintlayout.compose)
+
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":presentation"))
 }
 
 secrets {

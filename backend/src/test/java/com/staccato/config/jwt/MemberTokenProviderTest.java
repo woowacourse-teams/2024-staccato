@@ -5,17 +5,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-
+import com.staccato.ServiceSliceTest;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-
 import io.jsonwebtoken.Claims;
 
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
-public class MemberTokenProviderTest {
+public class MemberTokenProviderTest extends ServiceSliceTest {
 
     @Autowired
     private MemberRepository memberRepository;

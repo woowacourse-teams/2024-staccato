@@ -1,7 +1,7 @@
 package com.staccato.staccato.domain;
 
 import com.staccato.category.domain.Category;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +113,8 @@ class StaccatoImagesTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                .buildAndSave(categoryRepository);
             List<String> imageUrls = List.of("same1.jpg", "same2.jpg");
 
             Staccato staccato = StaccatoFixtures.defaultStaccato()
@@ -140,7 +141,8 @@ class StaccatoImagesTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                .buildAndSave(categoryRepository);
             List<String> imageUrls = List.of("img1.jpg", "img2.jpg");
 
             Staccato staccato = StaccatoFixtures.defaultStaccato()

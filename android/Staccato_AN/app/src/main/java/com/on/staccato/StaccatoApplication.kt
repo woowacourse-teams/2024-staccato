@@ -1,25 +1,23 @@
 package com.on.staccato
 
 import android.app.Application
-import com.google.android.libraries.places.api.net.PlacesClient
-import com.on.staccato.data.PlacesClientProvider
-import com.on.staccato.data.UserInfoPreferencesManager
-import com.on.staccato.data.network.StaccatoClient
+import android.app.NotificationManager
+import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.libraries.places.api.Places
+import com.on.staccato.presentation.notification.model.ChannelType
 import dagger.hilt.android.HiltAndroidApp
-import retrofit2.Retrofit
 
 @HiltAndroidApp
 class StaccatoApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        retrofit = StaccatoClient.initialize()
-        userInfoPrefsManager = UserInfoPreferencesManager(applicationContext)
-        placesClient = PlacesClientProvider.getClient(this)
+        registerNotificationChannel()
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        Places.initializeWithNewPlacesApiEnabled(this, BuildConfig.MAPS_API_KEY)
     }
 
-    companion object {
-        lateinit var retrofit: Retrofit
-        lateinit var userInfoPrefsManager: UserInfoPreferencesManager
-        lateinit var placesClient: PlacesClient
+    private fun registerNotificationChannel() {
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannels(ChannelType.getAllChannels(applicationContext))
     }
 }

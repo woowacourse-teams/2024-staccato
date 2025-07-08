@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Authorization", description = "Authorization API")
 public interface AuthControllerDocs {
-    @Operation(summary = "등록 및 로그인", description = "애플리케이션을 최초 실행할 때 한 번만 닉네임 입력을 받고, 식별 코드를 발급합니다.")
+    @Operation(summary = "등록 및 로그인", deprecated = true, description = "애플리케이션을 최초 실행할 때 한 번만 닉네임 입력을 받고, 식별 코드를 발급합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "등록 및 로그인 성공", responseCode = "200"),
             @ApiResponse(description = """
@@ -34,7 +34,7 @@ public interface AuthControllerDocs {
     })
     ResponseEntity<LoginResponse> login(@Valid LoginRequest loginRequest);
 
-    @Operation(summary = "고유 코드로 이전 기록 불러오기", description = "사용자에게 발급된 고유 코드로 사용자를 조회하여 토큰을 발급합니다.")
+    @Operation(summary = "고유 코드로 이전 기록 불러오기", deprecated = true, description = "사용자에게 발급된 고유 코드로 사용자를 조회하여 토큰을 발급합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "고유 코드로 사용자 조회 및 토큰 발급 성공", responseCode = "200"),
             @ApiResponse(description = "유효하지 않은 고유 코드일 때", responseCode = "400")

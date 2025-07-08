@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.firebaseCrashlytics) apply false
     alias(libs.plugins.mapsplatformSecretsGradlePlugin) apply false
     alias(libs.plugins.hiltAndroid) apply false
+    alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.jetbrainsKotlinJvm) apply false
 }
 
 buildscript {

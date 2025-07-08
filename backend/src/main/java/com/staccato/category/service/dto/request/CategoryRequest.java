@@ -1,9 +1,5 @@
 package com.staccato.category.service.dto.request;
 
-import com.staccato.category.domain.Category;
-import com.staccato.category.domain.Color;
-import com.staccato.config.swagger.SwaggerExamples;
-
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -11,6 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.staccato.category.domain.Color;
+import com.staccato.config.swagger.SwaggerExamples;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -20,10 +19,8 @@ public record CategoryRequest(
         String categoryThumbnailUrl,
         @Schema(example = SwaggerExamples.CATEGORY_TITLE)
         @NotBlank(message = "카테고리 제목을 입력해주세요.")
-        @Size(max = 30, message = "제목은 공백 포함 30자 이하로 설정해주세요.")
         String categoryTitle,
         @Schema(example = SwaggerExamples.CATEGORY_DESCRIPTION)
-        @Size(max = 500, message = "내용의 최대 허용 글자수는 공백 포함 500자입니다.")
         String description,
         @Schema(example = SwaggerExamples.CATEGORY_START_AT)
         @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -37,25 +34,26 @@ public record CategoryRequest(
         }
     }
 
-    public Category toCategory() {
-        return Category.builder()
-                .thumbnailUrl(categoryThumbnailUrl)
-                .title(categoryTitle)
-                .description(description)
-                .color(Color.GRAY.getName())
-                .startAt(startAt)
-                .endAt(endAt)
-                .build();
-    }
-
-    public CategoryRequestV2 toCategoryRequestV2() {
-        return new CategoryRequestV2(
+    public CategoryUpdateRequest toCategoryUpdateRequest() {
+        return new CategoryUpdateRequest(
                 categoryThumbnailUrl,
                 categoryTitle,
                 description,
                 Color.GRAY.getName(),
                 startAt,
                 endAt
+        );
+    }
+
+    public CategoryCreateRequest toCategoryCreateRequest() {
+        return new CategoryCreateRequest(
+                categoryThumbnailUrl,
+                categoryTitle,
+                description,
+                Color.GRAY.getName(),
+                startAt,
+                endAt,
+                false
         );
     }
 }

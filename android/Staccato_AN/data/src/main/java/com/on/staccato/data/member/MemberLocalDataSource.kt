@@ -1,0 +1,69 @@
+package com.on.staccato.data.member
+
+import android.content.SharedPreferences
+import com.on.staccato.domain.model.MemberProfile
+import com.on.staccato.domain.model.MemberProfile.Companion.EMPTY_STRING
+import com.on.staccato.domain.model.MemberProfile.Companion.INVALID_MEMBER_ID
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
+
+class MemberLocalDataSource
+    @Inject
+    constructor(
+        private val userInfoPrefs: SharedPreferences,
+    ) : MemberDataSource {
+        override suspend fun getToken(): String? =
+            withContext(Dispatchers.IO) {
+                userInfoPrefs.getString(TOKEN_KEY_NAME, EMPTY_STRING)
+            }
+
+        override suspend fun updateToken(newToken: String) {
+            withContext(Dispatchers.IO) {
+                userInfoPrefs.edit().putString(TOKEN_KEY_NAME, newToken).apply()
+            }
+        }
+
+        override suspend fun getMemberProfile(): MemberProfile =
+            withContext(Dispatchers.IO) {
+                MemberProfile(
+                    memberId = getMemberId(),
+                    profileImageUrl = getProfileImageUrl(),
+                    nickname = getNickname(),
+                    uuidCode = getRecoveryCode(),
+                )
+            }
+
+        override suspend fun updateMemberProfile(memberProfile: MemberProfile) {
+            withContext(Dispatchers.IO) {
+                userInfoPrefs.edit()
+                    .putLong(MEMBER_ID_KEY_NAME, memberProfile.memberId)
+                    .putString(PROFILE_IMAGE_URL_KEY_NAME, memberProfile.profileImageUrl)
+                    .putString(NICKNAME_KEY_NAME, memberProfile.nickname)
+                    .putString(RECOVERY_CODE_KEY_NAME, memberProfile.uuidCode)
+                    .apply()
+            }
+        }
+
+        override suspend fun updateProfileImageUrl(url: String?) {
+            withContext(Dispatchers.IO) {
+                userInfoPrefs.edit().putString(PROFILE_IMAGE_URL_KEY_NAME, url ?: EMPTY_STRING).apply()
+            }
+        }
+
+        private fun getMemberId(): Long = userInfoPrefs.getLong(MEMBER_ID_KEY_NAME, INVALID_MEMBER_ID)
+
+        private fun getProfileImageUrl(): String? = userInfoPrefs.getString(PROFILE_IMAGE_URL_KEY_NAME, null)
+
+        private fun getNickname(): String = userInfoPrefs.getString(NICKNAME_KEY_NAME, null) ?: EMPTY_STRING
+
+        private fun getRecoveryCode(): String = userInfoPrefs.getString(RECOVERY_CODE_KEY_NAME, null) ?: EMPTY_STRING
+
+        companion object {
+            private const val TOKEN_KEY_NAME = "com.on.staccato.token"
+            private const val PROFILE_IMAGE_URL_KEY_NAME = "com.on.staccato.profile"
+            private const val NICKNAME_KEY_NAME = "com.on.staccato.nickname"
+            private const val RECOVERY_CODE_KEY_NAME = "com.on.staccato.recovery"
+            private const val MEMBER_ID_KEY_NAME = "com.on.staccato.member_id"
+        }
+    }

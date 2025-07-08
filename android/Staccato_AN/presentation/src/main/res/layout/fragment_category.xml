@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="java.time.LocalDate" />
+
+        <variable
+            name="viewModel"
+            type="com.on.staccato.presentation.category.viewmodel.CategoryViewModel" />
+
+        <variable
+            name="isPermissionCanceled"
+            type="Boolean" />
+
+        <variable
+            name="categoryHandler"
+            type="com.on.staccato.presentation.category.CategoryHandler" />
+
+        <variable
+            name="toolbarHandler"
+            type="com.on.staccato.presentation.common.toolbar.ToolbarHandler" />
+
+        <variable
+            name="role"
+            type="com.on.staccato.domain.model.Role" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".presentation.category.CategoryFragment">
+
+        <include
+            android:id="@+id/include_category_toolbar"
+            layout="@layout/toolbar_detail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            bind:isHost="@{viewModel.category.myRole == role.HOST}"
+            bind:toolbarHandler="@{toolbarHandler}" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/sv_category"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/include_category_toolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_category_thumbnail"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/all_category_thumbnail_photo_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintDimensionRatio="3:2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    bind:coilImageUrl="@{viewModel.category.categoryThumbnailUrl}"
+                    bind:coilPlaceHolder="@{@drawable/category_gradient}"
+                    tools:src="@drawable/shape_place_holder_rectangle" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/category_gradient"
+                    android:visibility="@{viewModel.category.categoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_category_thumbnail"
+                    app:layout_constraintEnd_toEndOf="@id/iv_category_thumbnail"
+                    app:layout_constraintStart_toStartOf="@id/iv_category_thumbnail"
+                    app:layout_constraintTop_toTopOf="@id/iv_category_thumbnail" />
+
+                <TextView
+                    android:id="@+id/tv_category_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:text="@{viewModel.category.title}"
+                    android:textAppearance="@style/Typography.Title1"
+                    android:textColor="@color/absolute_white"
+                    app:layout_constraintBottom_toTopOf="@id/tv_category_period"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_goneMarginBottom="8dp"
+                    tools:text="아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 긴 추억 제목" />
+
+                <TextView
+                    android:id="@+id/tv_category_period"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:textAppearance="@style/Typography.Body4"
+                    android:textColor="@color/absolute_white"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_category_thumbnail"
+                    app:layout_constraintStart_toStartOf="@id/tv_category_title"
+                    bind:categoryEndAt="@{viewModel.category.endAt}"
+                    bind:categoryStartAt="@{viewModel.category.startAt}"
+                    tools:text="2023년 7월 1일 ~ 7월 5일" />
+
+                <TextView
+                    android:id="@+id/tv_category_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="@{viewModel.category.description}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_category_thumbnail"
+                    bind:visibilityByDescription="@{viewModel.category.description}"
+                    tools:text="(추억 소개) Lorem Ipsum is simply dummy text of the printing and typesetting industry. " />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_category_description"
+                    style="@style/DividerStyle"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_description"
+                    bind:visibilityByDescription="@{viewModel.category.description}" />
+
+                <TextView
+                    android:id="@+id/tv_category_mates"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/category_mates"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider_category_description"
+                    bind:visibleOrGone="@{viewModel.category.isShared}" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_category_mates"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="18dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_mates"
+                    bind:visibleOrGone="@{viewModel.category.isShared}"
+                    tools:listitem="@layout/item_member_profile" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_category_mates"
+                    style="@style/DividerStyle"
+                    android:layout_marginTop="18dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_category_mates"
+                    bind:visibleOrGone="@{viewModel.category.isShared}" />
+
+                <TextView
+                    android:id="@+id/tv_category_staccatos"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/category_staccatos"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider_category_mates" />
+
+                <ImageButton
+                    android:id="@+id/btn_category_refresh_staccatos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/transparent"
+                    android:contentDescription="@string/all_staccato_creation_btn_description"
+                    android:paddingHorizontal="6dp"
+                    android:src="@drawable/icon_refresh"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_category_staccatos"
+                    app:layout_constraintStart_toEndOf="@id/tv_category_staccatos"
+                    app:layout_constraintTop_toTopOf="@id/tv_category_staccatos"
+                    bind:visibleOrGone="@{viewModel.category.isShared}" />
+
+                <FrameLayout
+                    android:id="@+id/frame_category_add_staccatos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:onClick="@{() -> categoryHandler.onStaccatoCreationClicked(viewModel.category, isPermissionCanceled)}"
+                    android:paddingVertical="12dp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_category_staccatos"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_category_staccatos">
+
+                    <Button
+                        android:id="@+id/btn_category_add_staccatos"
+                        style="@style/BoundedIconButtonStyle"
+                        android:contentDescription="@string/all_staccato_creation_btn_description"
+                        android:text="@string/category_staccato_creation"
+                        app:icon="@drawable/icon_edit" />
+
+                </FrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_category_staccatos"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="4dp"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingBottom="48dp"
+                    android:scrollbars="none"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/frame_category_add_staccatos"
+                    app:spanCount="@integer/staccato_span_count"
+                    tools:listitem="@layout/item_staccatos" />
+
+                <ImageView
+                    android:id="@+id/iv_category_empty"
+                    android:layout_width="0dp"
+                    android:layout_height="170dp"
+                    android:layout_marginTop="80dp"
+                    android:contentDescription="@string/all_staccato_main_character"
+                    android:paddingBottom="10dp"
+                    android:src="@drawable/staccato_character"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_staccatos"
+                    bind:visibilityByStaccatos="@{viewModel.category.staccatos}" />
+
+                <TextView
+                    android:id="@+id/tv_category_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="100dp"
+                    android:text="@string/category_staccato_empty"
+                    android:textAppearance="@style/Typography.Body3.Not.Resizable"
+                    android:textColor="@color/gray4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_category_empty"
+                    bind:visibilityByStaccatos="@{viewModel.category.staccatos}"
+                    tools:visibility="visible" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/cv_member_invite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/cv_category_exit_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

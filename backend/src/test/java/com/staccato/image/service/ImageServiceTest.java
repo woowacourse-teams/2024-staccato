@@ -1,9 +1,15 @@
 package com.staccato.image.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import static com.staccato.image.infrastructure.FakeS3ObjectClient.FAKE_CLOUD_FRONT_END_POINT;
+
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
@@ -14,9 +20,6 @@ import com.staccato.image.infrastructure.S3ObjectClient;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static com.staccato.image.infrastructure.FakeS3ObjectClient.FAKE_CLOUD_FRONT_END_POINT;
 
 class ImageServiceTest extends ServiceSliceTest {
     @Autowired
@@ -37,7 +40,8 @@ class ImageServiceTest extends ServiceSliceTest {
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withThumbnailUrl(FAKE_CLOUD_FRONT_END_POINT + "/" + "images/category.jpg")
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         StaccatoFixtures.defaultStaccato()
                 .withCategory(category).withStaccatoImages(
                         List.of(FAKE_CLOUD_FRONT_END_POINT + "/" + "images/staccato1-1.jpg",

@@ -1,6 +1,7 @@
 package com.staccato.staccato.service.dto.request;
 
 import com.staccato.config.swagger.SwaggerExamples;
+import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,12 +11,10 @@ import java.util.Objects;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.staccato.category.domain.Category;
-import com.staccato.staccato.domain.StaccatoImages;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,7 +23,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record StaccatoRequest(
         @Schema(example = SwaggerExamples.STACCATO_TITLE)
         @NotBlank(message = "스타카토 제목을 입력해주세요.")
-        @Size(max = 30, message = "스타카토 제목은 공백 포함 30자 이하로 설정해주세요.")
         String staccatoTitle,
         @Schema(example = SwaggerExamples.STACCATO_PLACE_NAME)
         @NotNull(message = "장소 이름을 입력해주세요.")
@@ -48,7 +46,6 @@ public record StaccatoRequest(
         long categoryId,
         @ArraySchema(
                 arraySchema = @Schema(example = SwaggerExamples.IMAGE_URLS))
-        @Size(max = 5, message = "사진은 8장까지만 추가할 수 있어요.")
         List<String> staccatoImageUrls
 ) {
     public StaccatoRequest {
@@ -57,16 +54,17 @@ public record StaccatoRequest(
         }
     }
 
-    public Staccato toStaccato(Category category) {
-        return Staccato.builder()
-                .visitedAt(visitedAt)
-                .title(staccatoTitle)
-                .placeName(placeName)
-                .latitude(latitude)
-                .longitude(longitude)
-                .address(address)
-                .category(category)
-                .staccatoImages(new StaccatoImages(staccatoImageUrls))
-                .build();
+    public Staccato toStaccato(Category category, Member creator) {
+        return Staccato.create(
+                visitedAt,
+                staccatoTitle,
+                placeName,
+                address,
+                latitude,
+                longitude,
+                staccatoImageUrls,
+                category,
+                creator
+        );
     }
 }

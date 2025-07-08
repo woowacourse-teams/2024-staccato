@@ -1,0 +1,16 @@
+# 리뷰 요청 시 Slack 메시지 알림
+name: notify pr review
+
+on:
+  pull_request:
+    types: [review_requested]
+
+jobs:
+  notify:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Notify PR Review
+        uses: naver/notify-pr-review@v1.2.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          slackBotToken: ${{ secrets.SLACK_BOT_TOKEN }}

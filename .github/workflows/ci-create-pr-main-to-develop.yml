@@ -1,0 +1,38 @@
+name: Create Pull Request main To develop
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.HANNAH_PERSONAL_ACCESS_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for an open PR from main to develop using GitHub CLI
+        id: check_open_pr
+        run: |
+          PR_COUNT=$(gh pr list \
+          --base develop \
+          --head main \
+          --state open \
+          --json number \
+          --jq 'length')
+          echo "pr_count=$PR_COUNT" >> $GITHUB_OUTPUT
+
+      - name: Create PR from main to develop using GitHub CLI
+        if: steps.check_open_pr.outputs.pr_count == 0
+        run: |
+          gh pr create \
+            --base develop \
+            --head main \
+            --title "sync: develop 브랜치 최신화" \
+            --body "main 브랜치 변경으로 인한 develop 브랜치 최신화 작업" \
+            --reviewer linirini,s6m1n,Junyoung-WON,Ho-Tea,BurningFalls \
+            --assignee "@me" \
+            --label sync \
+            --project "2024-staccato"

@@ -1,19 +1,15 @@
 package com.staccato.member.domain;
 
 import java.util.UUID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-
 import com.staccato.config.domain.BaseEntity;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -25,15 +21,15 @@ import lombok.NonNull;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @SQLRestriction("is_deleted = false")
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
-    @Column(nullable = false, unique = true)
     @Embedded
+    @EqualsAndHashCode.Include
     private Nickname nickname;
     @Column(columnDefinition = "TEXT")
     private String imageUrl;

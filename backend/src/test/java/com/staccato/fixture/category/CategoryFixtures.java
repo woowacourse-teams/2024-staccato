@@ -2,10 +2,10 @@ package com.staccato.fixture.category;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
+import java.util.Objects;
 import com.staccato.category.domain.Category;
-import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.domain.Color;
 import com.staccato.category.domain.Term;
 import com.staccato.category.repository.CategoryRepository;
@@ -20,17 +20,19 @@ public class CategoryFixtures {
                 .withDescription("categoryDescription")
                 .withColor(Color.PINK)
                 .withTerm(LocalDate.of(2024, 1, 1),
-                        LocalDate.of(2024, 12, 31));
+                        LocalDate.of(2024, 12, 31))
+                .withIsShared(false);
     }
 
     public static class CategoryBuilder {
-        private Long id;
         private String thumbnailUrl;
         private String title;
         private String description;
         private Color color;
         private Term term;
-        private final List<CategoryMember> members = new ArrayList<>();
+        private Boolean isShared;
+        private Member host;
+        private List<Member> guests = new ArrayList<>();
 
         public CategoryBuilder withThumbnailUrl(String thumbnailUrl) {
             this.thumbnailUrl = thumbnailUrl;
@@ -57,23 +59,33 @@ public class CategoryFixtures {
             return this;
         }
 
-        public Category build() {
-            return new Category(thumbnailUrl, title, description, color, term.getStartAt(), term.getEndAt());
+        public CategoryBuilder withIsShared(Boolean isShared) {
+            this.isShared = isShared;
+            return this;
         }
 
-        public Category buildWithMember(Member member) {
-            Category category = build();
-            category.addCategoryMember(member);
+        public CategoryBuilder withHost(Member member) {
+            this.host = member;
+            return this;
+        }
+
+        public CategoryBuilder withGuests(List<Member> members) {
+            this.guests.addAll(members);
+            this.isShared = true;
+            return this;
+        }
+
+        public Category build() {
+            Category category = new Category(thumbnailUrl, title, description, color, term.getStartAt(), term.getEndAt(), isShared);
+            if (Objects.nonNull(host)) {
+                category.addHost(host);
+            }
+            category.addGuests(guests);
             return category;
         }
 
         public Category buildAndSave(CategoryRepository repository) {
             Category category = build();
-            return repository.save(category);
-        }
-
-        public Category buildAndSaveWithMember(Member member, CategoryRepository repository) {
-            Category category = buildWithMember(member);
             return repository.save(category);
         }
     }
