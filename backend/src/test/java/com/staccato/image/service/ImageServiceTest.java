@@ -17,6 +17,7 @@ import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.image.infrastructure.S3ObjectClient;
+import com.staccato.image.service.dto.DeletionResult;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
@@ -54,10 +55,10 @@ class ImageServiceTest extends ServiceSliceTest {
         cloudStorageClient.putS3Object("images/staccato1-4.jpg", null, null);
 
         // when
-        int deleted = imageService.deleteUnusedImages();
+        DeletionResult deleted = imageService.deleteUnusedImages();
 
         // then
-        assertThat(deleted).isEqualTo(2);
+        assertThat(deleted.successCount()).isEqualTo(2);
     }
 
 }

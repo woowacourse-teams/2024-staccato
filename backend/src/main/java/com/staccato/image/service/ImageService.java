@@ -1,27 +1,29 @@
 package com.staccato.image.service;
 
-import com.staccato.category.repository.CategoryRepository;
-import com.staccato.config.log.annotation.Trace;
-import com.staccato.exception.StaccatoException;
-import com.staccato.image.domain.ImageExtension;
-import com.staccato.image.infrastructure.S3ObjectClient;
-import com.staccato.image.service.dto.ImageUrlResponse;
-import com.staccato.staccato.repository.StaccatoImageRepository;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.RequiredArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.staccato.category.repository.CategoryRepository;
+import com.staccato.config.log.annotation.Trace;
+import com.staccato.exception.StaccatoException;
+import com.staccato.image.domain.ImageExtension;
+import com.staccato.image.infrastructure.S3ObjectClient;
+import com.staccato.image.service.dto.DeletionResult;
+import com.staccato.image.service.dto.ImageUrlResponse;
+import com.staccato.staccato.repository.StaccatoImageRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Trace
 @Service
@@ -70,7 +72,7 @@ public class ImageService {
     }
 
     @Transactional(readOnly = true)
-    public int deleteUnusedImages() {
+    public DeletionResult deleteUnusedImages() {
         Set<String> allImageUrls = extractAllImageUrls();
         try {
             return s3ObjectClient.deleteUnusedObjects(allImageUrls);

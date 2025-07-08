@@ -2,10 +2,17 @@ package com.staccato.image.infrastructure;
 
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.staccato.image.service.dto.DeletionResult;
+
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -14,10 +21,12 @@ import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 @Component
 public class S3ObjectClient {
+    private static final Logger log = LoggerFactory.getLogger(S3ObjectClient.class);
     private final S3Client s3Client;
     private final String bucketName;
     private final String endPoint;
@@ -65,9 +74,10 @@ public class S3ObjectClient {
         return url.replace(cloudFrontEndPoint + "/", "");
     }
 
-    public int deleteUnusedObjects(Set<String> usedKeys) {
+    public DeletionResult deleteUnusedObjects(Set<String> usedKeys) {
         String continuationToken = null;
-        AtomicInteger deleteCount = new AtomicInteger(0);
+        AtomicInteger successCounter = new AtomicInteger(0);
+        AtomicInteger failCounter = new AtomicInteger(0);
         do {
             ListObjectsV2Request request = ListObjectsV2Request.builder()
                     .bucket(bucketName)
@@ -78,15 +88,24 @@ public class S3ObjectClient {
             for (S3Object object : response.contents()) {
                 String key = object.key();
                 if (!usedKeys.contains(key)) {
-                    s3Client.deleteObject(DeleteObjectRequest.builder()
-                            .bucket(bucketName)
-                            .key(key)
-                            .build());
-                    deleteCount.incrementAndGet();
+                    deleteOneObject(key, successCounter, failCounter);
                 }
             }
             continuationToken = response.nextContinuationToken();
         } while (continuationToken != null);
-        return deleteCount.get();
+        return new DeletionResult(successCounter.get(), failCounter.get());
+    }
+
+    private void deleteOneObject(String key, AtomicInteger successCounter, AtomicInteger failCounter) {
+        try {
+            s3Client.deleteObject(DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build());
+            successCounter.incrementAndGet();
+        } catch (S3Exception | SdkClientException e) {
+            failCounter.incrementAndGet();
+            log.warn("삭제 실패: {} - {}", key, e.getMessage());
+        }
     }
 }

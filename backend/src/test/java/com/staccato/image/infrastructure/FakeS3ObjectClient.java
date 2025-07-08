@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.staccato.image.service.dto.DeletionResult;
+
 public class FakeS3ObjectClient extends S3ObjectClient {
     public static final String FAKE_CLOUD_FRONT_END_POINT = "fakeCloudFrontEndPoint";
     private final Set<String> storedKeys = new HashSet<>();
@@ -28,11 +30,11 @@ public class FakeS3ObjectClient extends S3ObjectClient {
     }
 
     @Override
-    public int deleteUnusedObjects(Set<String> usedKeys) {
+    public DeletionResult deleteUnusedObjects(Set<String> usedKeys) {
         Set<String> toDelete = storedKeys.stream()
                 .filter(stored -> !usedKeys.contains(stored))
                 .collect(Collectors.toSet());
         storedKeys.removeAll(toDelete);
-        return toDelete.size();
+        return new DeletionResult(toDelete.size(), 0);
     }
 }
