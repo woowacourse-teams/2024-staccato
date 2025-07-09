@@ -38,7 +38,6 @@ public class InvitationService {
     private final CategoryInvitationRepository categoryInvitationRepository;
     private final CategoryMemberRepository categoryMemberRepository;
     private final ApplicationEventPublisher eventPublisher;
-    private final EntityManager entityManager;
 
     @Transactional
     public CategoryInvitationCreateResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
@@ -93,7 +92,6 @@ public class InvitationService {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
         validateInviter(invitation, inviter);
         invitation.cancel();
-        entityManager.flush();
     }
 
     private void validateInviter(CategoryInvitation invitation, Member inviter) {
@@ -114,7 +112,6 @@ public class InvitationService {
             category.addGuests(List.of(invitation.getInvitee()));
         }
         eventPublisher.publishEvent(new CategoryInvitationAcceptedEvent(invitee, category));
-        entityManager.flush();
     }
 
     private boolean isInviteeNotInCategory(Member invitee, Category category) {
@@ -127,7 +124,6 @@ public class InvitationService {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
         invitation.validateInvitee(invitee);
         invitation.reject();
-        entityManager.flush();
     }
 
     private CategoryInvitation getCategoryInvitationById(long invitationId) {

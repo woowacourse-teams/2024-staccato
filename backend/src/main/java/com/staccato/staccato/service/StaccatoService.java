@@ -37,7 +37,6 @@ public class StaccatoService {
     private final CommentRepository commentRepository;
     private final StaccatoImageRepository staccatoImageRepository;
     private final ApplicationEventPublisher eventPublisher;
-    private final EntityManager entityManager;
 
     @Transactional
     public StaccatoIdResponse createStaccato(StaccatoRequest staccatoRequest, Member member) {
@@ -89,7 +88,6 @@ public class StaccatoService {
         List<StaccatoImage> existingImages = staccato.existingImages();
         removeExistingImages(existingImages);
         staccato.update(newStaccato);
-        entityManager.flush();
     }
 
     private void removeExistingImages(List<StaccatoImage> images) {
@@ -121,7 +119,6 @@ public class StaccatoService {
         staccato.validateOwner(member);
         Feeling feeling = feelingRequest.toFeeling();
         staccato.changeFeeling(feeling);
-        entityManager.flush();
     }
 
     private Staccato getStaccatoById(long staccatoId) {
