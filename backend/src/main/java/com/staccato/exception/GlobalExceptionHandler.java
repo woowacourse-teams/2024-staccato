@@ -128,9 +128,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionResponse);
     }
 
-    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    @ExceptionHandler(ConflictException.class)
     @ApiResponse(description = "낙관적 락 충돌 발생", responseCode = "409")
-    public ResponseEntity<ExceptionResponse> handleOptimisticLockingFailure(ObjectOptimisticLockingFailureException e) {
+    public ResponseEntity<ExceptionResponse> handleOptimisticLockingFailure(ConflictException e) {
         String exceptionMessage = "요청하신 데이터가 다른 요청에 의해 수정되었습니다. 새로고침 후 다시 시도해주세요.";
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.CONFLICT.toString(), exceptionMessage);
         log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
@@ -145,25 +145,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.internalServerError().body(exceptionResponse);
     }
 
-    @ExceptionHandler(CannotCreateTransactionException.class)
+    @ExceptionHandler({CannotCreateTransactionException.class, DataAccessException.class, TransactionSystemException.class})
     @ApiResponse(responseCode = "500")
-    public ResponseEntity<ExceptionResponse> handleCannotCreateTransactionException(CannotCreateTransactionException e) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
-        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage(), e.getStackTrace());
-        return ResponseEntity.internalServerError().body(exceptionResponse);
-    }
-
-    @ExceptionHandler(DataAccessException.class)
-    @ApiResponse(responseCode = "500")
-    public ResponseEntity<ExceptionResponse> handleDataAccessException(DataAccessException e) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
-        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage(), e.getStackTrace());
-        return ResponseEntity.internalServerError().body(exceptionResponse);
-    }
-
-    @ExceptionHandler(TransactionSystemException.class)
-    @ApiResponse(responseCode = "500")
-    public ResponseEntity<ExceptionResponse> handleTransactionSystemException(TransactionSystemException e) {
+    public ResponseEntity<ExceptionResponse> handleTransactionSystemException(RuntimeException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
         log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage(), e.getStackTrace());
         return ResponseEntity.internalServerError().body(exceptionResponse);
