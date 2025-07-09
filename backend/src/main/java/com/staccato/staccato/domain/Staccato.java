@@ -19,6 +19,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Version;
+import org.hibernate.annotations.DynamicUpdate;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.config.domain.BaseEntity;
@@ -34,6 +35,7 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicUpdate
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Staccato extends BaseEntity {
     @Id
