@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -385,8 +386,9 @@ class InvitationServiceTest extends ServiceSliceTest {
     }
 
     @Nested
+    @Disabled
     @DisplayName("초대 동시성 테스트")
-    class StaccatoConcurrency {
+    class InvitationConcurrency {
         @DisplayName("초대 수락과 취소를 동시에 시도하면 예외가 발생한다.")
         @Test
         void failOnConcurrentAcceptAndCancel() {

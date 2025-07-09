@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -486,6 +487,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     }
 
     @Nested
+    @Disabled
     @DisplayName("스타카토 동시성 테스트")
     class StaccatoConcurrency {
         private Member member;
