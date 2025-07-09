@@ -2,18 +2,21 @@ package com.staccato.invitation.service;
 
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
+import com.staccato.exception.ConflictException;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
@@ -381,31 +384,55 @@ class InvitationServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("초대 수락과 취소를 동시에 시도하면 낙관적 락 충돌 예외가 발생한다.")
-    @Test
-    void failOnConcurrentAcceptAndCancel() {
-        // given
-        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
-        Long invitationId = invitation.getId();
+    @Nested
+    @DisplayName("초대 동시성 테스트")
+    class StaccatoConcurrency {
+        @DisplayName("초대 수락과 취소를 동시에 시도하면 예외가 발생한다.")
+        @Test
+        void failOnConcurrentAcceptAndCancel() {
+            // given
+            CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+            Long invitationId = invitation.getId();
 
-        //when
-        CompletableFuture<Void> acceptFuture = CompletableFuture.runAsync(() ->
-                assertThatThrownBy(() -> transactionExecutor.executeInNewTransaction(() -> {
-                    invitationService.accept(guest, invitationId);
-                    transactionExecutor.sleep(2000);
-                })).isInstanceOf(ObjectOptimisticLockingFailureException.class)
-        );
+            //when
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+            Future<?> future = executorService.submit(() -> invitationService.accept(guest, invitationId));
+            Future<?> future2 = executorService.submit(() -> invitationService.cancel(host, invitationId));
 
-        CompletableFuture<Void> cancelFuture = CompletableFuture.runAsync(() ->
-                transactionExecutor.executeInNewTransaction(() -> {
-                    transactionExecutor.sleep(500);
-                    invitationService.cancel(host, invitationId);
-                })
-        );
+            // then
+            assertAll(
+                    () -> assertThatThrownBy(() -> {
+                        future.get();
+                        future2.get();
+                    }).hasCauseInstanceOf(ConflictException.class)
+                            .hasMessageContaining("이미 처리 완료된 초대입니다."),
+                    () -> assertThat(categoryInvitationRepository.findById(invitationId).get().getStatus())
+                            .isEqualTo(InvitationStatus.ACCEPTED)
+            );
+        }
 
-        // then
-        CompletableFuture.allOf(acceptFuture, cancelFuture).join();
-        assertThat(categoryInvitationRepository.findById(invitationId).get().getStatus())
-                .isEqualTo(InvitationStatus.CANCELED);
+        @DisplayName("초대 취소과 거절을 동시에 시도하면 예외가 발생한다.")
+        @Test
+        void failOnConcurrentCancelAndReject() {
+            // given
+            CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+            Long invitationId = invitation.getId();
+
+            //when
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+            Future<?> future = executorService.submit(() -> invitationService.cancel(host, invitationId));
+            Future<?> future2 = executorService.submit(() -> invitationService.reject(guest, invitationId));
+
+            // then
+            assertAll(
+                    () -> assertThatThrownBy(() -> {
+                        future.get();
+                        future2.get();
+                    }).hasCauseInstanceOf(ConflictException.class)
+                            .hasMessageContaining("이미 처리 완료된 초대입니다."),
+                    () -> assertThat(categoryInvitationRepository.findById(invitationId).get().getStatus())
+                            .isEqualTo(InvitationStatus.CANCELED)
+            );
+        }
     }
 }

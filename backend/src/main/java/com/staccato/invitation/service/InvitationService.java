@@ -2,13 +2,17 @@ package com.staccato.invitation.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.config.log.annotation.Trace;
+import com.staccato.exception.ConflictException;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.domain.CategoryInvitation;
@@ -36,6 +40,7 @@ public class InvitationService {
     private final CategoryInvitationRepository categoryInvitationRepository;
     private final CategoryMemberRepository categoryMemberRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final EntityManager entityManager;
 
     @Transactional
     public CategoryInvitationCreateResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
@@ -86,9 +91,14 @@ public class InvitationService {
 
     @Transactional
     public void cancel(Member inviter, long invitationId) {
-        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        validateInviter(invitation, inviter);
-        invitation.cancel();
+        try {
+            CategoryInvitation invitation = getCategoryInvitationById(invitationId);
+            validateInviter(invitation, inviter);
+            invitation.cancel();
+            entityManager.flush();
+        } catch (OptimisticLockException | OptimisticLockingFailureException ex) {
+            throw new ConflictException("이미 처리 완료된 초대입니다.");
+        }
     }
 
     private void validateInviter(CategoryInvitation invitation, Member inviter) {
@@ -99,15 +109,20 @@ public class InvitationService {
 
     @Transactional
     public void accept(Member invitee, long invitationId) {
-        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        invitation.validateInvitee(invitee);
-        invitation.accept();
+        try {
+            CategoryInvitation invitation = getCategoryInvitationById(invitationId);
+            invitation.validateInvitee(invitee);
+            invitation.accept();
 
-        Category category = invitation.getCategory();
-        if (isInviteeNotInCategory(invitee, category)) {
-            category.addGuests(List.of(invitation.getInvitee()));
+            Category category = invitation.getCategory();
+            if (isInviteeNotInCategory(invitee, category)) {
+                category.addGuests(List.of(invitation.getInvitee()));
+            }
+            eventPublisher.publishEvent(new CategoryInvitationAcceptedEvent(invitee, category));
+            entityManager.flush();
+        } catch (OptimisticLockException | OptimisticLockingFailureException ex) {
+            throw new ConflictException("이미 처리 완료된 초대입니다.");
         }
-        eventPublisher.publishEvent(new CategoryInvitationAcceptedEvent(invitee, category));
     }
 
     private boolean isInviteeNotInCategory(Member invitee, Category category) {
@@ -116,9 +131,14 @@ public class InvitationService {
 
     @Transactional
     public void reject(Member invitee, long invitationId) {
-        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        invitation.validateInvitee(invitee);
-        invitation.reject();
+        try {
+            CategoryInvitation invitation = getCategoryInvitationById(invitationId);
+            invitation.validateInvitee(invitee);
+            invitation.reject();
+            entityManager.flush();
+        } catch (OptimisticLockException | OptimisticLockingFailureException ex) {
+            throw new ConflictException("이미 처리 완료된 초대입니다.");
+        }
     }
 
     private CategoryInvitation getCategoryInvitationById(long invitationId) {
