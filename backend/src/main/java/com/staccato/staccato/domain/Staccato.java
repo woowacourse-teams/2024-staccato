@@ -19,7 +19,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Version;
-import org.hibernate.annotations.DynamicUpdate;
+import com.google.firebase.database.annotations.NotNull;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.config.domain.BaseEntity;
@@ -35,7 +35,6 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DynamicUpdate
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Staccato extends BaseEntity {
     @Id
@@ -48,7 +47,7 @@ public class Staccato extends BaseEntity {
     private StaccatoTitle title;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Feeling feeling = Feeling.NOTHING;
+    private Feeling feeling;
     @Embedded
     private Spot spot;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -83,6 +82,7 @@ public class Staccato extends BaseEntity {
                 longitude,
                 new StaccatoImages(staccatoImageUrls),
                 category,
+                Feeling.NOTHING,
                 auditor.getId(),
                 auditor.getId());
     }
@@ -97,6 +97,7 @@ public class Staccato extends BaseEntity {
             @NonNull BigDecimal longitude,
             @NonNull StaccatoImages staccatoImages,
             @NonNull Category category,
+            @NotNull Feeling feeling,
             Long createdBy,
             Long modifiedBy
     ) {
@@ -106,6 +107,7 @@ public class Staccato extends BaseEntity {
         this.spot = new Spot(placeName, address, latitude, longitude);
         this.staccatoImages.addAll(staccatoImages, this);
         this.category = category;
+        this.feeling = feeling;
         this.createdBy = createdBy;
         this.modifiedBy = modifiedBy;
     }

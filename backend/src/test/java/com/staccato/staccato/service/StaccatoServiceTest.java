@@ -2,6 +2,9 @@ package com.staccato.staccato.service;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -14,6 +17,7 @@ import com.staccato.category.domain.Color;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
+import com.staccato.exception.ConflictException;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
@@ -37,6 +41,7 @@ import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 import com.staccato.util.TransactionExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -54,8 +59,6 @@ class StaccatoServiceTest extends ServiceSliceTest {
     private CategoryRepository categoryRepository;
     @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private TransactionExecutor transactionExecutor;
 
     @DisplayName("사진 없이도 스타카토를 생성할 수 있다.")
     @Test
@@ -485,47 +488,104 @@ class StaccatoServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("동일한 Staccato를 동시에 수정하면 낙관적 락 예외가 발생한다.")
-    @Test
-    void failOnConcurrentUpdate() {
-        // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
-                .withHost(member)
-                .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
-                .buildAndSave(staccatoRepository);
-        Long staccatoId = staccato.getId();
+    @Nested
+    @DisplayName("스타카토 동시성 테스트")
+    class StaccatoConcurrency {
+        private Member member;
+        private Category category;
+        private Staccato staccato;
 
-        StaccatoRequest request1 = StaccatoRequestFixtures.defaultStaccatoRequest()
-                .withStaccatoTitle("first-update")
-                .withCategoryId(category.getId())
-                .build();
+        @BeforeEach
+        void setUp() {
+            member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+            category = CategoryFixtures.defaultCategory()
+                    .withHost(member)
+                    .buildAndSave(categoryRepository);
+            staccato = StaccatoFixtures.defaultStaccato()
+                    .withTitle("origin")
+                    .withFeeling(Feeling.ANGRY)
+                    .withCategory(category)
+                    .buildAndSave(staccatoRepository);
+        }
 
-        StaccatoRequest request2 = StaccatoRequestFixtures.defaultStaccatoRequest()
-                .withStaccatoTitle("second-update")
-                .withCategoryId(category.getId())
-                .build();
+        @DisplayName("동일한 Staccato를 순차적으로 수정하면 예외가 발생하지 않는다.")
+        @Test
+        void sequentialUpdatesNoConflict() {
+            // given
+            StaccatoRequest request1 = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    .withStaccatoTitle("first")
+                    .withCategoryId(category.getId())
+                    .build();
+            StaccatoRequest request2 = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    .withStaccatoTitle("second")
+                    .withCategoryId(category.getId())
+                    .build();
 
-        // when
-        CompletableFuture<Void> updateFuture1 = CompletableFuture.runAsync(() ->
-                assertThatThrownBy(() -> transactionExecutor.executeInNewTransaction(() -> {
-                    staccatoService.updateStaccatoById(staccatoId, request1, member);
-                    transactionExecutor.sleep(2000);
-                })).isInstanceOf(ObjectOptimisticLockingFailureException.class)
-        );
+            // when & then
+            assertAll(
+                    () -> assertThatNoException().isThrownBy(() ->
+                            staccatoService.updateStaccatoById(staccato.getId(), request1, member)),
+                    () -> assertThatNoException().isThrownBy(() ->
+                            staccatoService.updateStaccatoById(staccato.getId(), request2, member)),
+                    () -> assertThat(staccatoRepository.findById(staccato.getId())
+                            .get().getTitle().getTitle())
+                            .isEqualTo("second")
+            );
+        }
 
-        CompletableFuture<Void> updateFuture2 = CompletableFuture.runAsync(() ->
-                transactionExecutor.executeInNewTransaction(() -> {
-                    transactionExecutor.sleep(500);
-                    staccatoService.updateStaccatoById(staccatoId, request2, member);
-                })
-        );
+        @DisplayName("동일한 Staccato를 동시에 수정하면 예외가 발생한다.")
+        @Test
+        void failOnConcurrentUpdate() {
+            // given
+            StaccatoRequest request1 = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    .withStaccatoTitle("first")
+                    .withCategoryId(category.getId())
+                    .build();
 
-        // then
-        CompletableFuture.allOf(updateFuture1, updateFuture2).join();
-        assertThat(staccatoRepository.findById(staccatoId).get().getTitle().getTitle())
-                .isEqualTo("second-update");
+            StaccatoRequest request2 = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    .withStaccatoTitle("second")
+                    .withCategoryId(category.getId())
+                    .build();
+
+            // when
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+            Future<?> future = executorService.submit(() -> staccatoService.updateStaccatoById(staccato.getId(), request1, member));
+            Future<?> future2 = executorService.submit(() -> staccatoService.updateStaccatoById(staccato.getId(), request2, member));
+
+            // then
+            assertAll(
+                    () -> assertThatThrownBy(() -> {
+                        future.get();
+                        future2.get();
+                    }).hasCauseInstanceOf(ConflictException.class)
+                            .hasMessageContaining("누군가 이 스타카토를 먼저 수정했어요. 최신 상태를 불러온 뒤 다시 시도해주세요."),
+                    () -> assertThat(staccatoRepository.findById(staccato.getId()).get().getTitle().getTitle())
+                            .isEqualTo("first")
+            );
+        }
+
+        @DisplayName("동시에 Staccato의 기분을 수정하면 예외가 발생한다.")
+        @Test
+        void failOnConcurrentFeelingUpdate() {
+            // given
+            FeelingRequest request1 = new FeelingRequest(Feeling.HAPPY.getValue());
+            FeelingRequest request2 = new FeelingRequest(Feeling.SAD.getValue());
+
+            // when
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+            Future<?> future = executorService.submit(() -> staccatoService.updateStaccatoFeelingById(staccato.getId(), member, request1));
+            Future<?> future2 = executorService.submit(() -> staccatoService.updateStaccatoFeelingById(staccato.getId(), member, request2));
+
+            // then
+            assertAll(
+                    () -> assertThatThrownBy(() -> {
+                        future.get();
+                        future2.get();
+                    }).hasCauseInstanceOf(ConflictException.class)
+                            .hasMessageContaining("누군가 기분을 먼저 수정했어요. 최신 상태를 불러온 뒤 다시 시도해주세요."),
+                    () -> assertThat(staccatoRepository.findById(staccato.getId()).get().getFeeling())
+                            .isEqualTo(Feeling.HAPPY)
+            );
+        }
     }
 }

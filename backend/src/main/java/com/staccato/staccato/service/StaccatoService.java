@@ -1,13 +1,17 @@
 package com.staccato.staccato.service;
 
 import java.util.List;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
+import com.staccato.exception.ConflictException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Feeling;
@@ -35,6 +39,7 @@ public class StaccatoService {
     private final CommentRepository commentRepository;
     private final StaccatoImageRepository staccatoImageRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final EntityManager entityManager;
 
     @Transactional
     public StaccatoIdResponse createStaccato(StaccatoRequest staccatoRequest, Member member) {
@@ -71,20 +76,25 @@ public class StaccatoService {
             StaccatoRequest staccatoRequest,
             Member member
     ) {
-        Staccato staccato = getStaccatoById(staccatoId);
-        staccato.validateOwner(member);
+        try {
+            Staccato staccato = getStaccatoById(staccatoId);
+            staccato.validateOwner(member);
 
-        Category targetCategory = getCategoryById(staccatoRequest.categoryId());
-        targetCategory.validateOwner(member);
+            Category targetCategory = getCategoryById(staccatoRequest.categoryId());
+            targetCategory.validateOwner(member);
 
-        if (staccato.hasDifferentCategoryFrom(targetCategory)) {
-            staccato.validateCategoryChangeable(targetCategory);
+            if (staccato.hasDifferentCategoryFrom(targetCategory)) {
+                staccato.validateCategoryChangeable(targetCategory);
+            }
+
+            Staccato newStaccato = staccatoRequest.toStaccato(targetCategory, member);
+            List<StaccatoImage> existingImages = staccato.existingImages();
+            removeExistingImages(existingImages);
+            staccato.update(newStaccato);
+            entityManager.flush();
+        } catch (OptimisticLockException | OptimisticLockingFailureException ex) {
+            throw new ConflictException("누군가 이 스타카토를 먼저 수정했어요. 최신 상태를 불러온 뒤 다시 시도해주세요.");
         }
-
-        Staccato newStaccato = staccatoRequest.toStaccato(targetCategory, member);
-        List<StaccatoImage> existingImages = staccato.existingImages();
-        removeExistingImages(existingImages);
-        staccato.update(newStaccato);
     }
 
     private void removeExistingImages(List<StaccatoImage> images) {
@@ -111,10 +121,15 @@ public class StaccatoService {
 
     @Transactional
     public void updateStaccatoFeelingById(long staccatoId, Member member, FeelingRequest feelingRequest) {
-        Staccato staccato = getStaccatoById(staccatoId);
-        staccato.validateOwner(member);
-        Feeling feeling = feelingRequest.toFeeling();
-        staccato.changeFeeling(feeling);
+        try {
+            Staccato staccato = getStaccatoById(staccatoId);
+            staccato.validateOwner(member);
+            Feeling feeling = feelingRequest.toFeeling();
+            staccato.changeFeeling(feeling);
+            entityManager.flush();
+        } catch (OptimisticLockException | OptimisticLockingFailureException ex) {
+            throw new ConflictException("누군가 기분을 먼저 수정했어요. 최신 상태를 불러온 뒤 다시 시도해주세요.");
+        }
     }
 
     private Staccato getStaccatoById(long staccatoId) {
