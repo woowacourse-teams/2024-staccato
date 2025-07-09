@@ -17,7 +17,7 @@ import com.staccato.exception.ConflictException;
 @Component
 public class OptimisticLockAspect {
 
-    @Around("@annotation(com.staccato.config.aspect.annotation.OptimisticLockHandler)")
+    @Around("@annotation(org.springframework.transaction.annotation.Transactional)")
     public Object wrapOptimisticLock(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             return joinPoint.proceed();
