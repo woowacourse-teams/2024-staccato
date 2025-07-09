@@ -3,16 +3,14 @@ package com.staccato.invitation.service;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.OptimisticLockException;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
+import com.staccato.config.aspect.annotation.OptimisticLockHandler;
 import com.staccato.config.log.annotation.Trace;
-import com.staccato.exception.ConflictException;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.domain.CategoryInvitation;
@@ -90,15 +88,12 @@ public class InvitationService {
     }
 
     @Transactional
+    @OptimisticLockHandler("이미 처리 완료된 초대입니다.")
     public void cancel(Member inviter, long invitationId) {
-        try {
-            CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-            validateInviter(invitation, inviter);
-            invitation.cancel();
-            entityManager.flush();
-        } catch (OptimisticLockException | OptimisticLockingFailureException ex) {
-            throw new ConflictException("이미 처리 완료된 초대입니다.");
-        }
+        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
+        validateInviter(invitation, inviter);
+        invitation.cancel();
+        entityManager.flush();
     }
 
     private void validateInviter(CategoryInvitation invitation, Member inviter) {
@@ -108,21 +103,18 @@ public class InvitationService {
     }
 
     @Transactional
+    @OptimisticLockHandler("이미 처리 완료된 초대입니다.")
     public void accept(Member invitee, long invitationId) {
-        try {
-            CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-            invitation.validateInvitee(invitee);
-            invitation.accept();
+        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
+        invitation.validateInvitee(invitee);
+        invitation.accept();
 
-            Category category = invitation.getCategory();
-            if (isInviteeNotInCategory(invitee, category)) {
-                category.addGuests(List.of(invitation.getInvitee()));
-            }
-            eventPublisher.publishEvent(new CategoryInvitationAcceptedEvent(invitee, category));
-            entityManager.flush();
-        } catch (OptimisticLockException | OptimisticLockingFailureException ex) {
-            throw new ConflictException("이미 처리 완료된 초대입니다.");
+        Category category = invitation.getCategory();
+        if (isInviteeNotInCategory(invitee, category)) {
+            category.addGuests(List.of(invitation.getInvitee()));
         }
+        eventPublisher.publishEvent(new CategoryInvitationAcceptedEvent(invitee, category));
+        entityManager.flush();
     }
 
     private boolean isInviteeNotInCategory(Member invitee, Category category) {
@@ -130,15 +122,12 @@ public class InvitationService {
     }
 
     @Transactional
+    @OptimisticLockHandler("이미 처리 완료된 초대입니다.")
     public void reject(Member invitee, long invitationId) {
-        try {
-            CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-            invitation.validateInvitee(invitee);
-            invitation.reject();
-            entityManager.flush();
-        } catch (OptimisticLockException | OptimisticLockingFailureException ex) {
-            throw new ConflictException("이미 처리 완료된 초대입니다.");
-        }
+        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
+        invitation.validateInvitee(invitee);
+        invitation.reject();
+        entityManager.flush();
     }
 
     private CategoryInvitation getCategoryInvitationById(long invitationId) {

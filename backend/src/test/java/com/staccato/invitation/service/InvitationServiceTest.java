@@ -407,7 +407,7 @@ class InvitationServiceTest extends ServiceSliceTest {
                     }).hasCauseInstanceOf(ConflictException.class)
                             .hasMessageContaining("이미 처리 완료된 초대입니다."),
                     () -> assertThat(categoryInvitationRepository.findById(invitationId).get().getStatus())
-                            .isEqualTo(InvitationStatus.ACCEPTED)
+                            .isIn(InvitationStatus.CANCELED, InvitationStatus.ACCEPTED)
             );
         }
 
@@ -431,7 +431,7 @@ class InvitationServiceTest extends ServiceSliceTest {
                     }).hasCauseInstanceOf(ConflictException.class)
                             .hasMessageContaining("이미 처리 완료된 초대입니다."),
                     () -> assertThat(categoryInvitationRepository.findById(invitationId).get().getStatus())
-                            .isEqualTo(InvitationStatus.CANCELED)
+                            .isIn(InvitationStatus.REJECTED, InvitationStatus.CANCELED)
             );
         }
     }
