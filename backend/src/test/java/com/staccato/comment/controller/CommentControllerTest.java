@@ -13,14 +13,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.staccato.ControllerTest;
 import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
-import com.staccato.comment.service.dto.response.CommentResponse;
-import com.staccato.comment.service.dto.response.CommentResponses;
+import com.staccato.comment.service.dto.response.CommentResponseV2;
+import com.staccato.comment.service.dto.response.CommentResponsesV2;
 import com.staccato.exception.ExceptionResponse;
 
 import com.staccato.fixture.comment.CommentRequestFixtures;
 import com.staccato.fixture.comment.CommentUpdateRequestFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +37,6 @@ import org.springframework.http.MediaType;
 
 public class CommentControllerTest extends ControllerTest {
 
-    private static final int MAX_CONTENT_LENGTH = 500;
     private static final long MIN_STACCATO_ID = 1L;
 
     static Stream<Arguments> invalidCommentRequestProvider() {
@@ -105,25 +105,26 @@ public class CommentControllerTest extends ControllerTest {
     void readCommentsByStaccatoId() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
-        CommentResponse commentResponse = new CommentResponse(1L, 1L, "member", "image.jpg", "내용");
-        CommentResponses commentResponses = new CommentResponses(List.of(commentResponse));
+        CommentResponseV2 commentResponse = new CommentResponseV2(1L, 1L, "member", "image.jpg", "내용", LocalDateTime.of(2024, 6, 1, 14, 0, 0));
+        CommentResponsesV2 commentResponses = new CommentResponsesV2(List.of(commentResponse));
         when(commentService.readAllCommentsByStaccatoId(any(), any())).thenReturn(commentResponses);
         String expectedResponse = """
             {
                 "comments": [
-            	        {
+            	    {
                         "commentId": 1,
                         "memberId": 1,
                         "nickname": "member",
                         "memberImageUrl": "image.jpg",
-                        "content": "내용"
+                        "content": "내용",
+                        "createdAt": "2024-06-01T14:00:00"
                     }
                 ]
             }
             """;
 
         // when & then
-        mockMvc.perform(get("/comments")
+        mockMvc.perform(get("/v2/comments")
                 .param("staccatoId", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "token"))
