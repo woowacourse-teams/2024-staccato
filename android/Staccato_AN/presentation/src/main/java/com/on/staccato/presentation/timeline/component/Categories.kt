@@ -15,27 +15,27 @@ import com.on.staccato.presentation.timeline.model.dummyTimelineUiModels
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
-private const val TIMELINE_TOP_SCROLL_OFFSET = 0
+private const val CATEGORIES_TOP_SCROLL_OFFSET = 0
 
 @Composable
-fun Timeline(
-    timeline: List<TimelineUiModel>,
+fun Categories(
+    categories: List<TimelineUiModel>,
     onCategoryClicked: (Long) -> Unit,
     onTopChanged: (Boolean) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
-    val previousHashCode = rememberSaveable { mutableIntStateOf(timeline.hashCode()) }
+    val previousHashCode = rememberSaveable { mutableIntStateOf(categories.hashCode()) }
 
-    LaunchedEffect(timeline.hashCode()) {
-        if (timeline.hashCode() != previousHashCode.intValue) {
+    LaunchedEffect(categories.hashCode()) {
+        if (categories.hashCode() != previousHashCode.intValue) {
             lazyListState.animateScrollToItem(0)
-            previousHashCode.intValue = timeline.hashCode()
+            previousHashCode.intValue = categories.hashCode()
         }
     }
 
     LaunchedEffect(lazyListState) {
         snapshotFlow { lazyListState.firstVisibleItemScrollOffset }
-            .map { it == TIMELINE_TOP_SCROLL_OFFSET }
+            .map { it == CATEGORIES_TOP_SCROLL_OFFSET }
             .distinctUntilChanged()
             .collect {
                 onTopChanged(it)
@@ -46,11 +46,11 @@ fun Timeline(
         state = lazyListState,
     ) {
         items(
-            items = timeline,
+            items = categories,
             key = { it.categoryId },
-        ) { timelineCategory ->
+        ) { category ->
             CategoryItem(
-                category = timelineCategory,
+                category = category,
                 onCategoryClicked = onCategoryClicked,
             )
             DefaultDivider()
@@ -60,9 +60,9 @@ fun Timeline(
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-private fun TimelinePreview() {
-    Timeline(
-        timeline = dummyTimelineUiModels,
+private fun CategoriesPreview() {
+    Categories(
+        categories = dummyTimelineUiModels,
         onCategoryClicked = {},
         onTopChanged = {},
     )
