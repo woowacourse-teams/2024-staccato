@@ -6,13 +6,9 @@ import java.util.stream.Collectors;
 
 import com.staccato.image.service.dto.DeletionResult;
 
-public class FakeS3ObjectClient extends S3ObjectClient {
+public class FakeS3ObjectClient implements CloudStorageClient {
     public static final String FAKE_CLOUD_FRONT_END_POINT = "fakeCloudFrontEndPoint";
     private final Set<String> storedKeys = new HashSet<>();
-
-    public FakeS3ObjectClient() {
-        super("fakeBuket", "fakeEndPoint", FAKE_CLOUD_FRONT_END_POINT, "fakeAccessKey", "fakeSecretAccessKey");
-    }
 
     @Override
     public void putS3Object(String objectKey, String contentType, byte[] imageBytes) {

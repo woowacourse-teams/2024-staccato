@@ -25,7 +25,7 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 @Component
-public class S3ObjectClient {
+public class S3ObjectClient implements CloudStorageClient {
     private static final Logger log = LoggerFactory.getLogger(S3ObjectClient.class);
     private final S3Client s3Client;
     private final String bucketName;
@@ -49,6 +49,7 @@ public class S3ObjectClient {
         this.cloudFrontEndPoint = cloudFrontEndPoint;
     }
 
+    @Override
     public void putS3Object(String objectKey, String contentType, byte[] imageBytes) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -59,6 +60,7 @@ public class S3ObjectClient {
         s3Client.putObject(putObjectRequest, RequestBody.fromBytes(imageBytes));
     }
 
+    @Override
     public String getUrl(String keyName) {
         GetUrlRequest request = GetUrlRequest.builder()
                 .bucket(bucketName)
@@ -70,10 +72,12 @@ public class S3ObjectClient {
         return url.replace(endPoint, cloudFrontEndPoint);
     }
 
+    @Override
     public String extractKeyFromUrl(String url) {
         return url.replace(cloudFrontEndPoint + "/", "");
     }
 
+    @Override
     public DeletionResult deleteUnusedObjects(Set<String> usedKeys) {
         String continuationToken = null;
         AtomicInteger successCounter = new AtomicInteger(0);

@@ -18,7 +18,7 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.StaccatoException;
 import com.staccato.image.domain.ImageExtension;
-import com.staccato.image.infrastructure.S3ObjectClient;
+import com.staccato.image.infrastructure.CloudStorageClient;
 import com.staccato.image.service.dto.DeletionResult;
 import com.staccato.image.service.dto.ImageUrlResponse;
 import com.staccato.staccato.repository.StaccatoImageRepository;
@@ -34,7 +34,7 @@ public class ImageService {
 
     @Value("${image.folder.name}")
     private String imageFolderName;
-    private final S3ObjectClient s3ObjectClient;
+    private final CloudStorageClient s3ObjectClient;
     private final StaccatoImageRepository staccatoImageRepository;
     private final CategoryRepository categoryRepository;
 

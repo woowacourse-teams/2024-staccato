@@ -4,24 +4,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import static com.staccato.image.infrastructure.FakeS3ObjectClient.FAKE_CLOUD_FRONT_END_POINT;
 
+import java.security.interfaces.XECKey;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 
+import com.staccato.S3TestConfig;
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
+import com.staccato.image.infrastructure.CloudStorageClient;
 import com.staccato.image.infrastructure.S3ObjectClient;
 import com.staccato.image.service.dto.DeletionResult;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
 
+@Import({S3TestConfig.class})
 class ImageServiceTest extends ServiceSliceTest {
     @Autowired
     private ImageService imageService;
@@ -32,7 +37,7 @@ class ImageServiceTest extends ServiceSliceTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
-    private S3ObjectClient cloudStorageClient;
+    private CloudStorageClient cloudStorageClient;
 
     @DisplayName("사용되지 않는 S3 버킷 내 객체를 삭제합니다.")
     @Test
