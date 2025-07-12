@@ -415,7 +415,7 @@ class CategoryControllerTest extends ControllerTest {
                 .andExpect(content().json(expectedResponse, true));
     }
 
-    @DisplayName("특정 카테고리에 속한 스타카토 목록 조회에 성공한다.")
+    @DisplayName("특정 카테고리에 속한 스타카토 위치 목록 조회에 성공한다.")
     @Test
     void readStaccatoLocationsByCategory() throws Exception {
         // given
@@ -433,10 +433,10 @@ class CategoryControllerTest extends ControllerTest {
         );
         CategoryStaccatoLocationResponses responses = new CategoryStaccatoLocationResponses(List.of(response1, response2));
 
-        when(categoryService.readAllLocationStaccatoByCategory(any(Member.class), anyLong(), any(CategoryStaccatoLocationRangeRequest.class))).thenReturn(responses);
+        when(categoryService.readStaccatoLocationsByCategory(any(Member.class), anyLong(), any(CategoryStaccatoLocationRangeRequest.class))).thenReturn(responses);
         String expectedResponse = """
                 {
-                    "categoryStaccatoLocationResponses": [
+                    "staccatos": [
                          {
                              "staccatoId": null,
                              "staccatoColor": "pink",
@@ -454,7 +454,7 @@ class CategoryControllerTest extends ControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(get("/categories/1/staccatos")
+        mockMvc.perform(get("/categories/1/staccatos/locations")
                         .param("neLat", "81")
                         .param("neLng", "124")
                         .param("swLat", "80")
