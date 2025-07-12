@@ -16,14 +16,14 @@ import androidx.constraintlayout.compose.Dimension
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.component.clickableWithoutRipple
-import com.on.staccato.presentation.timeline.model.TimelineUiModel
-import com.on.staccato.presentation.timeline.model.dummyTimelineUiModels
+import com.on.staccato.presentation.timeline.model.CategoryUiModel
+import com.on.staccato.presentation.timeline.model.dummyCategoryUiModels
 import com.on.staccato.theme.Title3
 
 @Composable
 fun CategoryItem(
     modifier: Modifier = Modifier,
-    category: TimelineUiModel,
+    category: CategoryUiModel,
     onCategoryClicked: (Long) -> Unit,
 ) {
     val hasPeriod = category.startAt != null && category.endAt != null
@@ -148,7 +148,7 @@ fun CategoryItem(
 @Composable
 private fun CategoryItemPreview(
     @PreviewParameter(CategoryItemPreviewParameterProvider::class)
-    category: TimelineUiModel,
+    category: CategoryUiModel,
 ) {
     CategoryItem(
         category = category,
@@ -157,6 +157,6 @@ private fun CategoryItemPreview(
 }
 
 private class CategoryItemPreviewParameterProvider(
-    override val values: Sequence<TimelineUiModel> =
-        sequenceOf(*dummyTimelineUiModels.toTypedArray()),
-) : PreviewParameterProvider<TimelineUiModel>
+    override val values: Sequence<CategoryUiModel> =
+        sequenceOf(*dummyCategoryUiModels.toTypedArray()),
+) : PreviewParameterProvider<CategoryUiModel>

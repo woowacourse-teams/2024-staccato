@@ -3,7 +3,7 @@ package com.on.staccato.presentation.timeline.model
 import com.on.staccato.presentation.color.CategoryColor
 import java.time.LocalDate
 
-data class TimelineUiModel(
+data class CategoryUiModel(
     val categoryId: Long,
     val categoryTitle: String,
     val categoryThumbnailUrl: String? = null,
@@ -15,8 +15,8 @@ data class TimelineUiModel(
     val staccatoCount: Long,
 )
 
-val dummyTimelineUiModel =
-    TimelineUiModel(
+val dummyCategoryUiModel =
+    CategoryUiModel(
         categoryId = 1,
         categoryThumbnailUrl = null,
         categoryTitle = "카테고리 제목",
@@ -28,9 +28,9 @@ val dummyTimelineUiModel =
         staccatoCount = 100,
     )
 
-val dummyTimelineUiModels: List<TimelineUiModel> =
+val dummyCategoryUiModels: List<CategoryUiModel> =
     listOf(
-        dummyTimelineUiModel.copy(
+        dummyCategoryUiModel.copy(
             categoryId = 1L,
             categoryTitle = "기간이 없는 공동 카테고리",
             startAt = null,
@@ -38,19 +38,19 @@ val dummyTimelineUiModels: List<TimelineUiModel> =
             participants = dummyParticipantsUiModels[0],
             color = CategoryColor.LIGHT_MINT,
         ),
-        dummyTimelineUiModel.copy(
+        dummyCategoryUiModel.copy(
             categoryId = 2L,
             categoryTitle = "기간이 있는 공동 카테고리",
             participants = dummyParticipantsUiModels[1],
             color = CategoryColor.LIGHT_BLUE,
         ),
-        dummyTimelineUiModel.copy(
+        dummyCategoryUiModel.copy(
             categoryId = 3L,
             categoryTitle = "아주아주 긴 제목을 가진 기간이 있는 공동 카테고리~~",
             participants = dummyParticipantsUiModels[2],
             color = CategoryColor.LIGHT_INDIGO,
         ),
-        dummyTimelineUiModel.copy(
+        dummyCategoryUiModel.copy(
             categoryId = 4L,
             categoryTitle = "기간이 없는 개인 카테고리",
             startAt = null,
@@ -58,12 +58,12 @@ val dummyTimelineUiModels: List<TimelineUiModel> =
             isShared = false,
             color = CategoryColor.LIGHT_PURPLE,
         ),
-        dummyTimelineUiModel.copy(
+        dummyCategoryUiModel.copy(
             categoryId = 5L,
             categoryTitle = "기간이 있는 개인 카테고리",
             isShared = false,
         ),
-        dummyTimelineUiModel.copy(
+        dummyCategoryUiModel.copy(
             categoryId = 6L,
             categoryTitle = "아주아주 긴 제목을 가진 기간이 없는 개인 카테고리~~",
             startAt = null,

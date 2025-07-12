@@ -10,8 +10,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.staccato.presentation.component.DefaultDivider
-import com.on.staccato.presentation.timeline.model.TimelineUiModel
-import com.on.staccato.presentation.timeline.model.dummyTimelineUiModels
+import com.on.staccato.presentation.timeline.model.CategoryUiModel
+import com.on.staccato.presentation.timeline.model.dummyCategoryUiModels
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
@@ -19,7 +19,7 @@ private const val CATEGORIES_TOP_SCROLL_OFFSET = 0
 
 @Composable
 fun Categories(
-    categories: List<TimelineUiModel>,
+    categories: List<CategoryUiModel>,
     onCategoryClicked: (Long) -> Unit,
     onTopChanged: (Boolean) -> Unit,
 ) {
@@ -62,7 +62,7 @@ fun Categories(
 @Composable
 private fun CategoriesPreview() {
     Categories(
-        categories = dummyTimelineUiModels,
+        categories = dummyCategoryUiModels,
         onCategoryClicked = {},
         onTopChanged = {},
     )
