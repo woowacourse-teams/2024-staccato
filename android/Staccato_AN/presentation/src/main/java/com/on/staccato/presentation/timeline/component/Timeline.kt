@@ -49,7 +49,7 @@ fun Timeline(
             items = timeline,
             key = { it.categoryId },
         ) { timelineCategory ->
-            TimelineItem(
+            CategoryItem(
                 category = timelineCategory,
                 onCategoryClicked = onCategoryClicked,
             )

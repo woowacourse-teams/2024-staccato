@@ -21,7 +21,7 @@ import com.on.staccato.presentation.timeline.model.dummyTimelineUiModels
 import com.on.staccato.theme.Title3
 
 @Composable
-fun TimelineItem(
+fun CategoryItem(
     modifier: Modifier = Modifier,
     category: TimelineUiModel,
     onCategoryClicked: (Long) -> Unit,
@@ -146,17 +146,17 @@ fun TimelineItem(
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-private fun TimelineItemPreview(
-    @PreviewParameter(TimelineItemPreviewParameterProvider::class)
+private fun CategoryItemPreview(
+    @PreviewParameter(CategoryItemPreviewParameterProvider::class)
     category: TimelineUiModel,
 ) {
-    TimelineItem(
+    CategoryItem(
         category = category,
         onCategoryClicked = {},
     )
 }
 
-private class TimelineItemPreviewParameterProvider(
+private class CategoryItemPreviewParameterProvider(
     override val values: Sequence<TimelineUiModel> =
         sequenceOf(*dummyTimelineUiModels.toTypedArray()),
 ) : PreviewParameterProvider<TimelineUiModel>
