@@ -417,7 +417,7 @@ class CategoryControllerTest extends ControllerTest {
 
     @DisplayName("특정 카테고리에 속한 스타카토 목록 조회에 성공한다.")
     @Test
-    void readAllStaccatoLocationByCategory() throws Exception {
+    void readStaccatoLocationsByCategory() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();

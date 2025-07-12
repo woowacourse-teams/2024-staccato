@@ -84,7 +84,7 @@ public class CategoryController implements CategoryControllerDocs {
     }
 
     @GetMapping("/{categoryId}/staccatos/locations")
-    public ResponseEntity<CategoryStaccatoLocationResponses> readAllStaccatoLocationByCategory(
+    public ResponseEntity<CategoryStaccatoLocationResponses> readStaccatoLocationsByCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Validated @ModelAttribute CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest
