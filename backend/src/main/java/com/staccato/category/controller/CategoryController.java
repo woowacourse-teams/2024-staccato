@@ -98,10 +98,14 @@ public class CategoryController implements CategoryControllerDocs {
     public ResponseEntity<CategoryStaccatoResponses> readStaccatosByCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
-            @Validated @ModelAttribute CategoryStaccatoPaginationRequest categoryStaccatoPaginationRequest
+            @RequestParam(required = false) String cursor,
+            @RequestParam(defaultValue = "10")
+            @Min(value = 1, message = "limit는 1 이상, 100 이하여야 합니다.")
+            @Max(value = 100, message = "limit는 1 이상, 100 이하여야 합니다.")
+            int limit
     ) {
         CategoryStaccatoResponses categoryStaccatoResponses = categoryService.readStaccatosByCategory(
-                member, categoryId, categoryStaccatoPaginationRequest);
+                member, categoryId, cursor, limit);
         return ResponseEntity.ok().body(categoryStaccatoResponses);
     }
 

@@ -38,4 +38,6 @@ public class SwaggerExamples {
     public static final String NOTIFICATION_TOKEN = "token";
     public static final String DEVICE_TYPE = "ANDROID";
     public static final String DEVICE_ID = "241Ae231es";
+    public static final String PAGINATION_CURSOR = "base64EncodedValue";
+    public static final String PAGINATION_LIMIT = "10";
 }

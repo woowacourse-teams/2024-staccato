@@ -499,6 +499,57 @@ class CategoryControllerTest extends ControllerTest {
                 .andExpect(content().json(expectedResponse, true));
     }
 
+    @DisplayName("limit 값이 유효 범위를 벗어나면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(ints = {0, 101})
+    void cannotReadStaccatosByCategoryIfLimitOutOfBounds(int limit) throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
+        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), "nextCursor");
+
+        when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), anyString(), anyInt())).thenReturn(responses);
+
+        // when & then
+        mockMvc.perform(get("/categories/1/staccatos")
+                        .param("limit", String.valueOf(limit))
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("limit는 1 이상, 100 이하여야 합니다."));
+    }
+
+    @DisplayName("limit 값이 비어있을 경우 기본값 10이 적용된다.")
+    @Test
+    void defaultLimitIsApplied() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
+        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), "nextCursor");
+
+        when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), anyString(), anyInt())).thenReturn(responses);
+
+        // when
+        mockMvc.perform(get("/categories/1/staccatos")
+                        .param("cursor", "cursor")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk());
+
+        // then
+        ArgumentCaptor<Integer> limitCaptor = ArgumentCaptor.forClass(Integer.class);
+        verify(categoryService).readStaccatosByCategory(
+                any(Member.class),
+                anyLong(),
+                anyString(),
+                limitCaptor.capture()
+        );
+        assertThat(limitCaptor.getValue()).isEqualTo(10);    }
+
     @DisplayName("적합한 경로변수와 데이터를 통해 스타카토 수정에 성공한다.")
     @ParameterizedTest
     @MethodSource("categoryRequestProvider")

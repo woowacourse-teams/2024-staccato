@@ -123,7 +123,8 @@ public class CategoryService {
     public CategoryStaccatoResponses readStaccatosByCategory(
             Member member,
             long categoryId,
-            CategoryStaccatoPaginationRequest categoryStaccatoPaginationRequest
+            String cursor,
+            int limit
     ) {
         return null;
     }
