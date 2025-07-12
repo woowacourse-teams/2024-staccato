@@ -89,7 +89,7 @@ public class CategoryController implements CategoryControllerDocs {
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Validated @ModelAttribute CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest
     ) {
-        CategoryStaccatoLocationResponses categoryStaccatoLocationResponses = categoryService.readAllStaccatoByCategory(
+        CategoryStaccatoLocationResponses categoryStaccatoLocationResponses = categoryService.readAllLocationStaccatoByCategory(
                 member, categoryId, categoryStaccatoLocationRangeRequest);
         return ResponseEntity.ok().body(categoryStaccatoLocationResponses);
     }

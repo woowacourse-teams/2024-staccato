@@ -433,7 +433,7 @@ class CategoryControllerTest extends ControllerTest {
         );
         CategoryStaccatoLocationResponses responses = new CategoryStaccatoLocationResponses(List.of(response1, response2));
 
-        when(categoryService.readAllStaccatoByCategory(any(Member.class), anyLong(), any(CategoryStaccatoLocationRangeRequest.class))).thenReturn(responses);
+        when(categoryService.readAllLocationStaccatoByCategory(any(Member.class), anyLong(), any(CategoryStaccatoLocationRangeRequest.class))).thenReturn(responses);
         String expectedResponse = """
                 {
                     "categoryStaccatoLocationResponses": [

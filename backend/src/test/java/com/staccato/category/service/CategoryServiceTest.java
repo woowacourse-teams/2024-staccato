@@ -323,7 +323,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
-        CategoryStaccatoLocationResponses responses = categoryService.readAllStaccatoByCategory(
+        CategoryStaccatoLocationResponses responses = categoryService.readAllLocationStaccatoByCategory(
                 member, category.getId(), new CategoryStaccatoLocationRangeRequest(null, null, null, null));
 
         // then
