@@ -11,15 +11,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.staccato.ControllerTest;
+import com.staccato.comment.domain.Comment;
 import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
-import com.staccato.comment.service.dto.response.CommentResponse;
-import com.staccato.comment.service.dto.response.CommentResponses;
+import com.staccato.comment.service.dto.response.CommentResponseV2;
+import com.staccato.comment.service.dto.response.CommentResponsesV2;
 import com.staccato.exception.ExceptionResponse;
 
+import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.comment.CommentRequestFixtures;
 import com.staccato.fixture.comment.CommentUpdateRequestFixtures;
 import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.member.domain.Member;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -36,7 +39,6 @@ import org.springframework.http.MediaType;
 
 public class CommentControllerTest extends ControllerTest {
 
-    private static final int MAX_CONTENT_LENGTH = 500;
     private static final long MIN_STACCATO_ID = 1L;
 
     static Stream<Arguments> invalidCommentRequestProvider() {
@@ -105,15 +107,23 @@ public class CommentControllerTest extends ControllerTest {
     void readCommentsByStaccatoId() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
-        CommentResponse commentResponse = new CommentResponse(1L, 1L, "member", "image.jpg", "내용");
-        CommentResponses commentResponses = new CommentResponses(List.of(commentResponse));
-        when(commentService.readAllCommentsByStaccatoId(any(), any())).thenReturn(commentResponses);
+        Member member = MemberFixtures.defaultMember()
+                .withNickname("member")
+                .withImageUrl("image.jpg")
+                .build();
+        Comment comment = CommentFixtures.defaultComment()
+                .withMember(member)
+                .withContent("내용")
+                .build();
+        CommentResponseV2 commentResponseV2 = new CommentResponseV2(comment);
+        CommentResponsesV2 commentResponsesV2 = new CommentResponsesV2(List.of(commentResponseV2));
+        when(commentService.readAllCommentsByStaccatoId(any(), any())).thenReturn(commentResponsesV2);
         String expectedResponse = """
             {
                 "comments": [
-            	        {
-                        "commentId": 1,
-                        "memberId": 1,
+            	    {
+                        "commentId": null,
+                        "memberId": null,
                         "nickname": "member",
                         "memberImageUrl": "image.jpg",
                         "content": "내용"
@@ -124,11 +134,11 @@ public class CommentControllerTest extends ControllerTest {
 
         // when & then
         mockMvc.perform(get("/comments")
-                .param("staccatoId", "1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "token"))
-            .andExpect(status().isOk())
-            .andExpect(content().json(expectedResponse, true));
+                        .param("staccatoId", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("스타카토 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")

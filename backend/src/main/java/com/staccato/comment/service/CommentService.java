@@ -12,7 +12,7 @@ import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.event.CommentCreatedEvent;
 import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
-import com.staccato.comment.service.dto.response.CommentResponses;
+import com.staccato.comment.service.dto.response.CommentResponsesV2;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
@@ -41,13 +41,13 @@ public class CommentService {
         return comment.getId();
     }
 
-    public CommentResponses readAllCommentsByStaccatoId(Member member, Long staccatoId) {
+    public CommentResponsesV2 readAllCommentsByStaccatoId(Member member, Long staccatoId) {
         Staccato staccato = getStaccato(staccatoId);
         staccato.validateOwner(member);
         List<Comment> comments = commentRepository.findAllByStaccatoId(staccatoId);
         sortByCreatedAtAscending(comments);
 
-        return CommentResponses.from(comments);
+        return CommentResponsesV2.from(comments);
     }
 
     private Staccato getStaccato(long staccatoId) {

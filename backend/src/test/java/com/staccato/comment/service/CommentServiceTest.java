@@ -1,8 +1,12 @@
 package com.staccato.comment.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
@@ -10,8 +14,8 @@ import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
-import com.staccato.comment.service.dto.response.CommentResponse;
-import com.staccato.comment.service.dto.response.CommentResponses;
+import com.staccato.comment.service.dto.response.CommentResponseV2;
+import com.staccato.comment.service.dto.response.CommentResponsesV2;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
@@ -24,9 +28,6 @@ import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CommentServiceTest extends ServiceSliceTest {
 
@@ -115,11 +116,10 @@ class CommentServiceTest extends ServiceSliceTest {
         commentService.createComment(commentRequestOfAnotherStaccato, member);
 
         // when
-        CommentResponses commentResponses = commentService.readAllCommentsByStaccatoId(member,
-                staccato.getId());
+        CommentResponsesV2 commentResponses = commentService.readAllCommentsByStaccatoId(member, staccato.getId());
 
         // then
-        assertThat(commentResponses.comments().stream().map(CommentResponse::commentId).toList())
+        assertThat(commentResponses.comments().stream().map(CommentResponseV2::commentId).toList())
                 .containsExactly(commentId1, commentId2);
     }
 
