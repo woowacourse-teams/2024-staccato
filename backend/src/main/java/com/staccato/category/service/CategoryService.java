@@ -120,6 +120,14 @@ public class CategoryService {
         return CategoryStaccatoLocationResponses.of(staccatos);
     }
 
+    public CategoryStaccatoResponses readStaccatosByCategory(
+            Member member,
+            long categoryId,
+            CategoryStaccatoPaginationRequest categoryStaccatoPaginationRequest
+    ) {
+        return null;
+    }
+
     @Transactional
     public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
         Category originCategory = getCategoryById(categoryId);

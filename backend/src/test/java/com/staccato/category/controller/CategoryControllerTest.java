@@ -464,6 +464,41 @@ class CategoryControllerTest extends ControllerTest {
                 .andExpect(content().json(expectedResponse, true));
     }
 
+    @DisplayName("특정 카테고리에 속한 스타카토 목록 조회에 성공한다.")
+    @Test
+    void readStaccatosByCategory() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
+        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), "nextCursor");
+
+        when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), any(CategoryStaccatoPaginationRequest.class))).thenReturn(responses);
+        String expectedResponse = """
+                {
+                    "staccatos": [
+                            {
+                                "staccatoId": null,
+                                "staccatoTitle": "staccatoTitle",
+                                "staccatoImageUrl": "https://example.com/staccatoImage.jpg",
+                                "visitedAt": "2024-06-01T00:00:00"
+                            }
+                    ],
+                    "nextCursor": "nextCursor"
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/categories/1/staccatos")
+                        .param("cursor", "81")
+                        .param("limit", "1")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse, true));
+    }
+
     @DisplayName("적합한 경로변수와 데이터를 통해 스타카토 수정에 성공한다.")
     @ParameterizedTest
     @MethodSource("categoryRequestProvider")

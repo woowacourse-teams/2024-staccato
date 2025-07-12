@@ -94,6 +94,17 @@ public class CategoryController implements CategoryControllerDocs {
         return ResponseEntity.ok().body(categoryStaccatoLocationResponses);
     }
 
+    @GetMapping("/{categoryId}/staccatos")
+    public ResponseEntity<CategoryStaccatoResponses> readStaccatosByCategory(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @Validated @ModelAttribute CategoryStaccatoPaginationRequest categoryStaccatoPaginationRequest
+    ) {
+        CategoryStaccatoResponses categoryStaccatoResponses = categoryService.readStaccatosByCategory(
+                member, categoryId, categoryStaccatoPaginationRequest);
+        return ResponseEntity.ok().body(categoryStaccatoResponses);
+    }
+
     @PutMapping("/{categoryId}")
     public ResponseEntity<Void> updateCategory(
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
