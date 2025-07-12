@@ -2,7 +2,6 @@ package com.on.staccato.presentation.timeline.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -10,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -27,26 +27,21 @@ fun HiddenParticipantCountItem(
 ) {
     trace("HiddenParticipantCountItem") {
         Box(
+            contentAlignment = Alignment.Center,
             modifier =
                 Modifier
                     .size(21.dp)
-                    .shadow(2.dp, shape = CircleShape, clip = true)
+                    .shadow(2.dp, shape = CircleShape)
                     .background(color = White, shape = CircleShape)
-                    .padding(1.dp),
+                    .padding(1.dp)
+                    .clip(CircleShape)
+                    .background(color.color, shape = CircleShape),
         ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(color = color.color, shape = CircleShape),
-            ) {
-                Text(
-                    text = "+$count",
-                    color = color.textColor,
-                    style = Body6,
-                )
-            }
+            Text(
+                text = "+$count",
+                color = color.textColor,
+                style = Body6,
+            )
         }
     }
 }
