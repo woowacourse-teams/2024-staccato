@@ -9,15 +9,15 @@ import com.on.staccato.presentation.timeline.component.Categories
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
 
 @Composable
-fun TimelineScreen(
+fun CategoriesScreen(
     timelineViewModel: TimelineViewModel = hiltViewModel(),
     sharedViewModel: SharedViewModel,
     onCategoryClicked: (Long) -> Unit,
 ) {
-    val timeline by timelineViewModel.timeline.collectAsState()
+    val categories by timelineViewModel.timeline.collectAsState()
 
     Categories(
-        categories = timeline,
+        categories = categories,
         onCategoryClicked = onCategoryClicked,
         onTopChanged = { sharedViewModel.updateIsAtTop(it) },
     )
