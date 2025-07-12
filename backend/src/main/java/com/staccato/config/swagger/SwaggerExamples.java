@@ -20,9 +20,13 @@ public class SwaggerExamples {
     public static final String MEMBER_CODE = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
     public static final String MEMBER_NICKNAME = "김스타";
     public static final String IMAGE_URL = "https://image.staccato.kr/web/share/excited.png";
-    public static final String IMAGE_URLS = "[\"https://image.staccato.kr/web/share/happy.png\", " +
-            "\"https://image.staccato.kr/web/share/angry.png\", " +
-            "\"https://image.staccato.kr/web/share/sad.png\"]";
+    public static final String IMAGE_URLS = """
+            [
+                "https://image.staccato.kr/web/share/happy.png",
+                "https://image.staccato.kr/web/share/angry.png",
+                "https://image.staccato.kr/web/share/sad.png"
+            ]
+            """;
     public static final String FEELING = "happy";
     public static final String EXPIRED_AT = "2025-06-01T00:00:00";
     public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
