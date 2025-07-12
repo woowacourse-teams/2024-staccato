@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name="com.on.staccato.benchmark.BenchmarkMainActivity"
+            android:name="com.on.staccato.benchmark.CategoriesBenchmarkActivity"
             android:exported="true"
             android:screenOrientation="portrait">
 

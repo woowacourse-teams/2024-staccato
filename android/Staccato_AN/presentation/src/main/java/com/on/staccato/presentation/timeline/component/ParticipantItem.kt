@@ -13,27 +13,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.on.staccato.benchmark.trace
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
-import com.on.staccato.theme.White
 
 @Composable
 fun ParticipantItem(profileImageUrl: String? = null) {
-    Box(
-        modifier =
-            Modifier.size(25.dp)
-                .shadow(2.dp, shape = CircleShape, clip = true)
-                .background(Color.White)
-                .padding(1.dp),
-    ) {
-        DefaultAsyncImage(
-            modifier = Modifier.clip(CircleShape),
-            bitmapPixelSize = 150,
-            url = profileImageUrl,
-            errorImageRes = R.drawable.icon_member,
-            contentDescription = R.string.mates_profile_image_description,
-            contentScale = ContentScale.Crop,
-        )
+    trace("ParticipantItem") {
+        Box(
+            modifier =
+                Modifier.size(25.dp)
+                    .shadow(2.dp, shape = CircleShape, clip = true)
+                    .background(Color.White)
+                    .padding(1.dp),
+        ) {
+            DefaultAsyncImage(
+                modifier = Modifier.clip(CircleShape),
+                bitmapPixelSize = 150,
+                url = profileImageUrl,
+                errorImageRes = R.drawable.icon_member,
+                contentDescription = R.string.mates_profile_image_description,
+                contentScale = ContentScale.Crop,
+            )
+        }
     }
 }
 

@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import com.on.staccato.benchmark.trace
 import com.on.staccato.presentation.color.CategoryColor
 import com.on.staccato.theme.Body6
 import com.on.staccato.theme.White
@@ -24,26 +25,28 @@ fun HiddenParticipantCountItem(
     count: Long,
     color: CategoryColor,
 ) {
-    Box(
-        modifier =
-            Modifier
-                .size(21.dp)
-                .shadow(2.dp, shape = CircleShape, clip = true)
-                .background(color = White, shape = CircleShape)
-                .padding(1.dp),
-    ) {
+    trace("HiddenParticipantCountItem") {
         Box(
-            contentAlignment = Alignment.Center,
             modifier =
                 Modifier
-                    .fillMaxSize()
-                    .background(color = color.color, shape = CircleShape),
+                    .size(21.dp)
+                    .shadow(2.dp, shape = CircleShape, clip = true)
+                    .background(color = White, shape = CircleShape)
+                    .padding(1.dp),
         ) {
-            Text(
-                text = "+$count",
-                color = color.textColor,
-                style = Body6,
-            )
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(color = color.color, shape = CircleShape),
+            ) {
+                Text(
+                    text = "+$count",
+                    color = color.textColor,
+                    style = Body6,
+                )
+            }
         }
     }
 }

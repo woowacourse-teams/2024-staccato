@@ -8,6 +8,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.staccato.presentation.component.DefaultDivider
 import com.on.staccato.presentation.timeline.model.CategoryUiModel
@@ -19,6 +21,7 @@ private const val CATEGORIES_TOP_SCROLL_OFFSET = 0
 
 @Composable
 fun Categories(
+    modifier: Modifier = Modifier,
     categories: List<CategoryUiModel>,
     onCategoryClicked: (Long) -> Unit,
     onTopChanged: (Boolean) -> Unit,
@@ -43,6 +46,7 @@ fun Categories(
     }
 
     LazyColumn(
+        modifier = modifier.testTag("categories_lazy_column"),
         state = lazyListState,
     ) {
         items(
