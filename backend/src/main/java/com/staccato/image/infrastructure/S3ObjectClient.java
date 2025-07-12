@@ -1,5 +1,7 @@
 package com.staccato.image.infrastructure;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,10 +18,13 @@ import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.Delete;
+import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectsResponse;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
+import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
@@ -27,6 +32,8 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 @Component
 public class S3ObjectClient implements CloudStorageClient {
     private static final Logger log = LoggerFactory.getLogger(S3ObjectClient.class);
+    private static final int S3_DELETE_BATCH_LIMIT = 1000;
+
     private final S3Client s3Client;
     private final String bucketName;
     private final String endPoint;
@@ -79,9 +86,12 @@ public class S3ObjectClient implements CloudStorageClient {
 
     @Override
     public DeletionResult deleteUnusedObjects(Set<String> usedKeys) {
-        String continuationToken = null;
         AtomicInteger successCounter = new AtomicInteger(0);
         AtomicInteger failCounter = new AtomicInteger(0);
+
+        String continuationToken = null;
+        List<String> toDeleteBatch = new ArrayList<>();
+
         do {
             ListObjectsV2Request request = ListObjectsV2Request.builder()
                     .bucket(bucketName)
@@ -91,25 +101,45 @@ public class S3ObjectClient implements CloudStorageClient {
             ListObjectsV2Response response = s3Client.listObjectsV2(request);
             for (S3Object object : response.contents()) {
                 String key = object.key();
-                if (!usedKeys.contains(key)) {
-                    deleteOneObject(key, successCounter, failCounter);
+                if (usedKeys.contains(key))
+                    continue;
+
+                toDeleteBatch.add(key);
+                if (toDeleteBatch.size() == S3_DELETE_BATCH_LIMIT) {
+                    deleteObjectsBatch(toDeleteBatch, successCounter, failCounter);
+                    toDeleteBatch.clear();
                 }
             }
+
             continuationToken = response.nextContinuationToken();
         } while (continuationToken != null);
+
+        if (!toDeleteBatch.isEmpty()) {
+            deleteObjectsBatch(toDeleteBatch, successCounter, failCounter);
+        }
+
         return new DeletionResult(successCounter.get(), failCounter.get());
     }
 
-    private void deleteOneObject(String key, AtomicInteger successCounter, AtomicInteger failCounter) {
+    private void deleteObjectsBatch(List<String> keys, AtomicInteger successCounter, AtomicInteger failCounter) {
+        if (keys.isEmpty())
+            return;
+
+        List<ObjectIdentifier> objects = keys.stream()
+                .map(key -> ObjectIdentifier.builder().key(key).build())
+                .toList();
+        DeleteObjectsRequest deleteRequest = DeleteObjectsRequest.builder()
+                .bucket(bucketName)
+                .delete(Delete.builder().objects(objects).build())
+                .build();
+
         try {
-            s3Client.deleteObject(DeleteObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .build());
-            successCounter.incrementAndGet();
+            DeleteObjectsResponse result = s3Client.deleteObjects(deleteRequest);
+            successCounter.addAndGet(result.deleted().size());
+            failCounter.addAndGet(result.errors().size());
         } catch (S3Exception | SdkClientException e) {
-            failCounter.incrementAndGet();
-            log.warn("삭제 실패: {} - {}", key, e.getMessage());
+            failCounter.addAndGet(keys.size());
+            log.warn("일괄 삭제 실패: {}", e.getMessage());
         }
     }
 }

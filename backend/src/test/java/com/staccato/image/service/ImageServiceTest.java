@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import static com.staccato.image.infrastructure.FakeS3ObjectClient.FAKE_CLOUD_FRONT_END_POINT;
 
-import java.security.interfaces.XECKey;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +19,6 @@ import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.image.infrastructure.CloudStorageClient;
-import com.staccato.image.infrastructure.S3ObjectClient;
 import com.staccato.image.service.dto.DeletionResult;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
