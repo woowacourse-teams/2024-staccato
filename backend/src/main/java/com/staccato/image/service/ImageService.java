@@ -71,7 +71,7 @@ public class ImageService {
         }
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public DeletionResult deleteUnusedImages() {
         Set<String> allImageUrls = extractAllImageUrls();
         try {
