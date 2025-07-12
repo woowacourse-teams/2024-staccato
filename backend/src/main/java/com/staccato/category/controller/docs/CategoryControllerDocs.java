@@ -4,15 +4,23 @@ import java.time.LocalDate;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
+import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
+import com.staccato.category.service.dto.request.CategoryStaccatoPaginationRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
+import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
+import com.staccato.category.service.dto.response.CategoryStaccatoResponses;
+import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -90,6 +98,26 @@ public interface CategoryControllerDocs {
     ResponseEntity<CategoryDetailResponse> readCategory(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "카테고리 ID", example = "1") @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId);
+
+    @Operation(summary = "카테고리 내 스타카토 위치 목록 조회", description = "사용자의 카테고리 내 스타카토 위치 목록을 조회합니다. 위경도 기준 범위 기반 조회를 제공합니다")
+    @ApiResponses(value = {
+            @ApiResponse(description = "카테고리 내 스타카토 위치 목록 조회 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                                        
+                    (1) 존재하지 않는 카테고리을 조회하려고 했을 때
+                                        
+                    (2) Path Variable 형식이 잘못되었을 때
+                    
+                    (3) 위도는 -90.0 이상 90.0 이하, 경도는 -180.0 이상 180.0 이하여야 함
+                    """,
+                    responseCode = "400")
+    })
+    ResponseEntity<CategoryStaccatoLocationResponses> readStaccatoLocationsByCategory(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @Validated @ModelAttribute CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest
+    );
 
     @Operation(summary = "카테고리 수정", deprecated = true, description = "카테고리 정보(썸네일, 제목, 내용, 기간)를 수정합니다.")
     @ApiResponses(value = {
