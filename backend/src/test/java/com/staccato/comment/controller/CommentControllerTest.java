@@ -105,7 +105,8 @@ public class CommentControllerTest extends ControllerTest {
     void readCommentsByStaccatoId() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
-        CommentResponseV2 commentResponse = new CommentResponseV2(1L, 1L, "member", "image.jpg", "내용", LocalDateTime.of(2024, 6, 1, 14, 0, 0));
+        LocalDateTime createdAt = LocalDateTime.of(2024, 6, 1, 14, 0, 0);
+        CommentResponseV2 commentResponse = new CommentResponseV2(1L, 1L, "member", "image.jpg", "내용", createdAt, createdAt);
         CommentResponsesV2 commentResponses = new CommentResponsesV2(List.of(commentResponse));
         when(commentService.readAllCommentsByStaccatoId(any(), any())).thenReturn(commentResponses);
         String expectedResponse = """
@@ -117,7 +118,8 @@ public class CommentControllerTest extends ControllerTest {
                         "nickname": "member",
                         "memberImageUrl": "image.jpg",
                         "content": "내용",
-                        "createdAt": "2024-06-01T14:00:00"
+                        "createdAt": "2024-06-01T14:00:00",
+                        "updatedAt": "2024-06-01T14:00:00"
                     }
                 ]
             }

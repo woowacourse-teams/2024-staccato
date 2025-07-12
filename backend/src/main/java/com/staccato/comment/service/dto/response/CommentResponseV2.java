@@ -23,7 +23,10 @@ public record CommentResponseV2(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String content,
         @Schema(example = SwaggerExamples.COMMENT_CREATED_AT)
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        @Schema(example = SwaggerExamples.COMMENT_CREATED_AT)
+        LocalDateTime updatedAt
+
 ) {
     public CommentResponseV2(Comment comment) {
         this(
@@ -32,7 +35,8 @@ public record CommentResponseV2(
                 comment.getMember().getNickname().getNickname(),
                 comment.getMember().getImageUrl(),
                 comment.getContent(),
-                comment.getCreatedAt()
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
         );
     }
 
