@@ -50,8 +50,12 @@ public class NotificationService {
     }
 
     private void createNotificationToken(Member member, NotificationTokenRequest request) {
-        NotificationToken notificationToken = new NotificationToken(request.token(), member, request.toDeviceType(), request.deviceId());
-        notificationTokenRepository.save(notificationToken);
+        Optional<NotificationToken> notificationToken = notificationTokenRepository.findByToken(request.token());
+        notificationToken.ifPresentOrElse(
+                existingToken -> existingToken.updateDeviceId(request.deviceId()),
+                () -> notificationTokenRepository.save(
+                        new NotificationToken(request.token(), member, request.toDeviceType(), request.deviceId()))
+        );
     }
 
     public void sendInvitationAlert(Member inviter, Category category, List<Member> receivers) {

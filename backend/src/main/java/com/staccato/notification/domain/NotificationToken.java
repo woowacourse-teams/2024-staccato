@@ -12,8 +12,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.member.domain.Member;
+
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -56,5 +58,9 @@ public class NotificationToken extends BaseEntity {
 
     public void updateToken(String token) {
         this.token = token;
+    }
+
+    public void updateDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 }
