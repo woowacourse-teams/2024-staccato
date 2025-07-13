@@ -1,14 +1,11 @@
 package com.staccato.notification.service;
 
 import java.util.List;
-import java.util.Map;
-
-import javax.swing.text.SimpleAttributeSet;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.staccato.StaccatoApplication;
 import com.staccato.category.domain.Category;
 import com.staccato.comment.domain.Comment;
 import com.staccato.config.log.annotation.Trace;
@@ -43,18 +40,18 @@ public class NotificationService {
     }
 
     @Transactional
-    public void register(Member member, NotificationTokenRequest notificationTokenRequest) {
-        notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), notificationTokenRequest.toDeviceType(), notificationTokenRequest.deviceId())
-                .ifPresentOrElse(
-                        notificationToken -> notificationToken.updateToken(notificationTokenRequest.token()),
-                        () -> {
-                            NotificationToken notificationToken = new NotificationToken(
-                                    notificationTokenRequest.token(),
-                                    member,
-                                    notificationTokenRequest.toDeviceType(),
-                                    notificationTokenRequest.deviceId());
-                            notificationTokenRepository.save(notificationToken);
-                        });
+    public void register(Member member, NotificationTokenRequest request) {
+        Optional<NotificationToken> notificationToken = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), request.toDeviceType(), request.deviceId());
+        notificationToken.ifPresentOrElse(
+                existingToken -> existingToken.updateToken(request.token()),
+                () -> createNotificationToken(member, request)
+        );
+    }
+
+    private void createNotificationToken(Member member, NotificationTokenRequest request) {
+        NotificationToken notificationToken = new NotificationToken(request.token(), member, request.toDeviceType(), request.deviceId());
+        notificationTokenRepository.save(notificationToken);
     }
 
     public void sendInvitationAlert(Member inviter, Category category, List<Member> receivers) {
