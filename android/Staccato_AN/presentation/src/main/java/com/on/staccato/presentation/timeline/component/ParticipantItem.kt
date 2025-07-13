@@ -15,6 +15,8 @@ import com.on.staccato.benchmark.trace
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
 
+private const val PROFILE_IMAGE_SIZE = 25
+
 @Composable
 fun ParticipantItem(
     profileImageUrl: String? = null,
@@ -23,13 +25,13 @@ fun ParticipantItem(
     trace("ParticipantItem") {
         DefaultAsyncImage(
             modifier =
-                modifier.size(25.dp)
+                modifier.size(PROFILE_IMAGE_SIZE.dp)
                     .shadow(2.dp, shape = CircleShape)
                     .background(Color.White, shape = CircleShape)
                     .padding(1.dp)
                     .clip(CircleShape)
                     .background(Color.White),
-            bitmapPixelSize = 150,
+            imageSizeDp = PROFILE_IMAGE_SIZE.dp,
             url = profileImageUrl,
             placeHolder = R.drawable.icon_member,
             errorImageRes = R.drawable.icon_member,

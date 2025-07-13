@@ -21,6 +21,8 @@ import com.on.staccato.presentation.timeline.model.CategoryUiModel
 import com.on.staccato.presentation.timeline.model.dummyCategoryUiModels
 import com.on.staccato.theme.Title3
 
+private const val THUMBNAIL_IMAGE_SIZE = 90
+
 @Composable
 fun CategoryItem(
     modifier: Modifier = Modifier,
@@ -53,11 +55,11 @@ fun CategoryItem(
                 DefaultAsyncImage(
                     modifier =
                         Modifier
-                            .size(90.dp)
+                            .size(THUMBNAIL_IMAGE_SIZE.dp)
                             .constrainAs(thumbnail) {
                                 top.linkTo(parent.top)
                             },
-                    bitmapPixelSize = 500,
+                    imageSizeDp = THUMBNAIL_IMAGE_SIZE.dp,
                     url = category.categoryThumbnailUrl,
                     placeHolder = R.drawable.default_image,
                     errorImageRes = R.drawable.default_image,
