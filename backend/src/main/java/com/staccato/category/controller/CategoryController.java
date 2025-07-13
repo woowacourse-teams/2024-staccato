@@ -4,6 +4,7 @@ import java.net.URI;
 import java.time.LocalDate;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
+import com.staccato.category.service.dto.response.CategoryStaccatoResponses;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
@@ -79,7 +81,7 @@ public class CategoryController implements CategoryControllerDocs {
     public ResponseEntity<CategoryDetailResponse> readCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
-        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryWithStaccatosById(categoryId, member);
         return ResponseEntity.ok(categoryDetailResponse.toCategoryDetailResponse());
     }
 
@@ -89,7 +91,7 @@ public class CategoryController implements CategoryControllerDocs {
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Validated @ModelAttribute CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest
     ) {
-        CategoryStaccatoLocationResponses categoryStaccatoLocationResponses = categoryService.readAllLocationStaccatoByCategory(
+        CategoryStaccatoLocationResponses categoryStaccatoLocationResponses = categoryService.readStaccatoLocationsByCategory(
                 member, categoryId, categoryStaccatoLocationRangeRequest);
         return ResponseEntity.ok().body(categoryStaccatoLocationResponses);
     }

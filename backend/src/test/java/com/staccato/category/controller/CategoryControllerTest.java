@@ -1,8 +1,11 @@
 package com.staccato.category.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,6 +27,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,6 +45,7 @@ import com.staccato.category.service.dto.response.CategoryResponseV3;
 import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
+import com.staccato.category.service.dto.response.CategoryStaccatoResponses;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.category.CategoryRequestFixtures;
@@ -333,7 +338,7 @@ class CategoryControllerTest extends ControllerTest {
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
-        when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
+        when(categoryService.readCategoryWithStaccatosById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
                     "categoryId": null,
@@ -383,7 +388,7 @@ class CategoryControllerTest extends ControllerTest {
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
-        when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
+        when(categoryService.readCategoryWithStaccatosById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
                     "categoryId": null,
@@ -475,7 +480,7 @@ class CategoryControllerTest extends ControllerTest {
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), "nextCursor");
 
-        when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), any(CategoryStaccatoPaginationRequest.class))).thenReturn(responses);
+        when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), anyString(), anyInt())).thenReturn(responses);
         String expectedResponse = """
                 {
                     "staccatos": [
@@ -492,7 +497,7 @@ class CategoryControllerTest extends ControllerTest {
 
         // when & then
         mockMvc.perform(get("/categories/1/staccatos")
-                        .param("cursor", "81")
+                        .param("cursor", "cursor")
                         .param("limit", "1")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())

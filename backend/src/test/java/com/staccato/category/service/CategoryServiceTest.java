@@ -178,7 +178,7 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     @DisplayName("HOST는 본인이 속한 특정 카테고리를 조회할 수 있다.")
     @Test
-    void readCategoryByIdByHost() {
+    void readCategoryWithStaccatosByIdByHost() {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
 
@@ -186,7 +186,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), host);
 
         // when
-        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), host);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryWithStaccatosById(categoryIdResponse.categoryId(), host);
 
         // then
         assertAll(
@@ -197,7 +197,7 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     @DisplayName("GUEST는 본인이 속한 특정 카테고리를 조회할 수 있다.")
     @Test
-    void readCategoryByIdByGuest() {
+    void readCategoryWithStaccatosByIdByGuest() {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
         Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
@@ -209,7 +209,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .build());
 
         // when
-        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), host);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryWithStaccatosById(categoryIdResponse.categoryId(), host);
 
         // then
         assertAll(
@@ -220,7 +220,7 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     @DisplayName("기간이 없는 특정 카테고리를 조회한다.")
     @Test
-    void readCategoryByIdWithoutTerm() {
+    void readCategoryWithStaccatosByIdWithoutTerm() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
 
@@ -228,7 +228,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest().withTerm(null, null).build(), member);
 
         // when
-        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryWithStaccatosById(categoryIdResponse.categoryId(), member);
 
         // then
         assertAll(
@@ -241,7 +241,7 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     @DisplayName("본인 것이 아닌 특정 카테고리를 조회하려고 하면 예외가 발생한다.")
     @Test
-    void cannotReadCategoryByIdIfNotOwner() {
+    void cannotReadCategoryWithStaccatosByIdIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
@@ -257,7 +257,7 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     @DisplayName("특정 카테고리를 조회하면 스타카토는 최신순으로 반환한다.")
     @Test
-    void readCategoryByIdOrderByVisitedAt() {
+    void readCategoryByIdOrderWithStaccatosByVisitedAt() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
 
@@ -275,7 +275,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
-        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryWithStaccatosById(categoryIdResponse.categoryId(), member);
 
         // then
         assertAll(
@@ -323,13 +323,13 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
-        CategoryStaccatoLocationResponses responses = categoryService.readAllLocationStaccatoByCategory(
+        CategoryStaccatoLocationResponses responses = categoryService.readStaccatoLocationsByCategory(
                 member, category.getId(), new CategoryStaccatoLocationRangeRequest(null, null, null, null));
 
         // then
         assertAll(
-                () -> assertThat(responses.categoryStaccatoLocationResponses()).hasSize(2),
-                () -> assertThat(responses.categoryStaccatoLocationResponses())
+                () -> assertThat(responses.staccatos()).hasSize(2),
+                () -> assertThat(responses.staccatos())
                         .containsExactlyInAnyOrder(
                                 new CategoryStaccatoLocationResponse(staccato),
                                 new CategoryStaccatoLocationResponse(staccato2)

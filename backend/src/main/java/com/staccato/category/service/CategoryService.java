@@ -18,11 +18,13 @@ import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV4;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponseV3;
 import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
+import com.staccato.category.service.dto.response.CategoryStaccatoResponses;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.StaccatoException;
@@ -95,7 +97,7 @@ public class CategoryService {
         return sort.apply(categories);
     }
 
-    public CategoryDetailResponseV3 readCategoryById(long categoryId, Member member) {
+    public CategoryDetailResponseV3 readCategoryWithStaccatosById(long categoryId, Member member) {
         Category category = categoryRepository.findWithCategoryMembersById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
         category.validateOwner(member);
@@ -104,7 +106,15 @@ public class CategoryService {
         return new CategoryDetailResponseV3(category, staccatos, member);
     }
 
-    public CategoryStaccatoLocationResponses readAllLocationStaccatoByCategory(
+    public CategoryDetailResponseV4 readCategoryById(long categoryId, Member member) {
+        Category category = categoryRepository.findWithCategoryMembersById(categoryId)
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
+        category.validateOwner(member);
+
+        return new CategoryDetailResponseV4(category, member);
+    }
+
+    public CategoryStaccatoLocationResponses readStaccatoLocationsByCategory(
             Member member, long categoryId, CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest) {
         Category category = getCategoryById(categoryId);
         category.validateOwner(member);
