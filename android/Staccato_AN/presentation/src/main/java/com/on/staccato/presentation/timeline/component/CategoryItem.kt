@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.timeline.component
 
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -41,12 +40,9 @@ fun CategoryItem(
         ) {
             val (
                 thumbnail,
-                firstSpacer,
                 color,
-                secondSpacer,
                 period,
                 title,
-                thirdSpacer,
                 participants,
                 staccatoCount,
             ) = createRefs()
@@ -55,6 +51,7 @@ fun CategoryItem(
                 DefaultAsyncImage(
                     modifier =
                         Modifier
+                            .padding(end = 15.dp)
                             .size(THUMBNAIL_IMAGE_SIZE.dp)
                             .constrainAs(thumbnail) {
                                 top.linkTo(parent.top)
@@ -68,30 +65,24 @@ fun CategoryItem(
                 )
             }
 
-            trace("FirstSpacer") {
-                Spacer(modifier = Modifier.constrainAs(firstSpacer) { start.linkTo(thumbnail.end) }.size(15.dp))
-            }
-
             trace("CategoryFolder") {
                 CategoryFolder(
                     modifier =
-                        Modifier.constrainAs(color) {
-                            start.linkTo(firstSpacer.end)
-                            top.linkTo(thumbnail.top)
-                        }.padding(2.dp),
+                        Modifier
+                            .padding(end = 10.dp)
+                            .constrainAs(color) {
+                                start.linkTo(thumbnail.end)
+                                top.linkTo(thumbnail.top)
+                            }.padding(2.dp),
                     color = category.color,
                 )
-            }
-
-            trace("SecondSpacer") {
-                Spacer(modifier = Modifier.constrainAs(secondSpacer) { start.linkTo(color.end) }.size(10.dp))
             }
 
             trace("Title") {
                 Text(
                     modifier =
                         Modifier.constrainAs(title) {
-                            start.linkTo(secondSpacer.end)
+                            start.linkTo(color.end)
                             end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
                             height = Dimension.preferredWrapContent
@@ -113,7 +104,7 @@ fun CategoryItem(
                 CategoryPeriod(
                     modifier =
                         Modifier.constrainAs(period) {
-                            start.linkTo(secondSpacer.end)
+                            start.linkTo(color.end)
                             top.linkTo(title.bottom, margin = 3.dp)
                             bottom.linkTo(color.bottom)
                             end.linkTo(parent.end)
@@ -124,29 +115,21 @@ fun CategoryItem(
                 )
             }
 
-            trace("ThirdSpacer") {
-                Spacer(
-                    modifier =
-                        Modifier.size(22.dp)
-                            .constrainAs(thirdSpacer) {
-                                if (hasPeriod) {
-                                    top.linkTo(period.bottom)
-                                } else {
-                                    top.linkTo(title.bottom)
-                                }
-                            },
-                )
-            }
-
             trace("Participants") {
                 if (category.isShared) {
                     Participants(
                         modifier =
-                            Modifier.constrainAs(participants) {
-                                start.linkTo(firstSpacer.end)
-                                top.linkTo(thirdSpacer.bottom)
-                                bottom.linkTo(parent.bottom)
-                            },
+                            Modifier
+                                .padding(top = 22.dp)
+                                .constrainAs(participants) {
+                                    if (hasPeriod) {
+                                        top.linkTo(period.bottom)
+                                    } else {
+                                        top.linkTo(title.bottom)
+                                    }
+                                    start.linkTo(thumbnail.end)
+                                    bottom.linkTo(parent.bottom)
+                                },
                         participants = category.participants,
                         color = category.color,
                     )
