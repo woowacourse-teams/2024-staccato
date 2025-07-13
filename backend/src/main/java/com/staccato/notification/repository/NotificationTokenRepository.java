@@ -17,5 +17,5 @@ public interface NotificationTokenRepository extends JpaRepository<NotificationT
 
     void deleteAllByToken(String token);
 
-    Optional<NotificationToken> findByToken(String token);
+    List<NotificationToken> findAllByToken(String token);
 }
