@@ -11,9 +11,12 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import com.on.staccato.benchmark.trace
 import com.on.staccato.presentation.component.DefaultDivider
 import com.on.staccato.presentation.timeline.model.CategoryUiModel
+import com.on.staccato.presentation.timeline.model.CategoryViewType
 import com.on.staccato.presentation.timeline.model.dummyCategoryUiModels
+import com.on.staccato.presentation.timeline.model.viewType
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
@@ -52,11 +55,24 @@ fun Categories(
         items(
             items = categories,
             key = { it.categoryId },
+            contentType = { it.viewType },
         ) { category ->
-            CategoryItem(
-                category = category,
-                onCategoryClicked = onCategoryClicked,
-            )
+            trace("CategoryItem") {
+                when (category.viewType) {
+                    CategoryViewType.CommonWithPeriod -> {
+                        CommonCategoryWithPeriod(category, onCategoryClicked)
+                    }
+                    CategoryViewType.CommonWithoutPeriod -> {
+                        CommonCategoryWithoutPeriod(category, onCategoryClicked)
+                    }
+                    CategoryViewType.PersonalWithPeriod -> {
+                        PersonalCategoryWithPeriod(category, onCategoryClicked)
+                    }
+                    CategoryViewType.PersonalWithoutPeriod -> {
+                        PersonalCategoryWithoutPeriod(category, onCategoryClicked)
+                    }
+                }
+            }
             DefaultDivider()
         }
     }
