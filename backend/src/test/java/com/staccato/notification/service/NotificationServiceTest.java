@@ -180,9 +180,11 @@ class NotificationServiceTest extends ServiceSliceTest {
                 notificationToken.getDeviceId());
 
         // when
-        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
+        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
         notificationService.register(member, notificationTokenRequest);
-        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
+        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
 
         // then
         assertAll(
@@ -203,16 +205,16 @@ class NotificationServiceTest extends ServiceSliceTest {
                 .getName(), oldToken.getDeviceId());
 
         // when
-        NotificationToken beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId())
-                .orElseThrow();
+        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
         notificationService.register(member, notificationTokenRequest);
-        NotificationToken afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId())
-                .orElseThrow();
+        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
 
         // then
         assertAll(
-                () -> assertThat(beforeRegister.getToken()).isEqualTo(oldToken.getToken()),
-                () -> assertThat(afterRegister.getToken()).isEqualTo(notificationTokenRequest.token())
+                () -> assertThat(beforeRegister.get().getToken()).isEqualTo(oldToken.getToken()),
+                () -> assertThat(afterRegister.get().getToken()).isEqualTo(notificationTokenRequest.token())
         );
     }
 
