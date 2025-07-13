@@ -1,22 +1,17 @@
 package com.staccato.category.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
@@ -30,6 +25,7 @@ import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV4;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
@@ -54,6 +50,11 @@ import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.StaccatoService;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CategoryServiceTest extends ServiceSliceTest {
     @Autowired
@@ -176,133 +177,192 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("HOST는 본인이 속한 특정 카테고리를 조회할 수 있다.")
-    @Test
-    void readCategoryWithStaccatosByIdByHost() {
-        // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+    @Nested
+    @DisplayName("특정 카테고리 조회 시")
+    class ReadCategoryTest {
+        Member host;
+        Member guest;
+        Member other;
+        Category category;
 
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), host);
+        @BeforeEach
+        void setUp() {
+            host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+            guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+            other = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
 
-        // when
-        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryWithStaccatosById(categoryIdResponse.categoryId(), host);
+            category = CategoryFixtures.defaultCategory()
+                    .withTerm(LocalDate.of(2024, 1, 1),
+                            LocalDate.of(2024, 1, 4))
+                    .withHost(host)
+                    .withGuests(List.of(guest))
+                    .buildAndSave(categoryRepository);
+        }
 
-        // then
-        assertAll(
-                () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.members()).hasSize(1)
-        );
+        @Nested
+        @DisplayName("카테고리 조회(readCategoryById)일 경우")
+        class ReadCategory {
+            @DisplayName("HOST는 정상적으로 조회할 수 있다.")
+            @Test
+            void successForHost() {
+                // when
+                CategoryDetailResponseV4 response = categoryService.readCategoryById(category.getId(), host);
+
+                // then
+                assertAll(
+                        () -> assertThat(response.categoryId()).isEqualTo(category.getId()),
+                        () -> assertThat(response.members()).hasSize(2)
+                );
+            }
+
+            @DisplayName("GUEST도 정상적으로 조회할 수 있다.")
+            @Test
+            void successForGuest() {
+                CategoryDetailResponseV4 response = categoryService.readCategoryById(category.getId(), guest);
+                assertThat(response.categoryId()).isEqualTo(category.getId());
+                assertThat(response.members()).hasSize(2);
+            }
+
+            @DisplayName("기간이 없는 카테고리도 정상 조회된다.")
+            @Test
+            void successWhenTermIsNull() {
+                // given
+                category = CategoryFixtures.defaultCategory()
+                        .withHost(host)
+                        .withTerm(null, null)
+                        .buildAndSave(categoryRepository);
+
+                // when
+                CategoryDetailResponseV4 response = categoryService.readCategoryById(category.getId(), host);
+
+                // then
+                assertAll(
+                        () -> assertThat(response.categoryId()).isEqualTo(category.getId()),
+                        () -> assertThat(response.startAt()).isNull(),
+                        () -> assertThat(response.endAt()).isNull()
+                );
+            }
+
+            @DisplayName("카테고리에 속하지 않은 사용자는 조회할 수 없다.")
+            @Test
+            void failIfNotOwner() {
+                assertThatThrownBy(() -> categoryService.readCategoryById(category.getId(), other))
+                        .isInstanceOf(ForbiddenException.class)
+                        .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+            }
+
+            @DisplayName("존재하지 않는 카테고리일 경우 예외가 발생한다.")
+            @Test
+            void failIfNotExist() {
+                assertThatThrownBy(() -> categoryService.readCategoryById(0L, host))
+                        .isInstanceOf(StaccatoException.class)
+                        .hasMessage("요청하신 카테고리를 찾을 수 없어요.");
+            }
+        }
+
+        @Nested
+        @DisplayName("스타카토를 포함한 카테고리 조회(readCategoryWithStaccatosById)일 경우")
+        class ReadCategoryWithStaccatos {
+            private Staccato staccato;
+            private Staccato staccato2;
+
+            @BeforeEach
+            void setUpStaccatos() {
+                staccato = StaccatoFixtures.defaultStaccato()
+                        .withVisitedAt(LocalDateTime.of(2024, 1, 3, 0, 0, 0))
+                        .withCategory(category)
+                        .build();
+                staccato2 = StaccatoFixtures.defaultStaccato()
+                        .withVisitedAt(LocalDateTime.of(2024, 1, 2, 0, 0, 0))
+                        .withCategory(category)
+                        .build();
+                staccatoRepository.saveAll(List.of(staccato, staccato2));
+            }
+
+            @DisplayName("HOST는 staccato 목록을 함께 조회한다.")
+            @Test
+            void successForHost() {
+                // when
+                CategoryDetailResponseV3 response = categoryService.readCategoryWithStaccatosById(category.getId(), host);
+
+                // then
+                assertAll(
+                        () -> assertThat(response.categoryId()).isEqualTo(category.getId()),
+                        () -> assertThat(response.staccatos()).hasSize(2)
+                );
+            }
+
+            @DisplayName("GUEST도 staccato 목록을 함께 조회한다.")
+            @Test
+            void successForGuest() {
+                // when
+                CategoryDetailResponseV3 response = categoryService.readCategoryWithStaccatosById(category.getId(), guest);
+
+                // then
+                assertAll(
+                        () -> assertThat(response.categoryId()).isEqualTo(category.getId()),
+                        () -> assertThat(response.staccatos()).hasSize(2)
+                );
+            }
+
+            @DisplayName("스타카토는 방문 날짜 기준 최신순으로 정렬된다.")
+            @Test
+            void successOrderByVisitedAtDesc() {
+                // when
+                CategoryDetailResponseV3 response = categoryService.readCategoryWithStaccatosById(category.getId(), host);
+
+                // then
+                assertAll(
+                        () -> assertThat(response.categoryId()).isEqualTo(response.categoryId()),
+                        () -> assertThat(response.staccatos()).hasSize(3),
+                        () -> assertThat(response.staccatos()).containsExactly(
+                                new StaccatoResponse(staccato),
+                                new StaccatoResponse(staccato2)
+                        )
+                );
+            }
+
+            @DisplayName("기간이 없는 카테고리도 정상 조회된다.")
+            @Test
+            void successWhenTermIsNull() {
+                // given
+                category = CategoryFixtures.defaultCategory()
+                        .withHost(host)
+                        .withTerm(null, null)
+                        .buildAndSave(categoryRepository);
+
+                // when
+                CategoryDetailResponseV3 response = categoryService.readCategoryWithStaccatosById(category.getId(), host);
+
+                // then
+                assertAll(
+                        () -> assertThat(response.categoryId()).isEqualTo(category.getId()),
+                        () -> assertThat(response.startAt()).isNull(),
+                        () -> assertThat(response.endAt()).isNull()
+                );
+            }
+
+            @DisplayName("카테고리에 속하지 않은 사용자는 조회할 수 없다.")
+            @Test
+            void failIfNotOwner() {
+                assertThatThrownBy(() -> categoryService.readCategoryById(category.getId(), other))
+                        .isInstanceOf(ForbiddenException.class)
+                        .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+            }
+
+            @DisplayName("존재하지 않는 카테고리일 경우 예외가 발생한다.")
+            @Test
+            void failIfNotExist() {
+                assertThatThrownBy(() -> categoryService.readCategoryWithStaccatosById(999L, host))
+                        .isInstanceOf(StaccatoException.class)
+                        .hasMessage("요청하신 카테고리를 찾을 수 없어요.");
+            }
+        }
     }
 
-    @DisplayName("GUEST는 본인이 속한 특정 카테고리를 조회할 수 있다.")
+    @DisplayName("위경도 조건이 없으면 카테고리에 속한 모든 스타카토 위치 목록을 조회한다.")
     @Test
-    void readCategoryWithStaccatosByIdByGuest() {
-        // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), host);
-        Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
-        categoryMemberRepository.save(CategoryMember.builder().category(category).member(guest).role(Role.GUEST)
-                .build());
-
-        // when
-        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryWithStaccatosById(categoryIdResponse.categoryId(), host);
-
-        // then
-        assertAll(
-                () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.members()).hasSize(2)
-        );
-    }
-
-    @DisplayName("기간이 없는 특정 카테고리를 조회한다.")
-    @Test
-    void readCategoryWithStaccatosByIdWithoutTerm() {
-        // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().withTerm(null, null).build(), member);
-
-        // when
-        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryWithStaccatosById(categoryIdResponse.categoryId(), member);
-
-        // then
-        assertAll(
-                () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.members()).hasSize(1),
-                () -> assertThat(categoryDetailResponse.startAt()).isNull(),
-                () -> assertThat(categoryDetailResponse.endAt()).isNull()
-        );
-    }
-
-    @DisplayName("본인 것이 아닌 특정 카테고리를 조회하려고 하면 예외가 발생한다.")
-    @Test
-    void cannotReadCategoryWithStaccatosByIdIfNotOwner() {
-        // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
-
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), member);
-
-        // when & then
-        assertThatThrownBy(() -> categoryService.readCategoryById(categoryIdResponse.categoryId(), otherMember))
-                .isInstanceOf(ForbiddenException.class)
-                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
-    }
-
-    @DisplayName("특정 카테고리를 조회하면 스타카토는 최신순으로 반환한다.")
-    @Test
-    void readCategoryByIdOrderWithStaccatosByVisitedAt() {
-        // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), member);
-        Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
-        Staccato firstStaccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
-                .withCategory(category).buildAndSave(staccatoRepository);
-        Staccato secondStaccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2024, 6, 2, 0, 0))
-                .withCategory(category).buildAndSave(staccatoRepository);
-        Staccato thirdStaccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2024, 6, 3, 0, 0))
-                .withCategory(category).buildAndSave(staccatoRepository);
-
-        // when
-        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryWithStaccatosById(categoryIdResponse.categoryId(), member);
-
-        // then
-        assertAll(
-                () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.staccatos()).hasSize(3),
-                () -> assertThat(categoryDetailResponse.staccatos().stream().map(StaccatoResponse::staccatoId).toList())
-                        .containsExactly(
-                                thirdStaccato.getId(), secondStaccato.getId(), firstStaccato.getId())
-        );
-    }
-
-    @DisplayName("존재하지 않는 카테고리를 조회하려고 할 경우 예외가 발생한다.")
-    @Test
-    void failReadCategory() {
-        // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        long unknownId = 1;
-
-        // when & then
-        assertThatThrownBy(() -> categoryService.readCategoryById(unknownId, member))
-                .isInstanceOf(StaccatoException.class)
-                .hasMessage("요청하신 카테고리를 찾을 수 없어요.");
-    }
-
-    @DisplayName("위경도 조건이 없으면 카테고리에 속한 모든 스타카토 목록을 조회한다.")
-    @Test
-    void readAllStaccato() {
+    void readAllStaccatoLocations() {
         // given
         Member member = MemberFixtures.defaultMember().withCode("me").buildAndSave(memberRepository);
         Member member2 = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
