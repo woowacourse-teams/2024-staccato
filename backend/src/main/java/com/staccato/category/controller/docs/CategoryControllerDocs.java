@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
@@ -37,17 +36,17 @@ public interface CategoryControllerDocs {
             @ApiResponse(description = "카테고리 생성 성공", responseCode = "201"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                        
+                    
                     (1) 필수 값(카테고리 제목)이 누락되었을 때
-                                        
+                    
                     (2) 날짜 형식(yyyy-MM-dd)이 잘못되었을 때
-                                        
+                    
                     (3) 제목이 공백 포함 30자를 초과했을 때
-                                        
+                    
                     (4) 내용이 공백 포함 500자를 초과했을 때
-                                        
+                    
                     (5) 기간 설정이 잘못되었을 때 (시작 날짜와 끝날짜 중 하나만 설정할 수 없음)
-                                        
+                    
                     (6) 이미 존재하는 카테고리 이름일 때
                     """,
                     responseCode = "400")
@@ -68,9 +67,9 @@ public interface CategoryControllerDocs {
             @ApiResponse(description = "카테고리 목록 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                        
+                    
                     (1) 입력받은 특정 날짜가 유효하지 않을 때
-                                        
+                    
                     (2) 입력받은 개인 카테고리 여부가 유효하지 않을 때
                     """, responseCode = "400")
     })
@@ -89,9 +88,9 @@ public interface CategoryControllerDocs {
             @ApiResponse(description = "카테고리 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                        
+                    
                     (1) 존재하지 않는 카테고리을 조회하려고 했을 때
-                                        
+                    
                     (2) Path Variable 형식이 잘못되었을 때
                     """,
                     responseCode = "400")
@@ -105,9 +104,9 @@ public interface CategoryControllerDocs {
             @ApiResponse(description = "카테고리 내 스타카토 위치 목록 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                        
+                    
                     (1) 존재하지 않는 카테고리을 조회하려고 했을 때
-                                        
+                    
                     (2) Path Variable 형식이 잘못되었을 때
                     
                     (3) 위도는 -90.0 이상 90.0 이하, 경도는 -180.0 이상 180.0 이하여야 함
@@ -126,9 +125,9 @@ public interface CategoryControllerDocs {
             @ApiResponse(description = "카테고리 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                        
+                    
                     (1) 존재하지 않는 카테고리을 조회하려고 했을 때
-                                        
+                    
                     (2) Path Variable 형식이 잘못되었을 때
                     """,
                     responseCode = "400")
@@ -136,7 +135,10 @@ public interface CategoryControllerDocs {
     ResponseEntity<CategoryStaccatoResponses> readStaccatosByCategory(
             @Parameter(hidden = true) Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
-            @Parameter(description = "다음 페이지를 위한 커서, 요청 시 주어진 값이 없다면 첫 페이지를 조회합니다.", example = SwaggerExamples.PAGINATION_CURSOR) String cursor,
+            @Parameter(description = """
+                    다음 페이지를 위한 커서, 요청 시 주어진 값이 없다면 첫 페이지를 조회합니다.
+                    커서는 구분자(|)를 기준으로 Base64로 인코딩하여 `id|visitedAt|createdAt`순으로 값을 구성합니다.
+                    """, example = SwaggerExamples.PAGINATION_CURSOR) String cursor,
             @Parameter(description = "조회할 데이터 수(기본: 10, 최소: 1, 최대: 100)", example = SwaggerExamples.PAGINATION_LIMIT)
             @Min(value = 1, message = "limit는 1 이상, 100 이하여야 합니다.")
             @Max(value = 100, message = "limit는 1 이상, 100 이하여야 합니다.")
@@ -148,21 +150,21 @@ public interface CategoryControllerDocs {
             @ApiResponse(description = "카테고리 수정 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                        
+                    
                     (1) 필수 값(카테고리 제목)이 누락되었을 때
-                                        
+                    
                     (2) 날짜 형식(yyyy-MM-dd)이 잘못되었을 때
-                                        
+                    
                     (3) 제목이 공백 포함 30자를 초과했을 때
-                                        
+                    
                     (4) 내용이 공백 포함 500자를 초과했을 때
-                                        
+                    
                     (5) 기간 설정이 잘못되었을 때
-                                        
+                    
                     (6) 변경하려는 카테고리 기간이 이미 존재하는 스타카토를 포함하지 않을 때
-                                        
+                    
                     (7) 수정하려는 카테고리이 존재하지 않을 때
-                                        
+                    
                     (8) Path Variable 형식이 잘못되었을 때
                     """,
                     responseCode = "400")
@@ -177,13 +179,13 @@ public interface CategoryControllerDocs {
             @ApiResponse(description = "카테고리 색상 수정 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                        
+                    
                     (1) 필수 값(카테고리 색상)이 누락되었을 때
-                                        
+                    
                     (2) 색상 설정이 잘못되었을 때
-                                        
+                    
                     (3) 수정하려는 카테고리이 존재하지 않을 때
-                                        
+                    
                     (4) Path Variable 형식이 잘못되었을 때
                     """,
                     responseCode = "400")

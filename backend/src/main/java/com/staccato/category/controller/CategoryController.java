@@ -2,11 +2,9 @@ package com.staccato.category.controller;
 
 import java.net.URI;
 import java.time.LocalDate;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.staccato.category.controller.docs.CategoryControllerDocs;
 import com.staccato.category.service.CategoryService;
+import com.staccato.category.service.StaccatoCursor;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
@@ -37,7 +35,6 @@ import com.staccato.category.service.dto.response.CategoryStaccatoResponses;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
-
 import lombok.RequiredArgsConstructor;
 
 @Trace

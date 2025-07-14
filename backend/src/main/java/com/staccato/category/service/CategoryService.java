@@ -4,10 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
@@ -33,7 +31,6 @@ import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -134,7 +131,7 @@ public class CategoryService {
             Member member,
             long categoryId,
             String cursor,
-            int limit
+            Integer limit
     ) {
         return null;
     }
