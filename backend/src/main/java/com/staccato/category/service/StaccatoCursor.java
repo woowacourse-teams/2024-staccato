@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.Objects;
 import com.staccato.exception.StaccatoException;
 import com.staccato.staccato.domain.Staccato;
 
@@ -12,6 +13,7 @@ public record StaccatoCursor(
         LocalDateTime visitedAt,
         LocalDateTime createdAt
 ) {
+    private static final StaccatoCursor EMPTY = new StaccatoCursor(-1L, null, null);
     private static final String DELIMITER = "\\|";
     private static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     private static final int ARGUMENTS_COUNT = 3;
@@ -20,6 +22,9 @@ public record StaccatoCursor(
     private static final int CREATED_AT_INDEX = 2;
 
     public static StaccatoCursor fromEncoded(String encodedCursor) {
+        if (Objects.isNull(encodedCursor) || encodedCursor.isBlank()) {
+            return StaccatoCursor.empty();
+        }
         try {
             String decoded = new String(Base64.getUrlDecoder().decode(encodedCursor), StandardCharsets.UTF_8);
             String[] parts = decoded.split(DELIMITER);
@@ -37,11 +42,22 @@ public record StaccatoCursor(
         }
     }
 
+    public static StaccatoCursor empty() {
+        return EMPTY;
+    }
+
     public StaccatoCursor(Staccato staccato) {
         this(staccato.getId(), staccato.getVisitedAt(), staccato.getCreatedAt());
     }
 
+    public boolean isEmpty() {
+        return this.equals(EMPTY);
+    }
+
     public String encode() {
+        if (this.isEmpty()) {
+            return null;
+        }
         String cursor = String.format("%d|%s|%s",
                 id,
                 visitedAt.format(DATETIME_FORMAT),
