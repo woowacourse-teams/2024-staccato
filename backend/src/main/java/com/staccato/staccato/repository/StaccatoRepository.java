@@ -59,6 +59,17 @@ public interface StaccatoRepository extends JpaRepository<Staccato, Long> {
     @Query(value = """
                 SELECT * FROM staccato s
                 WHERE s.category_id = :categoryId
+                ORDER BY s.visited_at DESC, s.created_at DESC
+                LIMIT :limit
+            """, nativeQuery = true)
+    List<Staccato> findFirstPageByCategoryId(
+            @Param("categoryId") long categoryId,
+            @Param("limit") int limit
+    );
+
+    @Query(value = """
+                SELECT * FROM staccato s
+                WHERE s.category_id = :categoryId
                   AND (
                     s.visited_at < :visitedAt
                     OR (s.visited_at = :visitedAt AND s.created_at < :createdAt)
