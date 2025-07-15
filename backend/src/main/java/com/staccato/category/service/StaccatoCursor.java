@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import com.staccato.exception.StaccatoException;
+import com.staccato.staccato.domain.Staccato;
 
 public record StaccatoCursor(
         long id,
@@ -13,10 +14,10 @@ public record StaccatoCursor(
 ) {
     private static final String DELIMITER = "\\|";
     private static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-    public static final int ARGUMENTS_COUNT = 3;
-    public static final int ID_INDEX = 0;
-    public static final int VISITED_AT_INDEX = 1;
-    public static final int CREATED_AT_INDEX = 2;
+    private static final int ARGUMENTS_COUNT = 3;
+    private static final int ID_INDEX = 0;
+    private static final int VISITED_AT_INDEX = 1;
+    private static final int CREATED_AT_INDEX = 2;
 
     public static StaccatoCursor fromEncoded(String encodedCursor) {
         try {
@@ -34,6 +35,10 @@ public record StaccatoCursor(
         } catch (Exception e) {
             throw new StaccatoException("주어진 커서 포멧(id|visitedAt|createdAt)이 올바르지 않아요: " + encodedCursor, e);
         }
+    }
+
+    public StaccatoCursor(Staccato staccato) {
+        this(staccato.getId(), staccato.getVisitedAt(), staccato.getCreatedAt());
     }
 
     public String encode() {
