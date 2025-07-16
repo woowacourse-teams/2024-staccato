@@ -477,7 +477,7 @@ class CategoryControllerTest extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), "nextCursor");
+        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), StaccatoCursor.empty());
 
         when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), anyString(), anyInt())).thenReturn(responses);
         String expectedResponse = """
@@ -490,7 +490,7 @@ class CategoryControllerTest extends ControllerTest {
                                 "visitedAt": "2024-06-01T00:00:00"
                             }
                     ],
-                    "nextCursor": "nextCursor"
+                    "nextCursor": null
                 }
                 """;
 
@@ -513,7 +513,7 @@ class CategoryControllerTest extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), "nextCursor");
+        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), StaccatoCursor.empty());
 
         when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), anyString(), anyInt())).thenReturn(responses);
 
@@ -534,7 +534,7 @@ class CategoryControllerTest extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), "nextCursor");
+        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), StaccatoCursor.empty());
 
         when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), anyString(), anyInt())).thenReturn(responses);
 

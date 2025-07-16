@@ -15,11 +15,15 @@ public record StaccatoCursor(
 ) {
     private static final StaccatoCursor EMPTY = new StaccatoCursor(-1L, null, null);
     private static final String DELIMITER = "\\|";
-    private static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
     private static final int ARGUMENTS_COUNT = 3;
     private static final int ID_INDEX = 0;
     private static final int VISITED_AT_INDEX = 1;
     private static final int CREATED_AT_INDEX = 2;
+
+    public StaccatoCursor(Staccato staccato) {
+        this(staccato.getId(), staccato.getVisitedAt(), staccato.getCreatedAt());
+    }
 
     public static StaccatoCursor fromEncoded(String encodedCursor) {
         if (Objects.isNull(encodedCursor) || encodedCursor.isBlank()) {
@@ -44,10 +48,6 @@ public record StaccatoCursor(
 
     public static StaccatoCursor empty() {
         return EMPTY;
-    }
-
-    public StaccatoCursor(Staccato staccato) {
-        this(staccato.getId(), staccato.getVisitedAt(), staccato.getCreatedAt());
     }
 
     public boolean isEmpty() {

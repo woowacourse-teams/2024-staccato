@@ -332,7 +332,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
             Staccato firstStaccato = staccatos.get(0);
 
             // when
-            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdFromCursor(
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
                     category.getId(),
                     firstStaccato.getId(),
                     firstStaccato.getVisitedAt(),
@@ -349,80 +349,86 @@ class StaccatoRepositoryTest extends RepositoryTest {
         @Test
         void readStaccatosOrderByVisitedAtDesc() {
             // given
-            Staccato firstStaccato = staccatos.get(0);
+            Staccato cursorStaccato = staccatos.get(0);
 
             // when
-            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdFromCursor(
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
                     category.getId(),
-                    firstStaccato.getId(),
-                    firstStaccato.getVisitedAt(),
-                    firstStaccato.getCreatedAt(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    cursorStaccato.getCreatedAt(),
                     4
             );
 
             // then
-            assertThat(result).hasSize(3)
-                    .containsExactly(staccatos.get(0), staccatos.get(1), staccatos.get(2));
+            assertThat(result).hasSize(2)
+                    .containsExactly(staccatos.get(1), staccatos.get(2));
         }
 
         @DisplayName("방문 날짜가 동일하면 생성 날짜 기준 최신순으로 정렬해서 조회한다.")
         @Test
         void readStaccatosOrderByCreatedAtDesc() {
             // given
-            Staccato first = StaccatoFixtures.defaultStaccato()
-                    .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
-                    .withCategory(category).buildAndSave(staccatoRepository);
-            Staccato second = StaccatoFixtures.defaultStaccato()
-                    .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
-                    .withCategory(category).buildAndSave(staccatoRepository);
+            Staccato cursorStaccato = staccatos.get(0);
+
 
             // when
-            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdFromCursor(
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
                     category.getId(),
-                    second.getId(),
-                    second.getVisitedAt(),
-                    second.getCreatedAt(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    cursorStaccato.getCreatedAt(),
                     2
             );
 
             // then
-            assertThat(result).containsExactly(second, first);
+            assertThat(result).containsExactly(staccatos.get(1), staccatos.get(2));
         }
 
         @DisplayName("주어진 limit 개수 만큼을 조회한다.")
         @Test
         void readStaccatosAsMuchAsLimit() {
             // given
-            Staccato firstStaccato = staccatos.get(0);
+            Staccato cursorStaccato = staccatos.get(0);
             int limit = 2;
+            System.out.println("Cursor:");
+            System.out.println("ID: " + cursorStaccato.getId());
+            System.out.println("visitedAt: " + cursorStaccato.getVisitedAt());
+            System.out.println("createdAt: " + cursorStaccato.getCreatedAt());
+
+            System.out.println("---- All Staccatos ----");
+            staccatos.forEach(s -> System.out.println(
+                    "ID: " + s.getId() +
+                    " | visitedAt: " + s.getVisitedAt() +
+                    " | createdAt: " + s.getCreatedAt()));
 
             // when
-            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdFromCursor(
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
                     category.getId(),
-                    firstStaccato.getId(),
-                    firstStaccato.getVisitedAt(),
-                    firstStaccato.getCreatedAt(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    cursorStaccato.getCreatedAt(),
                     limit
             );
 
             // then
             assertThat(result).hasSize(2)
-                    .containsExactly(staccatos.get(0), staccatos.get(1));
+                    .containsExactly(staccatos.get(1), staccatos.get(2));
         }
 
         @DisplayName("존재하는 데이터보다 많은 개수를 요구하면 존재하는 데이터 수만큼만 조회한다.")
         @Test
         void readStaccatosAsMuchAsExists() {
             // given
-            Staccato firstStaccato = staccatos.get(0);
+            Staccato cursorStaccato = staccatos.get(0);
             int limit = 100;
 
             // when
-            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdFromCursor(
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
                     category.getId(),
-                    firstStaccato.getId(),
-                    firstStaccato.getVisitedAt(),
-                    firstStaccato.getCreatedAt(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    cursorStaccato.getCreatedAt(),
                     limit
             );
 
@@ -430,25 +436,25 @@ class StaccatoRepositoryTest extends RepositoryTest {
             assertThat(result).hasSize(2);
         }
 
-        @DisplayName("카테고리 내 스타카토 목록을 주어진 범위부터 조회한다.")
+        @DisplayName("카테고리 내 스타카토 목록을 주어진 커서 다음부터 조회한다.")
         @Test
         void readStaccatosFromCursor() {
             // given
-            Staccato secondStaccato = staccatos.get(1);
+            Staccato cursorStaccato = staccatos.get(1);
             int limit = 4;
 
             // when
-            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdFromCursor(
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
                     category.getId(),
-                    secondStaccato.getId(),
-                    secondStaccato.getVisitedAt(),
-                    secondStaccato.getCreatedAt(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    cursorStaccato.getCreatedAt(),
                     limit
             );
 
             // then
-            assertThat(result).hasSize(2)
-                    .containsExactly(staccatos.get(1), staccatos.get(2));
+            assertThat(result).hasSize(1)
+                    .containsExactly(staccatos.get(2));
         }
     }
 
