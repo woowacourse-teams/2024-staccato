@@ -72,8 +72,7 @@ public interface StaccatoRepository extends JpaRepository<Staccato, Long> {
                 WHERE s.category_id = :categoryId
                   AND (
                     s.visited_at < :visitedAt
-                    OR (s.visited_at = :visitedAt AND s.created_at < :createdAt)
-                    OR (s.visited_at = :visitedAt AND s.created_at = :createdAt AND s.id < :staccatoId)
+                    OR (s.visited_at = :visitedAt AND s.id < :staccatoId)
                   )
                 ORDER BY s.visited_at DESC, s.created_at DESC
                 LIMIT :limit
@@ -82,7 +81,6 @@ public interface StaccatoRepository extends JpaRepository<Staccato, Long> {
             @Param("categoryId") long categoryId,
             @Param("staccatoId") long staccatoId,
             @Param("visitedAt") LocalDateTime visitedAt,
-            @Param("createdAt") LocalDateTime createdAt,
             @Param("limit") int limit
     );
 

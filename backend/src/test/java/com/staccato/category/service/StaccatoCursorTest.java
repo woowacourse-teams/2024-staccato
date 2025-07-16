@@ -20,7 +20,6 @@ class StaccatoCursorTest {
         // given
         StaccatoCursor original = new StaccatoCursor(
                 42L,
-                LocalDateTime.of(2025, 7, 12, 0, 0, 0),
                 LocalDateTime.of(2025, 7, 12, 0, 0, 0)
         );
 
@@ -129,7 +128,6 @@ class StaccatoCursorTest {
         // given
         StaccatoCursor cursor = new StaccatoCursor(
                 1L,
-                LocalDateTime.of(2025, 7, 15, 12, 0),
                 LocalDateTime.of(2025, 7, 15, 12, 0)
         );
 

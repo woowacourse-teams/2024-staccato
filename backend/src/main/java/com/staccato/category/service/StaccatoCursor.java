@@ -10,24 +10,21 @@ import com.staccato.staccato.domain.Staccato;
 
 public record StaccatoCursor(
         long id,
-        LocalDateTime visitedAt,
-        LocalDateTime createdAt
+        LocalDateTime visitedAt
 ) {
-    private static final StaccatoCursor EMPTY = new StaccatoCursor(-1L, null, null);
+    private static final StaccatoCursor EMPTY = new StaccatoCursor(-1L, null);
     private static final String DELIMITER = "\\|";
     private static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-    private static final int ARGUMENTS_COUNT = 3;
+    private static final int ARGUMENTS_COUNT = 2;
     private static final int ID_INDEX = 0;
     private static final int VISITED_AT_INDEX = 1;
-    private static final int CREATED_AT_INDEX = 2;
 
     public StaccatoCursor {
         visitedAt = visitedAt == null ? null : LocalDateTime.parse(visitedAt.format(DATETIME_FORMAT), DATETIME_FORMAT);
-        createdAt = createdAt == null ? null : LocalDateTime.parse(createdAt.format(DATETIME_FORMAT), DATETIME_FORMAT);
     }
 
     public StaccatoCursor(Staccato staccato) {
-        this(staccato.getId(), staccato.getVisitedAt(), staccato.getCreatedAt());
+        this(staccato.getId(), staccato.getVisitedAt());
     }
 
     public static StaccatoCursor fromEncoded(String encodedCursor) {
@@ -43,9 +40,8 @@ public record StaccatoCursor(
 
             long id = Long.parseLong(parts[ID_INDEX]);
             LocalDateTime visitedAt = LocalDateTime.parse(parts[VISITED_AT_INDEX], DATETIME_FORMAT);
-            LocalDateTime createdAt = LocalDateTime.parse(parts[CREATED_AT_INDEX], DATETIME_FORMAT);
 
-            return new StaccatoCursor(id, visitedAt, createdAt);
+            return new StaccatoCursor(id, visitedAt);
         } catch (Exception e) {
             throw new StaccatoException("주어진 커서 포멧(id|visitedAt|createdAt)이 올바르지 않아요: " + encodedCursor, e);
         }
@@ -63,10 +59,7 @@ public record StaccatoCursor(
         if (this.isEmpty()) {
             return null;
         }
-        String cursor = String.format("%d|%s|%s",
-                id,
-                visitedAt.format(DATETIME_FORMAT),
-                createdAt.format(DATETIME_FORMAT));
+        String cursor = String.format("%d|%s", id, visitedAt.format(DATETIME_FORMAT));
         return Base64.getUrlEncoder().withoutPadding().encodeToString(cursor.getBytes(StandardCharsets.UTF_8));
     }
 

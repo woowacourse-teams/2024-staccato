@@ -145,7 +145,7 @@ public class CategoryService {
         if (cursor.isEmpty()) {
             return staccatoRepository.findFirstPageByCategoryId(categoryId, limit);
         }
-        return staccatoRepository.findStaccatosByCategoryIdAfterCursor(categoryId, cursor.id(), cursor.visitedAt(), cursor.createdAt(), limit);
+        return staccatoRepository.findStaccatosByCategoryIdAfterCursor(categoryId, cursor.id(), cursor.visitedAt(), limit);
     }
 
     private StaccatoCursor getNextCursor(List<Staccato> staccatos) {

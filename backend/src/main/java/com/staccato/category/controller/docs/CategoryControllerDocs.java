@@ -137,7 +137,7 @@ public interface CategoryControllerDocs {
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Parameter(description = """
                     다음 페이지를 위한 커서, 요청 시 주어진 값이 없다면 첫 페이지를 조회합니다.
-                    커서는 구분자(|)를 기준으로 Base64로 인코딩하여 `id|visitedAt|createdAt`순으로 값을 구성합니다.
+                    커서는 구분자(|)를 기준으로 Base64로 인코딩하여 `id|visitedAt`순으로 값을 구성합니다.
                     """, example = SwaggerExamples.PAGINATION_CURSOR) String cursor,
             @Parameter(description = "조회할 데이터 수(기본: 10, 최소: 1, 최대: 100)", example = SwaggerExamples.PAGINATION_LIMIT)
             @Min(value = 1, message = "limit는 1 이상, 100 이하여야 합니다.")

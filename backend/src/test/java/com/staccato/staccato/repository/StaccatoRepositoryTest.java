@@ -336,7 +336,6 @@ class StaccatoRepositoryTest extends RepositoryTest {
                     category.getId(),
                     cursorStaccato.getId(),
                     cursorStaccato.getVisitedAt(),
-                    cursorStaccato.getCreatedAt(),
                     4
             );
 
@@ -356,7 +355,6 @@ class StaccatoRepositoryTest extends RepositoryTest {
                     category.getId(),
                     cursorStaccato.getId(),
                     cursorStaccato.getVisitedAt(),
-                    cursorStaccato.getCreatedAt(),
                     4
             );
 
@@ -377,7 +375,6 @@ class StaccatoRepositoryTest extends RepositoryTest {
                     category.getId(),
                     cursorStaccato.getId(),
                     cursorStaccato.getVisitedAt(),
-                    cursorStaccato.getCreatedAt(),
                     2
             );
 
@@ -407,7 +404,6 @@ class StaccatoRepositoryTest extends RepositoryTest {
                     category.getId(),
                     cursorStaccato.getId(),
                     cursorStaccato.getVisitedAt(),
-                    cursorStaccato.getCreatedAt(),
                     limit
             );
 
@@ -428,7 +424,6 @@ class StaccatoRepositoryTest extends RepositoryTest {
                     category.getId(),
                     cursorStaccato.getId(),
                     cursorStaccato.getVisitedAt(),
-                    cursorStaccato.getCreatedAt(),
                     limit
             );
 
@@ -448,7 +443,6 @@ class StaccatoRepositoryTest extends RepositoryTest {
                     category.getId(),
                     cursorStaccato.getId(),
                     cursorStaccato.getVisitedAt(),
-                    cursorStaccato.getCreatedAt(),
                     limit
             );
 
