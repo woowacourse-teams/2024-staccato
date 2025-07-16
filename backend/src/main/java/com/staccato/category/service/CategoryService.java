@@ -131,9 +131,29 @@ public class CategoryService {
             Member member,
             long categoryId,
             String cursor,
-            Integer limit
+            int limit
     ) {
-        return null;
+        Category category = getCategoryById(categoryId);
+        category.validateOwner(member);
+        StaccatoCursor staccatoCursor = StaccatoCursor.fromEncoded(cursor);
+        List<Staccato> staccatos = readStaccatos(categoryId, staccatoCursor, limit);
+        StaccatoCursor nextCursor = getNextCursor(staccatos);
+        return CategoryStaccatoResponses.of(staccatos, nextCursor);
+    }
+
+    private List<Staccato> readStaccatos(long categoryId, StaccatoCursor cursor, int limit) {
+        if (cursor.isEmpty()) {
+            return staccatoRepository.findFirstPageByCategoryId(categoryId, limit);
+        }
+        return staccatoRepository.findStaccatosByCategoryIdAfterCursor(categoryId, cursor.id(), cursor.visitedAt(), cursor.createdAt(), limit);
+    }
+
+    private StaccatoCursor getNextCursor(List<Staccato> staccatos) {
+        if (staccatos.isEmpty()) {
+            return StaccatoCursor.empty();
+        }
+        int lastIndex = staccatos.size() - 1;
+        return new StaccatoCursor(staccatos.get(lastIndex));
     }
 
     @Transactional

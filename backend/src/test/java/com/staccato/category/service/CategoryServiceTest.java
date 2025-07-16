@@ -2,6 +2,8 @@ package com.staccato.category.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +34,7 @@ import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
+import com.staccato.category.service.dto.response.CategoryStaccatoResponses;
 import com.staccato.category.service.dto.response.StaccatoResponse;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
@@ -314,7 +317,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 // then
                 assertAll(
                         () -> assertThat(response.categoryId()).isEqualTo(response.categoryId()),
-                        () -> assertThat(response.staccatos()).hasSize(3),
+                        () -> assertThat(response.staccatos()).hasSize(2),
                         () -> assertThat(response.staccatos()).containsExactly(
                                 new StaccatoResponse(staccato),
                                 new StaccatoResponse(staccato2)
@@ -475,6 +478,124 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertThat(resultCategoryIds).hasSize(1)
                 .containsExactly(privateCategory.getId())
                 .doesNotContain(publicCategory.getId());
+    }
+
+    @Nested
+    @DisplayName("카테고리 내 스타카토 목록 조회 시")
+    class readStaccatosInCategory {
+        private Member member;
+        private Category category;
+        private List<Staccato> staccatos;
+
+        @BeforeEach
+        void setup() {
+            member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+            category = CategoryFixtures.defaultCategory()
+                    .withTerm(null, null)
+                    .withHost(member)
+                    .buildAndSave(categoryRepository);
+            staccatos = new ArrayList<>();
+            for (int count = 1; count <= 10; count++) {
+                staccatos.add(StaccatoFixtures.defaultStaccato()
+                        .withCategory(category)
+                        .withCreator(member)
+                        .withTitle("staccato " + count)
+                        .withVisitedAt(LocalDateTime.of(2024, 1, count, 0, 0, 0))
+                        .buildAndSave(staccatoRepository)
+                );
+            }
+
+            staccatos.sort(
+                    Comparator.comparing(Staccato::getVisitedAt).reversed()
+                            .thenComparing(Comparator.comparing(Staccato::getCreatedAt).reversed())
+            );
+        }
+
+        @DisplayName("주어진 커서가 없다면, 첫 페이지를 조회한다.")
+        @Test
+        void readStaccatosForFirstPage() {
+            // given
+            int limit = 1;
+            Staccato expectedStaccato = staccatos.get(0);
+            StaccatoCursor nextCursor = new StaccatoCursor(expectedStaccato);
+
+            // when
+            CategoryStaccatoResponses categoryStaccatoResponses = categoryService.readStaccatosByCategory(member, category.getId(), null, limit);
+
+            // then
+            assertAll(
+                    () -> assertThat(categoryStaccatoResponses.staccatos()).hasSize(limit),
+                    () -> assertThat(categoryStaccatoResponses.staccatos().get(0).staccatoId())
+                            .isEqualTo(expectedStaccato.getId()),
+                    () -> assertThat(StaccatoCursor.fromEncoded(categoryStaccatoResponses.nextCursor())).isEqualTo(nextCursor)
+            );
+        }
+
+        @DisplayName("주어진 커서 다음 데이터부터 조회한다.")
+        @Test
+        void readStaccatosAfterCursor() {
+            // given
+            Staccato cursorStaccato = staccatos.get(0);
+            StaccatoCursor cursor = new StaccatoCursor(cursorStaccato);
+            Staccato expectedStaccato = staccatos.get(1);
+
+            // when
+            CategoryStaccatoResponses response = categoryService.readStaccatosByCategory(member, category.getId(), cursor.encode(), 1);
+
+            // then
+            assertAll(
+                    () -> assertThat(response.staccatos()).hasSize(1),
+                    () -> assertThat(response.staccatos().get(0).staccatoId()).isEqualTo(expectedStaccato.getId())
+            );
+        }
+
+        @DisplayName("스타카토 목록과 함께 다음 페이지를 읽기 위해 마지막으로 읽었던 스타카토 기반의 nextCursor를 알려준다.")
+        @Test
+        void readStaccatosWithNextCursor() {
+            // given
+            Staccato cursorStaccato = staccatos.get(0);
+            int lastReadIndex = 2;
+            StaccatoCursor cursor = new StaccatoCursor(cursorStaccato);
+            StaccatoCursor nextCursor = new StaccatoCursor(staccatos.get(lastReadIndex));
+
+            // when
+            CategoryStaccatoResponses response = categoryService.readStaccatosByCategory(member, category.getId(), cursor.encode(), 2);
+
+            // then
+            assertThat(StaccatoCursor.fromEncoded(response.nextCursor())).isEqualTo(nextCursor);
+        }
+
+        @DisplayName("더 이상 다음 페이지가 없다면 null을 반환한다.")
+        @Test
+        void readStaccatosWithNextCursorNull() {
+            // given
+            Staccato lastStaccato = staccatos.get(9);
+            StaccatoCursor cursor = new StaccatoCursor(lastStaccato);
+
+            // when
+            CategoryStaccatoResponses response = categoryService.readStaccatosByCategory(member, category.getId(), cursor.encode(), 1);
+
+            // then
+            assertAll(
+                    () -> assertThat(response.staccatos()).isEmpty(),
+                    () -> assertThat(response.nextCursor()).isNull()
+
+            );
+        }
+
+        @DisplayName("카테고리가 존재하지 않으면 예외를 반환한다.")
+        @Test
+        void failIfCategoryNotExist() {
+            // given
+            long invalidCategoryId = 0L;
+
+            // when & then
+            assertThatThrownBy(() ->
+                    categoryService.readStaccatosByCategory(member, invalidCategoryId, null, 10)
+            )
+                    .isInstanceOf(StaccatoException.class)
+                    .hasMessage("요청하신 카테고리를 찾을 수 없어요.");
+        }
     }
 
     @DisplayName("카테고리 정보를 기반으로, 카테고리를 수정한다.")
