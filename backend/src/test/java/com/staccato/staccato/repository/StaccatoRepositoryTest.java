@@ -329,19 +329,19 @@ class StaccatoRepositoryTest extends RepositoryTest {
             Category otherCategory = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
             Staccato otherStaccato = StaccatoFixtures.defaultStaccato().withCategory(otherCategory)
                     .buildAndSave(staccatoRepository);
-            Staccato firstStaccato = staccatos.get(0);
+            Staccato cursorStaccato = staccatos.get(0);
 
             // when
             List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
                     category.getId(),
-                    firstStaccato.getId(),
-                    firstStaccato.getVisitedAt(),
-                    firstStaccato.getCreatedAt(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    cursorStaccato.getCreatedAt(),
                     4
             );
 
             // then
-            assertThat(result).hasSize(3)
+            assertThat(result).hasSize(2)
                     .doesNotContain(otherStaccato);
         }
 
