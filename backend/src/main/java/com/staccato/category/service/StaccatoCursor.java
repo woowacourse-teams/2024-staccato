@@ -21,6 +21,11 @@ public record StaccatoCursor(
     private static final int VISITED_AT_INDEX = 1;
     private static final int CREATED_AT_INDEX = 2;
 
+    public StaccatoCursor {
+        visitedAt = visitedAt == null ? null : LocalDateTime.parse(visitedAt.format(DATETIME_FORMAT), DATETIME_FORMAT);
+        createdAt = createdAt == null ? null : LocalDateTime.parse(createdAt.format(DATETIME_FORMAT), DATETIME_FORMAT);
+    }
+
     public StaccatoCursor(Staccato staccato) {
         this(staccato.getId(), staccato.getVisitedAt(), staccato.getCreatedAt());
     }
@@ -64,4 +69,21 @@ public record StaccatoCursor(
                 createdAt.format(DATETIME_FORMAT));
         return Base64.getUrlEncoder().withoutPadding().encodeToString(cursor.getBytes(StandardCharsets.UTF_8));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof StaccatoCursor other)) {
+            return false;
+        }
+        return this.id == other.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
+    }
+
 }
