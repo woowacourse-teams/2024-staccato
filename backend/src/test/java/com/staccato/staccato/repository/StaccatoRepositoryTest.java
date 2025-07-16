@@ -243,7 +243,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
         );
     }
 
-    @DisplayName("사용자의 스타카토 방문 날짜가 동일하다면, 생성날짜 기준 최신순으로 조회한다.")
+    @DisplayName("사용자의 스타카토 방문 날짜가 동일하다면, id 기준 내림차순으로 조회한다.")
     @Test
     void findAllByCategoryIdOrderByCreatedAt() {
         // given
@@ -318,7 +318,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
             }
             staccatos.sort(
                     Comparator.comparing(Staccato::getVisitedAt).reversed()
-                            .thenComparing(Comparator.comparing(Staccato::getCreatedAt).reversed())
+                            .thenComparing(Comparator.comparing(Staccato::getId).reversed())
             );
         }
 
@@ -368,7 +368,6 @@ class StaccatoRepositoryTest extends RepositoryTest {
         void readStaccatosOrderByCreatedAtDesc() {
             // given
             Staccato cursorStaccato = staccatos.get(0);
-
 
             // when
             List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
@@ -478,7 +477,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
             }
             staccatos.sort(
                     Comparator.comparing(Staccato::getVisitedAt).reversed()
-                            .thenComparing(Comparator.comparing(Staccato::getCreatedAt).reversed())
+                            .thenComparing(Comparator.comparing(Staccato::getId).reversed())
             );
         }
 
@@ -509,7 +508,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
                     .containsExactly(staccatos.get(0), staccatos.get(1), staccatos.get(2));
         }
 
-        @DisplayName("방문 날짜가 동일하면 생성 날짜 기준 최신순으로 정렬해서 조회한다.")
+        @DisplayName("방문 날짜가 동일하면 id 기준 내림차순으로 정렬해서 조회한다.")
         @Test
         void readStaccatosOrderByCreatedAtDesc() {
             // given

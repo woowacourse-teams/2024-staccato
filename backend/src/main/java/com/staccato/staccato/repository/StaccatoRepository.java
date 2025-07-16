@@ -59,7 +59,7 @@ public interface StaccatoRepository extends JpaRepository<Staccato, Long> {
     @Query(value = """
                 SELECT * FROM staccato s
                 WHERE s.category_id = :categoryId
-                ORDER BY s.visited_at DESC, s.created_at DESC
+                ORDER BY s.visited_at DESC, s.id DESC
                 LIMIT :limit
             """, nativeQuery = true)
     List<Staccato> findFirstPageByCategoryId(
@@ -74,7 +74,7 @@ public interface StaccatoRepository extends JpaRepository<Staccato, Long> {
                     s.visited_at < :visitedAt
                     OR (s.visited_at = :visitedAt AND s.id < :staccatoId)
                   )
-                ORDER BY s.visited_at DESC, s.created_at DESC
+                ORDER BY s.visited_at DESC, s.id DESC
                 LIMIT :limit
             """, nativeQuery = true)
     List<Staccato> findStaccatosByCategoryIdAfterCursor(
