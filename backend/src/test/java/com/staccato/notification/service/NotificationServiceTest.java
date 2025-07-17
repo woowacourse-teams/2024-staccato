@@ -180,9 +180,11 @@ class NotificationServiceTest extends ServiceSliceTest {
                 notificationToken.getDeviceId());
 
         // when
-        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
+        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
         notificationService.register(member, notificationTokenRequest);
-        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
+        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
 
         // then
         assertAll(
@@ -192,25 +194,84 @@ class NotificationServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("이미 토큰이 존재하면 기존 토큰을 갱신한다.")
+    @DisplayName("(MemberId, DeviceType, DeviceId)가 동일한 토큰이 존재하면 기존 토큰 값을 갱신한다.")
     @Test
-    void registerAndUpdateToken() {
+    void updateTokenValueWhenSameTokenExists() {
         // given
-        Member member = MemberFixtures.defaultMember().withNickname("reuser").buildAndSave(memberRepository);
+        Member member = MemberFixtures.defaultMember().withNickname("member").buildAndSave(memberRepository);
         NotificationToken oldToken = NotificationTokenFixtures.defaultNotificationToken(member)
                 .withToken("old-token").buildAndSave(notificationTokenRepository);
         NotificationTokenRequest notificationTokenRequest = new NotificationTokenRequest("updated-token", oldToken.getDeviceType()
                 .getName(), oldToken.getDeviceId());
 
         // when
-        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
+        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
         notificationService.register(member, notificationTokenRequest);
-        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
+        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
 
         // then
         assertAll(
                 () -> assertThat(beforeRegister.get().getToken()).isEqualTo(oldToken.getToken()),
                 () -> assertThat(afterRegister.get().getToken()).isEqualTo(notificationTokenRequest.token())
+        );
+    }
+
+    @DisplayName("토큰 값이 동일한 토큰이 정확히 한 개 존재하면 기존 토큰의 DeviceId 값을 갱신한다.")
+    @Test
+    void updateDeviceIdWhenSameTokenValueExistsOnce() {
+        // given
+        Member member = MemberFixtures.defaultMember().withNickname("member").buildAndSave(memberRepository);
+        String tokenValue = "token-value";
+        NotificationTokenFixtures.defaultNotificationToken(member)
+                .withToken(tokenValue)
+                .withDeviceId("old-device-id")
+                .buildAndSave(notificationTokenRepository);
+        NotificationTokenRequest notificationTokenRequest = new NotificationTokenRequest(
+                tokenValue, "android", "new-device-id");
+
+        // when
+        List<NotificationToken> beforeRegister = notificationTokenRepository.findAllByToken(tokenValue);
+        notificationService.register(member, notificationTokenRequest);
+        List<NotificationToken> afterRegister = notificationTokenRepository.findAllByToken(tokenValue);
+
+        assertAll(
+                () -> assertThat(beforeRegister).hasSize(1),
+                () -> assertThat(afterRegister).hasSize(1),
+                () -> assertThat(afterRegister.get(0).getId()).isEqualTo(beforeRegister.get(0).getId()),
+                () -> assertThat(afterRegister.get(0).getDeviceId()).isEqualTo("new-device-id")
+        );
+    }
+
+    @DisplayName("토큰 값이 동일한 토큰이 두 개 이상 존재하면 모든 토큰을 삭제하고 새로운 토큰을 생성한다.")
+    @Test
+    void deleteAllAndSaveOneWhenSameTokenValueExistsMoreThanTwice() {
+        // given
+        Member member = MemberFixtures.defaultMember().withNickname("member").buildAndSave(memberRepository);
+        String tokenValue = "token-value";
+        NotificationTokenFixtures.defaultNotificationToken(member)
+                .withToken(tokenValue)
+                .withDeviceId("old-device-id1")
+                .buildAndSave(notificationTokenRepository);
+        NotificationTokenFixtures.defaultNotificationToken(member)
+                .withToken(tokenValue)
+                .withDeviceId("old-device-id2")
+                .buildAndSave(notificationTokenRepository);
+        NotificationTokenRequest notificationTokenRequest = new NotificationTokenRequest(
+                tokenValue, "android", "new-device-id");
+
+        // when
+        List<NotificationToken> beforeRegister = notificationTokenRepository.findAllByToken(tokenValue);
+        notificationService.register(member, notificationTokenRequest);
+        List<NotificationToken> afterRegister = notificationTokenRepository.findAllByToken(tokenValue);
+
+        assertAll(
+                () -> assertThat(beforeRegister).hasSize(2),
+                () -> assertThat(afterRegister).hasSize(1),
+                () -> assertThat(notificationTokenRepository.findById(beforeRegister.get(0).getId())).isEmpty(),
+                () -> assertThat(notificationTokenRepository.findById(beforeRegister.get(1).getId())).isEmpty(),
+                () -> assertThat(afterRegister.get(0).getDeviceId()).isEqualTo("new-device-id")
         );
     }
 }
