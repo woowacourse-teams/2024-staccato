@@ -387,16 +387,6 @@ class StaccatoRepositoryTest extends RepositoryTest {
             // given
             Staccato cursorStaccato = staccatos.get(0);
             int limit = 2;
-            System.out.println("Cursor:");
-            System.out.println("ID: " + cursorStaccato.getId());
-            System.out.println("visitedAt: " + cursorStaccato.getVisitedAt());
-            System.out.println("createdAt: " + cursorStaccato.getCreatedAt());
-
-            System.out.println("---- All Staccatos ----");
-            staccatos.forEach(s -> System.out.println(
-                    "ID: " + s.getId() +
-                    " | visitedAt: " + s.getVisitedAt() +
-                    " | createdAt: " + s.getCreatedAt()));
 
             // when
             List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
