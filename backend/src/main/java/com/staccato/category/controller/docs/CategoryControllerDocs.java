@@ -83,13 +83,13 @@ public interface CategoryControllerDocs {
             boolean isPrivate
     );
 
-    @Operation(summary = "카테고리 조회", deprecated = true, description = "사용자의 카테고리을 조회합니다.")
+    @Operation(summary = "카테고리 조회", deprecated = true, description = "사용자의 카테고리를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                     
-                    (1) 존재하지 않는 카테고리을 조회하려고 했을 때
+                    (1) 존재하지 않는 카테고리를 조회하려고 했을 때
                     
                     (2) Path Variable 형식이 잘못되었을 때
                     """,
@@ -109,7 +109,7 @@ public interface CategoryControllerDocs {
                     
                     (2) Path Variable 형식이 잘못되었을 때
                     
-                    (3) 위도는 -90.0 이상 90.0 이하, 경도는 -180.0 이상 180.0 이하여야 함
+                    (3) 위도 또는 경도 값이 유효한 범위를 벗어났을 때 (위도: -90.0 이상 90.0 이하, 경도: -180.0 이상 180.0 이하)
                     """,
                     responseCode = "400")
     })
@@ -195,7 +195,7 @@ public interface CategoryControllerDocs {
             @Parameter(required = true) @Valid CategoryColorRequest categoryColorRequest,
             @Parameter(hidden = true) Member member);
 
-    @Operation(summary = "카테고리 삭제", description = "사용자의 카테고리을 삭제합니다.")
+    @Operation(summary = "카테고리 삭제", description = "사용자의 카테고리를 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 삭제 성공", responseCode = "200"),
             @ApiResponse(description = "Path Variable 형식이 잘못되었을 때 발생", responseCode = "400")
