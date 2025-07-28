@@ -30,7 +30,7 @@ public class OptimisticLockAspect {
         }
     }
 
-    private static Optional<String> getMessage(ProceedingJoinPoint joinPoint) {
+    private Optional<String> getMessage(ProceedingJoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         OptimisticLockHandler annotation = method.getAnnotation(OptimisticLockHandler.class);
