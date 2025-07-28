@@ -1,7 +1,6 @@
 package com.staccato.config.aspect;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 import java.util.Optional;
 import jakarta.persistence.OptimisticLockException;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,11 +21,9 @@ public class OptimisticLockAspect {
         try {
             return joinPoint.proceed();
         } catch (OptimisticLockException | OptimisticLockingFailureException ex) {
-            Optional<String> message = getMessage(joinPoint);
-            if (message.isEmpty()) {
-                throw new ConflictException(ex);
-            }
-            throw new ConflictException(message.get(), ex);
+            throw getMessage(joinPoint)
+                    .map(message -> new ConflictException(message, ex))
+                    .orElseThrow(() -> new ConflictException(ex));
         }
     }
 
@@ -34,9 +31,8 @@ public class OptimisticLockAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         OptimisticLockHandler annotation = method.getAnnotation(OptimisticLockHandler.class);
-        if (Objects.isNull(annotation)) {
-            return Optional.empty();
-        }
-        return Optional.of(annotation.value());
+
+        return Optional.ofNullable(annotation)
+                .map(OptimisticLockHandler::value);
     }
 }
