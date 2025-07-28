@@ -35,7 +35,7 @@ public record StaccatoCursor(
             String decoded = new String(Base64.getUrlDecoder().decode(encodedCursor), StandardCharsets.UTF_8);
             String[] parts = decoded.split(DELIMITER);
             if (parts.length != ARGUMENTS_COUNT) {
-                throw new StaccatoException("주어진 커서 포멧(id|visitedAt|createdAt)이 올바르지 않아요: " + encodedCursor);
+                throw new StaccatoException("주어진 커서 포멧(id|visitedAt)이 올바르지 않아요: " + encodedCursor);
             }
 
             long id = Long.parseLong(parts[ID_INDEX]);
@@ -43,7 +43,7 @@ public record StaccatoCursor(
 
             return new StaccatoCursor(id, visitedAt);
         } catch (Exception e) {
-            throw new StaccatoException("주어진 커서 포멧(id|visitedAt|createdAt)이 올바르지 않아요: " + encodedCursor, e);
+            throw new StaccatoException("주어진 커서 포멧(id|visitedAt)이 올바르지 않아요: " + encodedCursor, e);
         }
     }
 

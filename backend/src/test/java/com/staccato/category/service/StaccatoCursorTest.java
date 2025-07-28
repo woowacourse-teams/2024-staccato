@@ -35,25 +35,25 @@ class StaccatoCursorTest {
     @Test
     void cannotDecodePlainText() {
         // given
-        String plainText = "42|2025-07-12T23:45:00|2025-07-12T23:00:00";
+        String plainText = "42|2025-07-12T23:45:00";
 
         // when & then
         assertThatThrownBy(() -> StaccatoCursor.fromEncoded(plainText))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("주어진 커서 포멧(id|visitedAt|createdAt)이 올바르지 않아요: ")
+                .hasMessageContaining("주어진 커서 포멧(id|visitedAt)이 올바르지 않아요: ")
                 .hasMessageContaining(plainText);
     }
 
-    @DisplayName("필드 수가 3개가 아닌 경우 decode 시 예외를 던진다")
+    @DisplayName("필드 수가 2개가 아닌 경우 decode 시 예외를 던진다")
     @Test
     void cannotDecodeWrongFieldCount() {
         // given
-        String encoded = encodeBase64("42|2025-07-12T23:45:00");
+        String encoded = encodeBase64("42|2025-07-12T23:45:00|2025-07-12T23:45:00");
 
         // when & then
         assertThatThrownBy(() -> StaccatoCursor.fromEncoded(encoded))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("주어진 커서 포멧(id|visitedAt|createdAt)이 올바르지 않아요: ")
+                .hasMessageContaining("주어진 커서 포멧(id|visitedAt)이 올바르지 않아요: ")
                 .hasMessageContaining(encoded);
     }
 
@@ -61,13 +61,13 @@ class StaccatoCursorTest {
     @Test
     void cannotDecodeInvalidId() {
         // given
-        String raw = "abc|2025-07-12T23:45:00|2025-07-12T23:00:00";
+        String raw = "abc|2025-07-12T23:45:00";
         String encoded = encodeBase64(raw);
 
         // when & then
         assertThatThrownBy(() -> StaccatoCursor.fromEncoded(encoded))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("주어진 커서 포멧(id|visitedAt|createdAt)이 올바르지 않아요: ")
+                .hasMessageContaining("주어진 커서 포멧(id|visitedAt)이 올바르지 않아요: ")
                 .hasMessageContaining(encoded);
     }
 
@@ -75,27 +75,13 @@ class StaccatoCursorTest {
     @Test
     void cannotDecodeInvalidVisitedAt() {
         // given
-        String raw = "42|invalid-date|2025-07-12T23:00:00";
+        String raw = "42|invalid-date";
         String encoded = encodeBase64(raw);
 
         // when & then
         assertThatThrownBy(() -> StaccatoCursor.fromEncoded(encoded))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("주어진 커서 포멧(id|visitedAt|createdAt)이 올바르지 않아요: ")
-                .hasMessageContaining(encoded);
-    }
-
-    @DisplayName("createdAt 필드의 날짜 형식이 잘못된 경우 decode 시 예외를 던진다")
-    @Test
-    void cannotDecodeInvalidCreatedAt() {
-        // given
-        String raw = "42|2025-07-12T23:45:00|invalid-created";
-        String encoded = encodeBase64(raw);
-
-        // when
-        assertThatThrownBy(() -> StaccatoCursor.fromEncoded(encoded))
-                .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("주어진 커서 포멧(id|visitedAt|createdAt)이 올바르지 않아요: ")
+                .hasMessageContaining("주어진 커서 포멧(id|visitedAt)이 올바르지 않아요: ")
                 .hasMessageContaining(encoded);
     }
 
