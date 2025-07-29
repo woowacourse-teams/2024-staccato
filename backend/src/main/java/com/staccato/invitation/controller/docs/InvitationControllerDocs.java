@@ -2,16 +2,13 @@ package com.staccato.invitation.controller.docs;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-
 import org.springframework.http.ResponseEntity;
-
 import com.staccato.config.auth.LoginMember;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
 import com.staccato.invitation.service.dto.response.CategoryInvitationReceivedResponses;
 import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponses;
 import com.staccato.member.domain.Member;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,13 +22,13 @@ public interface InvitationControllerDocs {
             @ApiResponse(description = "카테고리 초대 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                        
+                    
                     (1) 초대하려는 카테고리가 존재하지 않을 때
-                                        
+                    
                     (2) Path Variable 형식이 잘못되었을 때
-                                        
+                    
                     (3) 이미 카테고리에 추가된 사용자에게 초대 요청 했을 때
-                                        
+                    
                     (4) 이미 초대 요청을 보낸 사용자에게 초대 요청 했을 때
                     """,
                     responseCode = "400")
@@ -46,14 +43,15 @@ public interface InvitationControllerDocs {
             @ApiResponse(description = "초대 취소 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                        
+                    
                     (1) 취소하려는 초대가 존재하지 않을 때
-                                        
+                    
                     (2) Path Variable 형식이 잘못되었을 때
-                                        
+                    
                     (3) 이미 수락/거절된 초대 요청일 때
                     """,
-                    responseCode = "400")
+                    responseCode = "400"),
+            @ApiResponse(description = "이미 처리(수락/거절)된 초대일 때", responseCode = "409")
     })
     ResponseEntity<Void> cancelInvitation(
             @Parameter(hidden = true) Member member,
@@ -72,14 +70,15 @@ public interface InvitationControllerDocs {
             @ApiResponse(description = "초대 수락 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                        
+                    
                     (1) 수락하려는 초대가 존재하지 않을 때
-                                        
+                    
                     (2) Path Variable 형식이 잘못되었을 때
-                                        
+                    
                     (3) 이미 취소/거절된 초대 요청일 때
                     """,
-                    responseCode = "400")
+                    responseCode = "400"),
+            @ApiResponse(description = "이미 처리(취소/거절)된 초대일 때", responseCode = "409")
     })
     ResponseEntity<Void> acceptInvitation(
             @Parameter(hidden = true) Member member,
@@ -91,14 +90,15 @@ public interface InvitationControllerDocs {
             @ApiResponse(description = "초대 거절 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                        
+                    
                     (1) 거절하려는 초대가 존재하지 않을 때
-                                        
+                    
                     (2) Path Variable 형식이 잘못되었을 때
-                                        
+                    
                     (3) 이미 취소/수락된 초대 요청일 때
                     """,
-                    responseCode = "400")
+                    responseCode = "400"),
+            @ApiResponse(description = "이미 처리(취소/수락)된 초대일 때", responseCode = "409")
     })
     ResponseEntity<Void> rejectInvitation(
             @Parameter(hidden = true) Member member,

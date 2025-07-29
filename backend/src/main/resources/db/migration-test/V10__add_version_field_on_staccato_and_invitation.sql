@@ -1,0 +1,4 @@
+ALTER TABLE category_invitation
+    ADD COLUMN version BIGINT DEFAULT 0 NOT NULL;
+ALTER TABLE staccato
+    ADD COLUMN version BIGINT DEFAULT 0 NOT NULL;

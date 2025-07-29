@@ -88,7 +88,8 @@ public interface StaccatoControllerDocs {
                     
                     (8) 공유 상태가 다르거나, 공유 카테고리간의 카테고리 변경이 일어났을 때
                     """,
-                    responseCode = "400")
+                    responseCode = "400"),
+            @ApiResponse(description = "다른 사용자에 의해 먼저 수정이 발생했을 때", responseCode = "409")
     })
     ResponseEntity<Void> updateStaccatoById(
             @Parameter(hidden = true) Member member,
@@ -98,7 +99,8 @@ public interface StaccatoControllerDocs {
     @Operation(summary = "스타카토 삭제", description = "스타카토를 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "스타카토 삭제에 성공했거나 해당 스타카토가 존재하지 않는 경우", responseCode = "200"),
-            @ApiResponse(description = "스타카토 식별자에 양수가 아닌 값을 기입했을 경우", responseCode = "400")
+            @ApiResponse(description = "스타카토 식별자에 양수가 아닌 값을 기입했을 경우", responseCode = "400"),
+            @ApiResponse(description = "다른 사용자에 의해 먼저 수정이 발생했을 때", responseCode = "409")
     })
     ResponseEntity<Void> deleteStaccatoById(
             @Parameter(hidden = true) Member member,
@@ -119,7 +121,8 @@ public interface StaccatoControllerDocs {
 
                     (4) 요청한 기분 표현을 찾을 수 없을 때
                     """,
-                    responseCode = "400")
+                    responseCode = "400"),
+            @ApiResponse(description = "다른 사용자에 의해 먼저 수정이 발생했을 때", responseCode = "409")
     })
     ResponseEntity<Void> updateStaccatoFeelingById(
             @Parameter(hidden = true) Member member,

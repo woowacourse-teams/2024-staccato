@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.comment.repository.CommentRepository;
+import com.staccato.config.aspect.annotation.OptimisticLockHandler;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
@@ -66,6 +67,7 @@ public class StaccatoService {
     }
 
     @Transactional
+    @OptimisticLockHandler("누군가 이 스타카토를 먼저 수정했어요. 최신 상태를 불러온 뒤 다시 시도해주세요.")
     public void updateStaccatoById(
             long staccatoId,
             StaccatoRequest staccatoRequest,
@@ -110,6 +112,7 @@ public class StaccatoService {
     }
 
     @Transactional
+    @OptimisticLockHandler("누군가 기분을 먼저 수정했어요. 최신 상태를 불러온 뒤 다시 시도해주세요.")
     public void updateStaccatoFeelingById(long staccatoId, Member member, FeelingRequest feelingRequest) {
         Staccato staccato = getStaccatoById(staccatoId);
         staccato.validateOwner(member);

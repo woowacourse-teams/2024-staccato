@@ -10,13 +10,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-
+import jakarta.persistence.Version;
 import com.staccato.category.domain.Category;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -46,6 +45,8 @@ public class CategoryInvitation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private InvitationStatus status;
+    @Version
+    private Long version;
 
     public static CategoryInvitation invite(@NonNull Category category, @NonNull Member inviter, @NonNull Member invitee) {
         return new CategoryInvitation(category, inviter, invitee, InvitationStatus.REQUESTED);
