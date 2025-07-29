@@ -2,6 +2,8 @@ package com.staccato.staccato.repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -241,7 +243,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
         );
     }
 
-    @DisplayName("사용자의 스타카토 방문 날짜가 동일하다면, 생성날짜 기준 최신순으로 조회한다.")
+    @DisplayName("사용자의 스타카토 방문 날짜가 동일하다면, id 기준 내림차순으로 조회한다.")
     @Test
     void findAllByCategoryIdOrderByCreatedAt() {
         // given
@@ -288,5 +290,257 @@ class StaccatoRepositoryTest extends RepositoryTest {
 
         // then
         assertThat(result).isEqualTo(result);
+    }
+
+    @Nested
+    @DisplayName("카테고리 내 스타카토 목록을 일정 개수만큼 조회 시")
+    class readStaccatosInPage {
+        private Member member;
+        private Category category;
+        private List<Staccato> staccatos;
+
+        @BeforeEach
+        void setUp() {
+            member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+            category = CategoryFixtures.defaultCategory()
+                    .withTerm(null, null)
+                    .withHost(member)
+                    .buildAndSave(categoryRepository);
+            staccatos = new ArrayList<>();
+            for (int count = 1; count <= 3; count++) {
+                staccatos.add(StaccatoFixtures.defaultStaccato()
+                        .withCategory(category)
+                        .withCreator(member)
+                        .withTitle("staccato " + count)
+                        .withVisitedAt(LocalDateTime.of(2024, 1, count, 0, 0, 0))
+                        .buildAndSave(staccatoRepository)
+                );
+            }
+            staccatos.sort(
+                    Comparator.comparing(Staccato::getVisitedAt).reversed()
+                            .thenComparing(Comparator.comparing(Staccato::getId).reversed())
+            );
+        }
+
+        @DisplayName("카테고리 내 스타카토만 조회된다.")
+        @Test
+        void readStaccatosByCategoryId() {
+            // given
+            Category otherCategory = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
+            Staccato otherStaccato = StaccatoFixtures.defaultStaccato().withCategory(otherCategory)
+                    .buildAndSave(staccatoRepository);
+            Staccato cursorStaccato = staccatos.get(0);
+
+            // when
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
+                    category.getId(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    4
+            );
+
+            // then
+            assertThat(result).hasSize(2)
+                    .doesNotContain(otherStaccato);
+        }
+
+        @DisplayName("방문 날짜 기준 최신순으로 정렬해서 조회한다.")
+        @Test
+        void readStaccatosOrderByVisitedAtDesc() {
+            // given
+            Staccato cursorStaccato = staccatos.get(0);
+
+            // when
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
+                    category.getId(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    4
+            );
+
+            // then
+            assertThat(result).hasSize(2)
+                    .containsExactly(staccatos.get(1), staccatos.get(2));
+        }
+
+        @DisplayName("방문 날짜가 동일하면 생성 날짜 기준 최신순으로 정렬해서 조회한다.")
+        @Test
+        void readStaccatosOrderByCreatedAtDesc() {
+            // given
+            Staccato cursorStaccato = staccatos.get(0);
+
+            // when
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
+                    category.getId(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    2
+            );
+
+            // then
+            assertThat(result).containsExactly(staccatos.get(1), staccatos.get(2));
+        }
+
+        @DisplayName("주어진 limit 개수 만큼을 조회한다.")
+        @Test
+        void readStaccatosAsMuchAsLimit() {
+            // given
+            Staccato cursorStaccato = staccatos.get(0);
+            int limit = 2;
+
+            // when
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
+                    category.getId(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    limit
+            );
+
+            // then
+            assertThat(result).hasSize(2)
+                    .containsExactly(staccatos.get(1), staccatos.get(2));
+        }
+
+        @DisplayName("존재하는 데이터보다 많은 개수를 요구하면 존재하는 데이터 수만큼만 조회한다.")
+        @Test
+        void readStaccatosAsMuchAsExists() {
+            // given
+            Staccato cursorStaccato = staccatos.get(0);
+            int limit = 100;
+
+            // when
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
+                    category.getId(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    limit
+            );
+
+            // then
+            assertThat(result).hasSize(2);
+        }
+
+        @DisplayName("카테고리 내 스타카토 목록을 주어진 커서 다음부터 조회한다.")
+        @Test
+        void readStaccatosFromCursor() {
+            // given
+            Staccato cursorStaccato = staccatos.get(1);
+            int limit = 4;
+
+            // when
+            List<Staccato> result = staccatoRepository.findStaccatosByCategoryIdAfterCursor(
+                    category.getId(),
+                    cursorStaccato.getId(),
+                    cursorStaccato.getVisitedAt(),
+                    limit
+            );
+
+            // then
+            assertThat(result).hasSize(1)
+                    .containsExactly(staccatos.get(2));
+        }
+    }
+
+    @Nested
+    @DisplayName("카테고리 목록의 첫 페이지를 조회 시")
+    class readStaccatosInFirstPage {
+        private Member member;
+        private Category category;
+        private List<Staccato> staccatos;
+
+        @BeforeEach
+        void setUp() {
+            member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+            category = CategoryFixtures.defaultCategory()
+                    .withTerm(null, null)
+                    .withHost(member)
+                    .buildAndSave(categoryRepository);
+            staccatos = new ArrayList<>();
+            for (int count = 1; count <= 3; count++) {
+                staccatos.add(StaccatoFixtures.defaultStaccato()
+                        .withCategory(category)
+                        .withCreator(member)
+                        .withTitle("staccato " + count)
+                        .withVisitedAt(LocalDateTime.of(2024, 1, count, 0, 0, 0))
+                        .buildAndSave(staccatoRepository)
+                );
+            }
+            staccatos.sort(
+                    Comparator.comparing(Staccato::getVisitedAt).reversed()
+                            .thenComparing(Comparator.comparing(Staccato::getId).reversed())
+            );
+        }
+
+        @DisplayName("카테고리 내 스타카토만 조회된다.")
+        @Test
+        void readStaccatosByCategoryId() {
+            // given
+            Category otherCategory = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
+            Staccato otherStaccato = StaccatoFixtures.defaultStaccato().withCategory(otherCategory)
+                    .buildAndSave(staccatoRepository);
+
+            // when
+            List<Staccato> result = staccatoRepository.findFirstPageByCategoryId(category.getId(), 4);
+
+            // then
+            assertThat(result).hasSize(3)
+                    .doesNotContain(otherStaccato);
+        }
+
+        @DisplayName("방문 날짜 기준 최신순으로 정렬해서 조회한다.")
+        @Test
+        void readStaccatosOrderByVisitedAtDesc() {
+            // when
+            List<Staccato> result = staccatoRepository.findFirstPageByCategoryId(category.getId(), 4);
+
+            // then
+            assertThat(result).hasSize(3)
+                    .containsExactly(staccatos.get(0), staccatos.get(1), staccatos.get(2));
+        }
+
+        @DisplayName("방문 날짜가 동일하면 id 기준 내림차순으로 정렬해서 조회한다.")
+        @Test
+        void readStaccatosOrderByCreatedAtDesc() {
+            // given
+            Staccato first = StaccatoFixtures.defaultStaccato()
+                    .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
+                    .withCategory(category).buildAndSave(staccatoRepository);
+            Staccato second = StaccatoFixtures.defaultStaccato()
+                    .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
+                    .withCategory(category).buildAndSave(staccatoRepository);
+
+            // when
+            List<Staccato> result = staccatoRepository.findFirstPageByCategoryId(category.getId(), 2);
+
+            // then
+            assertThat(result).containsExactly(second, first);
+        }
+
+        @DisplayName("주어진 limit 개수 만큼을 조회한다.")
+        @Test
+        void readStaccatosAsMuchAsLimit() {
+            // given
+            int limit = 2;
+
+            // when
+            List<Staccato> result = staccatoRepository.findFirstPageByCategoryId(category.getId(), limit);
+
+            // then
+            assertThat(result).hasSize(2)
+                    .containsExactly(staccatos.get(0), staccatos.get(1));
+        }
+
+        @DisplayName("존재하는 데이터보다 많은 개수를 요구하면 존재하는 데이터 수만큼만 조회한다.")
+        @Test
+        void readStaccatosAsMuchAsExists() {
+            // given
+            int limit = 100;
+
+            // when
+            List<Staccato> result = staccatoRepository.findFirstPageByCategoryId(category.getId(), limit);
+
+            // then
+            assertThat(result).hasSize(3);
+        }
     }
 }

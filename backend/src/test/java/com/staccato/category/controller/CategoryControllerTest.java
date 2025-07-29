@@ -1,36 +1,23 @@
 package com.staccato.category.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
 import com.staccato.ControllerTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
+import com.staccato.category.service.StaccatoCursor;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
@@ -41,6 +28,7 @@ import com.staccato.category.service.dto.response.CategoryResponseV3;
 import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
+import com.staccato.category.service.dto.response.CategoryStaccatoResponses;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.category.CategoryRequestFixtures;
@@ -48,6 +36,22 @@ import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class CategoryControllerTest extends ControllerTest {
 
@@ -333,7 +337,7 @@ class CategoryControllerTest extends ControllerTest {
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
-        when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
+        when(categoryService.readCategoryWithStaccatosById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
                     "categoryId": null,
@@ -383,7 +387,7 @@ class CategoryControllerTest extends ControllerTest {
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
-        when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
+        when(categoryService.readCategoryWithStaccatosById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
                     "categoryId": null,
@@ -415,9 +419,9 @@ class CategoryControllerTest extends ControllerTest {
                 .andExpect(content().json(expectedResponse, true));
     }
 
-    @DisplayName("특정 카테고리에 속한 스타카토 목록 조회에 성공한다.")
+    @DisplayName("특정 카테고리에 속한 스타카토 위치 목록 조회에 성공한다.")
     @Test
-    void readAllStaccatoByCategory() throws Exception {
+    void readStaccatoLocationsByCategory() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
@@ -433,10 +437,10 @@ class CategoryControllerTest extends ControllerTest {
         );
         CategoryStaccatoLocationResponses responses = new CategoryStaccatoLocationResponses(List.of(response1, response2));
 
-        when(categoryService.readAllStaccatoByCategory(any(Member.class), anyLong(), any(CategoryStaccatoLocationRangeRequest.class))).thenReturn(responses);
+        when(categoryService.readStaccatoLocationsByCategory(any(Member.class), anyLong(), any(CategoryStaccatoLocationRangeRequest.class))).thenReturn(responses);
         String expectedResponse = """
                 {
-                    "categoryStaccatoLocationResponses": [
+                    "staccatos": [
                          {
                              "staccatoId": null,
                              "staccatoColor": "pink",
@@ -454,7 +458,7 @@ class CategoryControllerTest extends ControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(get("/categories/1/staccatos")
+        mockMvc.perform(get("/categories/1/staccatos/locations")
                         .param("neLat", "81")
                         .param("neLng", "124")
                         .param("swLat", "80")
@@ -462,6 +466,93 @@ class CategoryControllerTest extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse, true));
+    }
+
+    @DisplayName("특정 카테고리에 속한 스타카토 목록 조회에 성공한다.")
+    @Test
+    void readStaccatosByCategory() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
+        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), StaccatoCursor.empty());
+
+        when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), anyString(), anyInt())).thenReturn(responses);
+        String expectedResponse = """
+                {
+                    "staccatos": [
+                            {
+                                "staccatoId": null,
+                                "staccatoTitle": "staccatoTitle",
+                                "staccatoImageUrl": "https://example.com/staccatoImage.jpg",
+                                "visitedAt": "2024-06-01T00:00:00"
+                            }
+                    ],
+                    "nextCursor": null
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/categories/1/staccatos")
+                        .param("cursor", "cursor")
+                        .param("limit", "1")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse, true));
+    }
+
+    @DisplayName("limit 값이 유효 범위를 벗어나면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(ints = {0, 101})
+    void cannotReadStaccatosByCategoryIfLimitOutOfBounds(int limit) throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .build();
+        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), StaccatoCursor.empty());
+
+        when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), anyString(), anyInt())).thenReturn(responses);
+
+        // when & then
+        mockMvc.perform(get("/categories/1/staccatos")
+                        .param("limit", String.valueOf(limit))
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("limit는 1 이상, 100 이하여야 합니다."));
+    }
+
+    @DisplayName("limit 값이 비어있을 경우 기본값 10이 적용된다.")
+    @Test
+    void defaultLimitIsApplied() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
+        CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), StaccatoCursor.empty());
+
+        when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), anyString(), anyInt())).thenReturn(responses);
+
+        // when
+        mockMvc.perform(get("/categories/1/staccatos")
+                        .param("cursor", "cursor")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk());
+
+        // then
+        ArgumentCaptor<Integer> limitCaptor = ArgumentCaptor.forClass(Integer.class);
+        verify(categoryService).readStaccatosByCategory(
+                any(Member.class),
+                anyLong(),
+                anyString(),
+                limitCaptor.capture()
+        );
+        assertThat(limitCaptor.getValue()).isEqualTo(10);
     }
 
     @DisplayName("적합한 경로변수와 데이터를 통해 스타카토 수정에 성공한다.")

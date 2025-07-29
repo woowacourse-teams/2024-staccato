@@ -4,10 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
@@ -18,21 +16,21 @@ import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV4;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponseV3;
 import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
+import com.staccato.category.service.dto.response.CategoryStaccatoResponses;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
-import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -96,7 +94,7 @@ public class CategoryService {
         return sort.apply(categories);
     }
 
-    public CategoryDetailResponseV3 readCategoryById(long categoryId, Member member) {
+    public CategoryDetailResponseV3 readCategoryWithStaccatosById(long categoryId, Member member) {
         Category category = categoryRepository.findWithCategoryMembersById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
         category.validateOwner(member);
@@ -105,7 +103,15 @@ public class CategoryService {
         return new CategoryDetailResponseV3(category, staccatos, member);
     }
 
-    public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
+    public CategoryDetailResponseV4 readCategoryById(long categoryId, Member member) {
+        Category category = categoryRepository.findWithCategoryMembersById(categoryId)
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
+        category.validateOwner(member);
+
+        return new CategoryDetailResponseV4(category, member);
+    }
+
+    public CategoryStaccatoLocationResponses readStaccatoLocationsByCategory(
             Member member, long categoryId, CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest) {
         Category category = getCategoryById(categoryId);
         category.validateOwner(member);
@@ -119,6 +125,35 @@ public class CategoryService {
         );
 
         return CategoryStaccatoLocationResponses.of(staccatos);
+    }
+
+    public CategoryStaccatoResponses readStaccatosByCategory(
+            Member member,
+            long categoryId,
+            String cursor,
+            int limit
+    ) {
+        Category category = getCategoryById(categoryId);
+        category.validateOwner(member);
+        StaccatoCursor staccatoCursor = StaccatoCursor.fromEncoded(cursor);
+        List<Staccato> staccatos = readStaccatos(categoryId, staccatoCursor, limit);
+        StaccatoCursor nextCursor = getNextCursor(staccatos);
+        return CategoryStaccatoResponses.of(staccatos, nextCursor);
+    }
+
+    private List<Staccato> readStaccatos(long categoryId, StaccatoCursor cursor, int limit) {
+        if (cursor.isEmpty()) {
+            return staccatoRepository.findFirstPageByCategoryId(categoryId, limit);
+        }
+        return staccatoRepository.findStaccatosByCategoryIdAfterCursor(categoryId, cursor.id(), cursor.visitedAt(), limit);
+    }
+
+    private StaccatoCursor getNextCursor(List<Staccato> staccatos) {
+        if (staccatos.isEmpty()) {
+            return StaccatoCursor.empty();
+        }
+        int lastIndex = staccatos.size() - 1;
+        return new StaccatoCursor(staccatos.get(lastIndex));
     }
 
     @Transactional

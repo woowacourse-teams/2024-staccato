@@ -1,6 +1,7 @@
 package com.staccato.staccato.repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -55,7 +56,33 @@ public interface StaccatoRepository extends JpaRepository<Staccato, Long> {
 
     List<Staccato> findAllByCategoryId(long categoryId);
 
-    List<Staccato> findAllByCategoryIdIn(List<Long> categoryIds);
+    @Query(value = """
+                SELECT * FROM staccato s
+                WHERE s.category_id = :categoryId
+                ORDER BY s.visited_at DESC, s.id DESC
+                LIMIT :limit
+            """, nativeQuery = true)
+    List<Staccato> findFirstPageByCategoryId(
+            @Param("categoryId") long categoryId,
+            @Param("limit") int limit
+    );
+
+    @Query(value = """
+                SELECT * FROM staccato s
+                WHERE s.category_id = :categoryId
+                  AND (
+                    s.visited_at < :visitedAt
+                    OR (s.visited_at = :visitedAt AND s.id < :staccatoId)
+                  )
+                ORDER BY s.visited_at DESC, s.id DESC
+                LIMIT :limit
+            """, nativeQuery = true)
+    List<Staccato> findStaccatosByCategoryIdAfterCursor(
+            @Param("categoryId") long categoryId,
+            @Param("staccatoId") long staccatoId,
+            @Param("visitedAt") LocalDateTime visitedAt,
+            @Param("limit") int limit
+    );
 
     @Modifying
     @Query("DELETE FROM Staccato s WHERE s.category.id = :categoryId")
