@@ -512,7 +512,7 @@ class CategoryControllerTest extends ControllerTest {
         Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
-                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
+                .build();
         CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), StaccatoCursor.empty());
 
         when(categoryService.readStaccatosByCategory(any(Member.class), anyLong(), anyString(), anyInt())).thenReturn(responses);
