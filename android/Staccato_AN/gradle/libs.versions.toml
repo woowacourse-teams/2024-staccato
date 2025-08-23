@@ -50,7 +50,7 @@ kotlinxSerializationJson = "1.9.0"
 coil = "2.7.0"
 lottie = "6.6.7"
 dotsindicator = "5.1.0"
-ktlint = "13.1.0"
+ktlint = "12.1.0"
 
 # Test
 junitBom = "5.13.4"
