@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kotlinCompose)
     id("kotlin-kapt")
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.androidJUnit5)
@@ -8,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.on.staccato.presentation"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 26
@@ -37,19 +38,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     dataBinding {
         enable = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
     }
 }
 
@@ -59,7 +56,9 @@ dependencies {
     implementation(libs.material)
 
     // JUnit5
-    testImplementation(libs.junit5)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testRuntimeOnly(libs.junit.vintage.engine)
 
     // AssertJ
@@ -72,10 +71,6 @@ dependencies {
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
 
-    // Android JUnit5
-    androidTestImplementation(libs.junit5.android.test.core)
-    androidTestRuntimeOnly(libs.junit5.android.test.runner)
-
     // Coroutines Test
     testImplementation(libs.kotlinx.coroutines.test)
 
@@ -86,8 +81,8 @@ dependencies {
     androidTestImplementation(libs.mockk.android)
 
     // Lifecycle
-    implementation(libs.lifecycle.viewmodel)
-    implementation(libs.lifecycle.livedata)
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.livedata)
 
     // Fragment
     implementation(libs.androidx.fragment.ktx)
@@ -96,7 +91,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
 
     // Splash Screen
-    implementation(libs.splashscreen)
+    implementation(libs.androidx.splashscreen)
 
     // Coil
     implementation(libs.coil)
@@ -158,7 +153,7 @@ dependencies {
     implementation(libs.coil.compose)
 
     // Compose ViewModel
-    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Compose ConstraintLayout
     implementation(libs.androidx.constraintlayout.compose)
