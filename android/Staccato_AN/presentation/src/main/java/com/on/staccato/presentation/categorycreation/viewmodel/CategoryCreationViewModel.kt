@@ -180,13 +180,12 @@ class CategoryCreationViewModel
                 isShared = _isShared.value,
             )
 
-        private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {
-            return if (isPeriodActive.value) {
+        private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? =
+            if (isPeriodActive.value) {
                 date.value
             } else {
                 null
             }
-        }
 
         private fun emitMessageEvent(message: String) {
             _messageEvent.setValue(MessageEvent.from(message))

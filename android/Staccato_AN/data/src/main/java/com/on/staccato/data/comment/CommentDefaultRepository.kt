@@ -19,9 +19,7 @@ class CommentDefaultRepository
             commentDataSource.getComments(staccatoId).handle { it.toDomain() }
 
         override suspend fun createComment(newComment: NewComment): ApiResult<Unit> =
-            commentDataSource.createComment(
-                newComment.toDto(),
-            ).handle()
+            commentDataSource.createComment(newComment.toDto()).handle()
 
         override suspend fun updateComment(
             commentId: Long,

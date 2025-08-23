@@ -1,6 +1,7 @@
 package com.on.staccato.data.member
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.model.MemberProfile.Companion.EMPTY_STRING
 import com.on.staccato.domain.model.MemberProfile.Companion.INVALID_MEMBER_ID
@@ -20,7 +21,7 @@ class MemberLocalDataSource
 
         override suspend fun updateToken(newToken: String) {
             withContext(Dispatchers.IO) {
-                userInfoPrefs.edit().putString(TOKEN_KEY_NAME, newToken).apply()
+                userInfoPrefs.edit { putString(TOKEN_KEY_NAME, newToken) }
             }
         }
 
@@ -36,18 +37,19 @@ class MemberLocalDataSource
 
         override suspend fun updateMemberProfile(memberProfile: MemberProfile) {
             withContext(Dispatchers.IO) {
-                userInfoPrefs.edit()
-                    .putLong(MEMBER_ID_KEY_NAME, memberProfile.memberId)
-                    .putString(PROFILE_IMAGE_URL_KEY_NAME, memberProfile.profileImageUrl)
-                    .putString(NICKNAME_KEY_NAME, memberProfile.nickname)
-                    .putString(RECOVERY_CODE_KEY_NAME, memberProfile.uuidCode)
-                    .apply()
+                userInfoPrefs
+                    .edit {
+                        putLong(MEMBER_ID_KEY_NAME, memberProfile.memberId)
+                            .putString(PROFILE_IMAGE_URL_KEY_NAME, memberProfile.profileImageUrl)
+                            .putString(NICKNAME_KEY_NAME, memberProfile.nickname)
+                            .putString(RECOVERY_CODE_KEY_NAME, memberProfile.uuidCode)
+                    }
             }
         }
 
         override suspend fun updateProfileImageUrl(url: String?) {
             withContext(Dispatchers.IO) {
-                userInfoPrefs.edit().putString(PROFILE_IMAGE_URL_KEY_NAME, url ?: EMPTY_STRING).apply()
+                userInfoPrefs.edit { putString(PROFILE_IMAGE_URL_KEY_NAME, url ?: EMPTY_STRING) }
             }
         }
 
