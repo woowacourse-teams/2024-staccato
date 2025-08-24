@@ -128,6 +128,9 @@ dependencies {
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.junitparams)
 
+    // Espresso
+    androidTestImplementation(libs.androidx.test.espresso.core)
+
     // Coil
     implementation(libs.coil)
 
