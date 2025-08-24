@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -14,23 +12,7 @@ android {
     defaultConfig {
         minSdk = 26
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] =
-            "de.mannodermaus.junit5.AndroidJUnit5Builder"
         consumerProguardFiles("consumer-rules.pro")
-
-        val secretPropsFile = rootProject.file("secret.properties")
-        val localDefaultsFile = rootProject.file("local.defaults.properties")
-        val props =
-            Properties().apply {
-                if (secretPropsFile.exists()) {
-                    load(secretPropsFile.inputStream())
-                } else if (localDefaultsFile.exists()) {
-                    load(localDefaultsFile.inputStream())
-                }
-            }
-        val mapsApiKey = props.getProperty("MAPS_API_KEY") ?: ""
-        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -52,12 +34,8 @@ android {
 }
 
 dependencies {
-
+    // Android
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    androidTestImplementation(libs.androidx.test.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
 
     // Retrofit
     implementation(libs.retrofit)
