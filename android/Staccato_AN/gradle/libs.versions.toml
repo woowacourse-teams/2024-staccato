@@ -121,10 +121,10 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessaging" }
 
 # Retrofit
-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttpLoggingInterceptor" }
 okhttp-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttpMockwebserver" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
 retrofit-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitSerializationConverter" }
 
 # Test

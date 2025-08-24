@@ -40,7 +40,7 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization.converter)
-    implementation(libs.converter.scalars)
+    implementation(libs.retrofit.converter.scalars)
 
     // Kotlinx-Serialization
     implementation(libs.kotlinx.serialization.json)
