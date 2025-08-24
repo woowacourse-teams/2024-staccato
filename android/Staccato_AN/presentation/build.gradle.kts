@@ -51,6 +51,7 @@ android {
 }
 
 dependencies {
+    // Android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -74,7 +75,7 @@ dependencies {
     // Coroutines Test
     testImplementation(libs.kotlinx.coroutines.test)
 
-    // Mockk
+    // MockK
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.agent)
     androidTestImplementation(libs.mockk.agent)
@@ -109,7 +110,7 @@ dependencies {
     // Lottie
     implementation(libs.lottie)
 
-    // CameraX
+    // Camerax
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)

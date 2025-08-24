@@ -120,8 +120,6 @@ dependencies {
     // AssertJ
     testImplementation(libs.assertj.core)
 
-    // Android Test Runner
-
     // Android JUnit4
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.runner)
