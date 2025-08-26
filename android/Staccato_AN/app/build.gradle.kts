@@ -125,6 +125,13 @@ dependencies {
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
 
+    // Android Hilt Test
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.android.compiler)
+
+    // Android Espresso
+    androidTestImplementation(libs.androidx.espresso.core)
+
     // Android JUnit4
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.junitparams)
