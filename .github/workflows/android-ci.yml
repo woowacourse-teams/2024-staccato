@@ -209,6 +209,9 @@ jobs:
         uses: mikepenz/action-junit-report@v5
         with:
           report_paths: '**/build/outputs/androidTest-results/connected/**/*.xml'
+          check_name: 'UI Test Reports'
           comment: true
+          detailed_summary: true
+          include_time_in_summary: true
           fail_on_failure: false
           fail_on_parse_error: false
