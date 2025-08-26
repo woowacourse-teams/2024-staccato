@@ -30,9 +30,7 @@ android {
         versionCode = 15
         versionName = "2.1.2"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] =
-            "de.mannodermaus.junit5.AndroidJUnit5Builder"
+        testInstrumentationRunner = "com.on.staccato.HiltTestRunner"
 
         buildConfigField("String", "TOKEN", "${localProperties["token"]}")
     }
@@ -134,11 +132,6 @@ dependencies {
 
     // Android JUnit4
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.junitparams)
-
-    // Android JUnit5
-    androidTestImplementation(libs.junit5.android.test.core)
-    androidTestRuntimeOnly(libs.junit5.android.test.runner)
 
     // Glide
     implementation(libs.glide)
