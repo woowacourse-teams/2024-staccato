@@ -9,7 +9,7 @@ class HiltTestRunner : AndroidJUnitRunner() {
     override fun newApplication(
         classLoader: ClassLoader?,
         name: String?,
-        context: Context?
+        context: Context?,
     ): Application =
         super.newApplication(
             classLoader,
