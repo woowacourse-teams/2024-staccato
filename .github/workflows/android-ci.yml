@@ -205,13 +205,10 @@ jobs:
             **/build/reports/*
             **/build/outputs/*/connected/*
       - name: Publish UI Test Results
-        uses: dorny/test-reporter@v2
-        if: always()
+        if: (!canceled())
+        uses: mikepenz/action-junit-report@v5
         with:
-          name: UI Tests
-          badge-title: 'UI Tests'
-          reporter: java-junit
-          working-directory: ./android/Staccato_AN
-          path: '**/build/outputs/androidTest-results/connected/**/*.xml'
-          fail-on-empty: 'false'
-          fail-on-error: 'false'
+          report_paths: '**/build/outputs/androidTest-results/connected/**/*.xml'
+          comment: true
+          fail_on_failure: false
+          fail_on_parse_error: false
