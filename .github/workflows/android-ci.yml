@@ -205,7 +205,7 @@ jobs:
             **/build/reports/*
             **/build/outputs/*/connected/*
       - name: Publish UI Test Results
-        if: (!canceled())
+        if: ${{ !cancelled() }}
         uses: mikepenz/action-junit-report@v5
         with:
           report_paths: '**/build/outputs/androidTest-results/connected/**/*.xml'
