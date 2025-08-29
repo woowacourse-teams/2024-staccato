@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+
 import com.staccato.category.domain.Category;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Feeling;
@@ -88,12 +89,6 @@ public class StaccatoFixtures {
 
         public Staccato buildAndSave(StaccatoRepository repository) {
             Staccato staccato = build();
-            return repository.save(staccato);
-        }
-
-        public Staccato buildAndSaveWithStaccatoImages(List<String> staccatoImages, StaccatoRepository repository) {
-            Staccato staccato = build();
-            this.staccatoImages.addAll(new StaccatoImages(staccatoImages), staccato);
             return repository.save(staccato);
         }
     }

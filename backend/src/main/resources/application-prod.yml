@@ -9,7 +9,7 @@ spring:
       mode: always
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(QdX7RtOmixaK8JZYh9uxBmsnpkQEOQvKL7j2zSvT5+FOeCPgdxxE2q6R1/fFN/JaIg8wzcvy/64a1DVCoAZH+QpcX+0uSmL9uUfv99hffyY4azyYVxTs8fEKoKwE+voc1Y2KeagzudlQXjC5LAfBzFQGWLA/Fg5oIHdZg+RtC9oIERrpeCoClNaytryS3nYU)
+    url: ENC(58w/5RjPFcFvgad4S8W0dhglKgSwH686nySynhrJwj0YthzC4whg3mm/v72VkrjMOKtJ+Z/6S85nCX7KEqFjt3DVjMPKQ96rCxo5z1w57RsSplP/Yotl/x8dHatYVys9IzC2CRJiNmeEwQBNWNXoeAm5XPFkGhIlGnCZmseHbOVxexy/dBaSuY0NwDS7LpNjvMhKRAXXUZcEJRYSKcIgyw==)
     username: ENC(S8qX2951mrx7H100uifIdrJPizgxCHyNXQGuVdN87JTrT3WIo4mYeXNXkSC8To1B)
     password: ENC(wx1OIC98fnnql3kmBAzd4EUV1/yRcHh9i0zxFVA8YFP7yzFiodXd1UgcwDHUrnWL)
     hikari:
