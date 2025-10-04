@@ -751,9 +751,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(host).buildAndSave(commentRepository);
+        CommentFixtures.defaultComment(staccato, host).buildAndSave(commentRepository);
         categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest2));
 
         // when

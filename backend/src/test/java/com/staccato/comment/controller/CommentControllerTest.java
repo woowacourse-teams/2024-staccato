@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.staccato.ControllerTest;
+import com.staccato.category.domain.Category;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
@@ -18,11 +19,14 @@ import com.staccato.comment.service.dto.response.CommentResponseV2;
 import com.staccato.comment.service.dto.response.CommentResponsesV2;
 import com.staccato.exception.ExceptionResponse;
 
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.comment.CommentRequestFixtures;
 import com.staccato.fixture.comment.CommentUpdateRequestFixtures;
 import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
+import com.staccato.staccato.domain.Staccato;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -107,12 +111,13 @@ public class CommentControllerTest extends ControllerTest {
     void readCommentsByStaccatoId() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).build();
         Member member = MemberFixtures.defaultMember()
                 .withNickname("member")
                 .withImageUrl("image.jpg")
                 .build();
-        Comment comment = CommentFixtures.defaultComment()
-                .withMember(member)
+        Comment comment = CommentFixtures.defaultComment(staccato, member)
                 .withContent("내용")
                 .build();
         CommentResponseV2 commentResponseV2 = new CommentResponseV2(comment);

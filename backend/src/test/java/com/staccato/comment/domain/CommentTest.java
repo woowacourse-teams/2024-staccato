@@ -90,10 +90,7 @@ class CommentTest {
         @Test
         void validateCommentOwnerSuccess() {
             // given
-            Comment comment = CommentFixtures.defaultComment()
-                    .withStaccato(staccato)
-                    .withMember(member)
-                    .build();
+            Comment comment = CommentFixtures.defaultComment(staccato, member).build();
 
             // when & then
             assertDoesNotThrow(() -> comment.validateOwner(member));
@@ -103,10 +100,7 @@ class CommentTest {
         @Test
         void validateCommentOwnerFail() {
             // given
-            Comment comment = CommentFixtures.defaultComment()
-                    .withStaccato(staccato)
-                    .withMember(member)
-                    .build();
+            Comment comment = CommentFixtures.defaultComment(staccato, member).build();
             Member other = MemberFixtures.defaultMember().withNickname("other").build();
 
             // when & then

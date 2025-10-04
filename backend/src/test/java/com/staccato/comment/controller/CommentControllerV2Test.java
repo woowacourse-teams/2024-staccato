@@ -15,13 +15,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import com.staccato.ControllerTest;
+import com.staccato.category.domain.Category;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.service.dto.response.CommentResponseV2;
 import com.staccato.comment.service.dto.response.CommentResponsesV2;
 import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
+import com.staccato.staccato.domain.Staccato;
 
 public class CommentControllerV2Test extends ControllerTest {
 
@@ -29,13 +33,14 @@ public class CommentControllerV2Test extends ControllerTest {
     @Test
     void readCommentsByStaccatoId() throws Exception {
         // given
+        Category category = CategoryFixtures.defaultCategory().build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).build();
         when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
         Member member = MemberFixtures.defaultMember()
                 .withNickname("member")
                 .withImageUrl("image.jpg")
                 .build();
-        Comment comment = CommentFixtures.defaultComment()
-                .withMember(member)
+        Comment comment = CommentFixtures.defaultComment(staccato, member)
                 .withContent("내용")
                 .build();
         CommentResponseV2 commentResponse = new CommentResponseV2(comment);

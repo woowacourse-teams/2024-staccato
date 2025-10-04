@@ -171,12 +171,8 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member1).buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Comment comment1 = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(member1).buildAndSave(commentRepository);
-        Comment comment2 = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(member2).buildAndSave(commentRepository);
+        Comment comment1 = CommentFixtures.defaultComment(staccato, member1).buildAndSave(commentRepository);
+        Comment comment2 = CommentFixtures.defaultComment(staccato, member2).buildAndSave(commentRepository);
 
         String token = shareTokenProvider.create(new ShareTokenPayload(staccato.getId(), member1.getId()));
 

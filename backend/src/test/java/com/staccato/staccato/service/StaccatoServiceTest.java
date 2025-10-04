@@ -420,9 +420,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage1.jpg", "https://example.com/staccatoImage2.jpg"))
                 .buildAndSave(staccatoRepository);
-        Comment comment = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(member).buildAndSave(commentRepository);
+        Comment comment = CommentFixtures.defaultComment(staccato, member).buildAndSave(commentRepository);
 
         // when
         staccatoService.deleteStaccatoById(staccato.getId(), member);

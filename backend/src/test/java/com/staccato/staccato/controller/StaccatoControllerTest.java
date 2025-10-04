@@ -385,12 +385,8 @@ class StaccatoControllerTest extends ControllerTest {
         Member member2 = MemberFixtures.defaultMember()
                 .withNickname("nickname2")
                 .withImageUrl("memberImageUrl2.jpg").build();
-        Comment comment1 = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(member1).build();
-        Comment comment2 = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(member2).build();
+        Comment comment1 = CommentFixtures.defaultComment(staccato, member1).build();
+        Comment comment2 = CommentFixtures.defaultComment(staccato, member2).build();
         StaccatoSharedResponse staccatoSharedResponse = new StaccatoSharedResponse(expiredAt, staccato, member1, List.of(comment1, comment2));
         when(staccatoShareService.readSharedStaccatoByToken(token)).thenReturn(staccatoSharedResponse);
         String expectedResponse = """

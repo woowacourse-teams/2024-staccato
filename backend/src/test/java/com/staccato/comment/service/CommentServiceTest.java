@@ -129,9 +129,7 @@ class CommentServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(staccatoOwner).buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(staccatoOwner).buildAndSave(commentRepository);
+        CommentFixtures.defaultComment(staccato, staccatoOwner).buildAndSave(commentRepository);
 
         // when & then
         assertThatThrownBy(
@@ -149,9 +147,7 @@ class CommentServiceTest extends ServiceSliceTest {
                 .withHost(member)
                 .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Comment comment = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(member).buildAndSave(commentRepository);
+        Comment comment = CommentFixtures.defaultComment(staccato, member).buildAndSave(commentRepository);
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
 
         // when
@@ -187,9 +183,7 @@ class CommentServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(staccatoOwner).buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Comment comment = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(staccatoOwner)
+        Comment comment = CommentFixtures.defaultComment(staccato, staccatoOwner)
                 .buildAndSave(commentRepository);
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
 
@@ -209,9 +203,7 @@ class CommentServiceTest extends ServiceSliceTest {
                 .withHost(member)
                 .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Comment comment = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(member).buildAndSave(commentRepository);
+        Comment comment = CommentFixtures.defaultComment(staccato, member).buildAndSave(commentRepository);
 
         // when
         commentService.deleteComment(comment.getId(), member);
@@ -230,9 +222,7 @@ class CommentServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(commentOwner).buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Comment comment = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(commentOwner).buildAndSave(commentRepository);
+        Comment comment = CommentFixtures.defaultComment(staccato, commentOwner).buildAndSave(commentRepository);
 
         // when & then
         assertThatThrownBy(() -> commentService.deleteComment(comment.getId(), unexpectedMember))

@@ -76,9 +76,7 @@ class NotificationServiceTest extends ServiceSliceTest {
                 .buildAndSave(categoryRepository);
         staccato = StaccatoFixtures.defaultStaccato(category)
                 .buildAndSave(staccatoRepository);
-        comment = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(host)
+        comment = CommentFixtures.defaultComment(staccato, host)
                 .buildAndSave(commentRepository);
 
         NotificationTokenFixtures.defaultNotificationToken(host)
