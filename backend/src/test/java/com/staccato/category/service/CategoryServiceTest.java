@@ -624,7 +624,8 @@ class CategoryServiceTest extends ServiceSliceTest {
                                 LocalDate.of(2024, 12, 31)).build(), member);
 
         // when
-        CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.ofDefault().build();
+        CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.ofDefault()
+                .withTerm(null, null).build();
         categoryService.updateCategory(categoryUpdateRequest, categoryIdResponse.categoryId(), member);
         Category foundedCategory = categoryRepository.findById(categoryIdResponse.categoryId()).get();
 
