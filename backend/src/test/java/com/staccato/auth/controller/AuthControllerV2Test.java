@@ -27,7 +27,7 @@ class AuthControllerV2Test extends ControllerTest {
     @Test
     void login() throws Exception {
         // given
-        Member member = MemberFixtures.defaultMember().withNickname("staccato").build();
+        Member member = MemberFixtures.ofDefault().withNickname("staccato").build();
         String loginRequest = """
                 {
                     "nickname": "staccato"
@@ -56,7 +56,7 @@ class AuthControllerV2Test extends ControllerTest {
     @NullSource
     void cannotLoginIfNicknameTooShort(String nickname) throws Exception {
         // given
-        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest()
+        LoginRequest loginRequest = LoginRequestFixtures.ofDefault()
                 .withNickname(nickname).build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "닉네임을 입력해주세요.");
 
@@ -73,7 +73,7 @@ class AuthControllerV2Test extends ControllerTest {
     void findMemberByCodeAndCreateToken() throws Exception {
         // given
         String code = UUID.randomUUID().toString();
-        Member member = MemberFixtures.defaultMember().withCode(code).build();
+        Member member = MemberFixtures.ofDefault().withCode(code).build();
         LoginResponseV2 loginResponse = new LoginResponseV2(member, "token");
         when(authService.loginByCode(any(String.class))).thenReturn(loginResponse);
         String response = """

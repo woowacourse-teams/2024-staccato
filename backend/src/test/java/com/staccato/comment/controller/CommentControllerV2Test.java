@@ -33,14 +33,14 @@ public class CommentControllerV2Test extends ControllerTest {
     @Test
     void readCommentsByStaccatoId() throws Exception {
         // given
-        Category category = CategoryFixtures.defaultCategory().build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato(category).build();
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
-        Member member = MemberFixtures.defaultMember()
+        Category category = CategoryFixtures.ofDefault().build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category).build();
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
+        Member member = MemberFixtures.ofDefault()
                 .withNickname("member")
                 .withImageUrl("image.jpg")
                 .build();
-        Comment comment = CommentFixtures.defaultComment(staccato, member)
+        Comment comment = CommentFixtures.ofDefault(staccato, member)
                 .withContent("내용")
                 .build();
         CommentResponseV2 commentResponse = new CommentResponseV2(comment);
@@ -75,7 +75,7 @@ public class CommentControllerV2Test extends ControllerTest {
     @Test
     void readCommentsByStaccatoIdFail() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
 

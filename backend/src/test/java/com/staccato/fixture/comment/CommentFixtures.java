@@ -7,7 +7,7 @@ import com.staccato.staccato.domain.Staccato;
 
 public class CommentFixtures {
 
-    public static CommentBuilder defaultComment(Staccato staccato, Member member) {
+    public static CommentBuilder ofDefault(Staccato staccato, Member member) {
         return new CommentBuilder()
                 .withStaccato(staccato)
                 .withMember(member)

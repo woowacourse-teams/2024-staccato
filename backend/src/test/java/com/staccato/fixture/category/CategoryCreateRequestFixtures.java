@@ -7,7 +7,7 @@ import com.staccato.category.service.dto.request.CategoryCreateRequest;
 
 public class CategoryCreateRequestFixtures {
 
-    public static CategoryCreateRequestBuilder defaultCategoryCreateRequest() {
+    public static CategoryCreateRequestBuilder ofDefault() {
         return new CategoryCreateRequestBuilder()
                 .withCategoryThumbnailUrl("https://example.com/categoryThumbnailUrl.jpg")
                 .withCategoryTitle("categoryTitle")

@@ -15,7 +15,7 @@ import com.staccato.staccato.repository.StaccatoRepository;
 
 public class StaccatoFixtures {
 
-    public static StaccatoBuilder defaultStaccato(Category category) {
+    public static StaccatoBuilder ofDefault(Category category) {
         return new StaccatoBuilder()
                 .withCategory(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))

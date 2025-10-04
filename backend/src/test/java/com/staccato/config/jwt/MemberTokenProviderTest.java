@@ -23,7 +23,7 @@ public class MemberTokenProviderTest extends ServiceSliceTest {
     public void setUp() {
         TokenProperties tokenProperties = new TokenProperties("test-secret-key");
         tokenProvider = new MemberTokenProvider(tokenProperties);
-        member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
     }
 
     @DisplayName("멤버 토큰은 멤버 아이디를 갖고 있다.")

@@ -57,19 +57,19 @@ class StaccatoRepositoryTest extends RepositoryTest {
 
         @BeforeEach
         void init() {
-            member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-            category1ByMember = CategoryFixtures.defaultCategory()
+            member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+            category1ByMember = CategoryFixtures.ofDefault()
                     .withTitle("category1")
                     .withHost(member)
                     .buildAndSave(categoryRepository);
-            category2ByMember = CategoryFixtures.defaultCategory()
+            category2ByMember = CategoryFixtures.ofDefault()
                     .withTitle("category2")
                     .withHost(member)
                     .buildAndSave(categoryRepository);
-            staccatoInCategory1 = StaccatoFixtures.defaultStaccato(category1ByMember)
+            staccatoInCategory1 = StaccatoFixtures.ofDefault(category1ByMember)
                     .withSpot(MIN_LATITUDE, MAX_LONGITUDE)
                     .buildAndSave(staccatoRepository);
-            staccatoInCategory2 = StaccatoFixtures.defaultStaccato(category2ByMember)
+            staccatoInCategory2 = StaccatoFixtures.ofDefault(category2ByMember)
                     .withSpot(MAX_LATITUDE, MIN_LONGITUDE)
                     .buildAndSave(staccatoRepository);
         }
@@ -81,12 +81,12 @@ class StaccatoRepositoryTest extends RepositoryTest {
             @Test
             void findAllStaccatoByMemberWithoutAnyCondition() {
                 // given
-                Member anotherMember = MemberFixtures.defaultMember().withNickname("otherMem")
+                Member anotherMember = MemberFixtures.ofDefault().withNickname("otherMem")
                         .buildAndSave(memberRepository);
-                Category anotherCategory = CategoryFixtures.defaultCategory()
+                Category anotherCategory = CategoryFixtures.ofDefault()
                         .withHost(anotherMember)
                         .buildAndSave(categoryRepository);
-                Staccato anotherStaccato = StaccatoFixtures.defaultStaccato(anotherCategory)
+                Staccato anotherStaccato = StaccatoFixtures.ofDefault(anotherCategory)
                         .buildAndSave(staccatoRepository);
 
                 // when
@@ -102,16 +102,16 @@ class StaccatoRepositoryTest extends RepositoryTest {
             void findAllStaccatoByMemberWithLocationRange() {
                 // given
                 BigDecimal threshold = new BigDecimal("0.01");
-                Staccato underMinLatitude = StaccatoFixtures.defaultStaccato(category1ByMember)
+                Staccato underMinLatitude = StaccatoFixtures.ofDefault(category1ByMember)
                         .withSpot(MIN_LATITUDE.subtract(threshold), MAX_LONGITUDE)
                         .buildAndSave(staccatoRepository);
-                Staccato overMaxLatitude = StaccatoFixtures.defaultStaccato(category1ByMember)
+                Staccato overMaxLatitude = StaccatoFixtures.ofDefault(category1ByMember)
                         .withSpot(MAX_LATITUDE.add(threshold), MIN_LONGITUDE)
                         .buildAndSave(staccatoRepository);
-                Staccato underMinLongitude = StaccatoFixtures.defaultStaccato(category1ByMember)
+                Staccato underMinLongitude = StaccatoFixtures.ofDefault(category1ByMember)
                         .withSpot(MAX_LATITUDE, MIN_LONGITUDE.subtract(threshold))
                         .buildAndSave(staccatoRepository);
-                Staccato overMaxLongitude = StaccatoFixtures.defaultStaccato(category1ByMember)
+                Staccato overMaxLongitude = StaccatoFixtures.ofDefault(category1ByMember)
                         .withSpot(MIN_LATITUDE, MAX_LONGITUDE.add(threshold))
                         .buildAndSave(staccatoRepository);
 
@@ -146,16 +146,16 @@ class StaccatoRepositoryTest extends RepositoryTest {
             void findAllStaccatoByMemberWithCategoryAndInRange() {
                 // given
                 BigDecimal threshold = new BigDecimal("0.01");
-                Staccato underMinLatitude = StaccatoFixtures.defaultStaccato(category1ByMember)
+                Staccato underMinLatitude = StaccatoFixtures.ofDefault(category1ByMember)
                         .withSpot(MIN_LATITUDE.subtract(threshold), MAX_LONGITUDE)
                         .buildAndSave(staccatoRepository);
-                Staccato overMaxLatitude = StaccatoFixtures.defaultStaccato(category1ByMember)
+                Staccato overMaxLatitude = StaccatoFixtures.ofDefault(category1ByMember)
                         .withSpot(MAX_LATITUDE.add(threshold), MIN_LONGITUDE)
                         .buildAndSave(staccatoRepository);
-                Staccato underMinLongitude = StaccatoFixtures.defaultStaccato(category1ByMember)
+                Staccato underMinLongitude = StaccatoFixtures.ofDefault(category1ByMember)
                         .withSpot(MAX_LATITUDE, MIN_LONGITUDE.subtract(threshold))
                         .buildAndSave(staccatoRepository);
-                Staccato overMaxLongitude = StaccatoFixtures.defaultStaccato(category1ByMember)
+                Staccato overMaxLongitude = StaccatoFixtures.ofDefault(category1ByMember)
                         .withSpot(MIN_LATITUDE, MAX_LONGITUDE.add(threshold))
                         .buildAndSave(staccatoRepository);
 
@@ -175,15 +175,15 @@ class StaccatoRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByCategoryIdInBulk() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault().buildAndSave(categoryRepository);
+        CategoryMemberFixtures.ofDefault()
                 .withMember(member)
                 .withCategory(category).buildAndSave(categoryMemberRepository);
 
-        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Staccato staccato1 = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Staccato staccato2 = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
+        Staccato staccato = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        Staccato staccato1 = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        Staccato staccato2 = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
 
         // when
         staccatoRepository.deleteAllByCategoryIdInBulk(category.getId());
@@ -203,19 +203,19 @@ class StaccatoRepositoryTest extends RepositoryTest {
     @Test
     void findAllByCategoryIdOrderByVisitedAt() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault().buildAndSave(categoryRepository);
+        CategoryMemberFixtures.ofDefault()
                 .withMember(member)
                 .withCategory(category).buildAndSave(categoryMemberRepository);
 
-        Staccato staccato1 = StaccatoFixtures.defaultStaccato(category)
+        Staccato staccato1 = StaccatoFixtures.ofDefault(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .buildAndSave(staccatoRepository);
-        Staccato staccato2 = StaccatoFixtures.defaultStaccato(category)
+        Staccato staccato2 = StaccatoFixtures.ofDefault(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 2, 0, 0))
                 .buildAndSave(staccatoRepository);
-        Staccato staccato3 = StaccatoFixtures.defaultStaccato(category)
+        Staccato staccato3 = StaccatoFixtures.ofDefault(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 3, 0, 0))
                 .buildAndSave(staccatoRepository);
 
@@ -233,16 +233,16 @@ class StaccatoRepositoryTest extends RepositoryTest {
     @Test
     void findAllByCategoryIdOrderByCreatedAt() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault().buildAndSave(categoryRepository);
+        CategoryMemberFixtures.ofDefault()
                 .withMember(member)
                 .withCategory(category).buildAndSave(categoryMemberRepository);
 
-        Staccato staccato1 = StaccatoFixtures.defaultStaccato(category)
+        Staccato staccato1 = StaccatoFixtures.ofDefault(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .buildAndSave(staccatoRepository);
-        Staccato staccato2 = StaccatoFixtures.defaultStaccato(category)
+        Staccato staccato2 = StaccatoFixtures.ofDefault(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .buildAndSave(staccatoRepository);
 
@@ -261,12 +261,12 @@ class StaccatoRepositoryTest extends RepositoryTest {
     @ValueSource(ints = {0, 2})
     void countAllByCategoryWhenZero(int staccatoCount) {
         //given
-        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Member host = MemberFixtures.ofDefault().withNickname("host").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .buildAndSave(categoryRepository);
         for (int count = 1; count <= staccatoCount; count++) {
-            StaccatoFixtures.defaultStaccato(category)
+            StaccatoFixtures.ofDefault(category)
                     .buildAndSave(staccatoRepository);
         }
 
@@ -286,13 +286,13 @@ class StaccatoRepositoryTest extends RepositoryTest {
 
         @BeforeEach
         void setUp() {
-            member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-            category = CategoryFixtures.defaultCategory()
+            member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+            category = CategoryFixtures.ofDefault()
                     .withHost(member)
                     .buildAndSave(categoryRepository);
             staccatos = new ArrayList<>();
             for (int count = 1; count <= 3; count++) {
-                staccatos.add(StaccatoFixtures.defaultStaccato(category)
+                staccatos.add(StaccatoFixtures.ofDefault(category)
                         .withCreator(member)
                         .withTitle("staccato " + count)
                         .withVisitedAt(LocalDateTime.of(2024, 1, count, 0, 0, 0))
@@ -309,8 +309,8 @@ class StaccatoRepositoryTest extends RepositoryTest {
         @Test
         void readStaccatosByCategoryId() {
             // given
-            Category otherCategory = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-            Staccato otherStaccato = StaccatoFixtures.defaultStaccato(otherCategory)
+            Category otherCategory = CategoryFixtures.ofDefault().buildAndSave(categoryRepository);
+            Staccato otherStaccato = StaccatoFixtures.ofDefault(otherCategory)
                     .buildAndSave(staccatoRepository);
             Staccato cursorStaccato = staccatos.get(0);
 
@@ -433,13 +433,13 @@ class StaccatoRepositoryTest extends RepositoryTest {
 
         @BeforeEach
         void setUp() {
-            member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-            category = CategoryFixtures.defaultCategory()
+            member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+            category = CategoryFixtures.ofDefault()
                     .withHost(member)
                     .buildAndSave(categoryRepository);
             staccatos = new ArrayList<>();
             for (int count = 1; count <= 3; count++) {
-                staccatos.add(StaccatoFixtures.defaultStaccato(category)
+                staccatos.add(StaccatoFixtures.ofDefault(category)
                         .withCreator(member)
                         .withTitle("staccato " + count)
                         .withVisitedAt(LocalDateTime.of(2024, 1, count, 0, 0, 0))
@@ -456,8 +456,8 @@ class StaccatoRepositoryTest extends RepositoryTest {
         @Test
         void readStaccatosByCategoryId() {
             // given
-            Category otherCategory = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-            Staccato otherStaccato = StaccatoFixtures.defaultStaccato(otherCategory)
+            Category otherCategory = CategoryFixtures.ofDefault().buildAndSave(categoryRepository);
+            Staccato otherStaccato = StaccatoFixtures.ofDefault(otherCategory)
                     .buildAndSave(staccatoRepository);
 
             // when
@@ -483,10 +483,10 @@ class StaccatoRepositoryTest extends RepositoryTest {
         @Test
         void readStaccatosOrderByCreatedAtDesc() {
             // given
-            Staccato first = StaccatoFixtures.defaultStaccato(category)
+            Staccato first = StaccatoFixtures.ofDefault(category)
                     .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                     .buildAndSave(staccatoRepository);
-            Staccato second = StaccatoFixtures.defaultStaccato(category)
+            Staccato second = StaccatoFixtures.ofDefault(category)
                     .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                     .buildAndSave(staccatoRepository);
 

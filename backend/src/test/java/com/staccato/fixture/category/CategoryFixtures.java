@@ -13,7 +13,7 @@ import com.staccato.member.domain.Member;
 
 public class CategoryFixtures {
 
-    public static CategoryBuilder defaultCategory() {
+    public static CategoryBuilder ofDefault() {
         return new CategoryBuilder()
                 .withThumbnailUrl("https://example.com/categoryThumbnail.jpg")
                 .withTitle("categoryTitle")

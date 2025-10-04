@@ -36,12 +36,12 @@ class CommentRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByStaccatoIdInBulk() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        Staccato staccato1 = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Staccato staccato2 = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        CommentFixtures.defaultComment(staccato1, member).build();
-        CommentFixtures.defaultComment(staccato2, member).build();
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault().buildAndSave(categoryRepository);
+        Staccato staccato1 = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        Staccato staccato2 = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        CommentFixtures.ofDefault(staccato1, member).build();
+        CommentFixtures.ofDefault(staccato2, member).build();
 
         // when
         commentRepository.deleteAllByStaccatoIdInBulk(List.of(staccato1.getId(), staccato2.getId()));

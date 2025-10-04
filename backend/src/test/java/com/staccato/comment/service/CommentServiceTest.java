@@ -46,12 +46,12 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void createComment() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        CommentRequest commentRequest = CommentRequestFixtures.defaultCommentRequest().build();
+        StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        CommentRequest commentRequest = CommentRequestFixtures.ofDefault().build();
 
         // when
         long commentId = commentService.createComment(commentRequest, member);
@@ -64,8 +64,8 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void createCommentFailByNotExistStaccato() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        CommentRequest commentRequest = CommentRequestFixtures.defaultCommentRequest().build();
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        CommentRequest commentRequest = CommentRequestFixtures.ofDefault().build();
 
         // when & then
         assertThatThrownBy(() -> commentService.createComment(commentRequest, member))
@@ -77,13 +77,13 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void createCommentFailByForbidden() {
         // given
-        Member staccatoOwner = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member unexpectedMember = MemberFixtures.defaultMember().withNickname("otherMem")
+        Member staccatoOwner = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Member unexpectedMember = MemberFixtures.ofDefault().withNickname("otherMem")
                 .buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(staccatoOwner).buildAndSave(categoryRepository);
-        StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        CommentRequest commentRequest = CommentRequestFixtures.defaultCommentRequest().build();
+        StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        CommentRequest commentRequest = CommentRequestFixtures.ofDefault().build();
 
         // when & then
         assertThatThrownBy(() -> commentService.createComment(commentRequest, unexpectedMember))
@@ -95,17 +95,17 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void readAllByStaccatoId() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Staccato anotherStaccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        CommentRequest commentRequest1 = CommentRequestFixtures.defaultCommentRequest()
+        Staccato staccato = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        Staccato anotherStaccato = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        CommentRequest commentRequest1 = CommentRequestFixtures.ofDefault()
                 .withStaccatoId(staccato.getId()).build();
-        CommentRequest commentRequest2 = CommentRequestFixtures.defaultCommentRequest()
+        CommentRequest commentRequest2 = CommentRequestFixtures.ofDefault()
                 .withStaccatoId(staccato.getId()).build();
-        CommentRequest commentRequestOfAnotherStaccato = CommentRequestFixtures.defaultCommentRequest()
+        CommentRequest commentRequestOfAnotherStaccato = CommentRequestFixtures.ofDefault()
                 .withStaccatoId(anotherStaccato.getId()).build();
         long commentId1 = commentService.createComment(commentRequest1, member);
         long commentId2 = commentService.createComment(commentRequest2, member);
@@ -123,13 +123,13 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void readAllByStaccatoIdFailByForbidden() {
         // given
-        Member staccatoOwner = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member unexpectedMember = MemberFixtures.defaultMember().withNickname("otherMem")
+        Member staccatoOwner = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Member unexpectedMember = MemberFixtures.ofDefault().withNickname("otherMem")
                 .buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(staccatoOwner).buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        CommentFixtures.defaultComment(staccato, staccatoOwner).buildAndSave(commentRepository);
+        Staccato staccato = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        CommentFixtures.ofDefault(staccato, staccatoOwner).buildAndSave(commentRepository);
 
         // when & then
         assertThatThrownBy(
@@ -142,13 +142,13 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void updateComment() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Comment comment = CommentFixtures.defaultComment(staccato, member).buildAndSave(commentRepository);
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        Comment comment = CommentFixtures.ofDefault(staccato, member).buildAndSave(commentRepository);
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.ofDefault().build();
 
         // when
         commentService.updateComment(member, comment.getId(), commentUpdateRequest);
@@ -163,11 +163,11 @@ class CommentServiceTest extends ServiceSliceTest {
     void updateCommentFailByNotExist() {
         // given
         long notExistCommentId = 1;
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.ofDefault().build();
 
         // when & then
         assertThatThrownBy(
-                () -> commentService.updateComment(MemberFixtures.defaultMember().build(), notExistCommentId,
+                () -> commentService.updateComment(MemberFixtures.ofDefault().build(), notExistCommentId,
                         commentUpdateRequest))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 댓글을 찾을 수 없어요.");
@@ -177,15 +177,15 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void updateCommentFailByForbidden() {
         // given
-        Member staccatoOwner = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member unexpectedMember = MemberFixtures.defaultMember().withNickname("otherMem")
+        Member staccatoOwner = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Member unexpectedMember = MemberFixtures.ofDefault().withNickname("otherMem")
                 .buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(staccatoOwner).buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Comment comment = CommentFixtures.defaultComment(staccato, staccatoOwner)
+        Staccato staccato = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        Comment comment = CommentFixtures.ofDefault(staccato, staccatoOwner)
                 .buildAndSave(commentRepository);
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.ofDefault().build();
 
         // when & then
         assertThatThrownBy(() -> commentService.updateComment(unexpectedMember, comment.getId(),
@@ -198,12 +198,12 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void deleteComment() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Comment comment = CommentFixtures.defaultComment(staccato, member).buildAndSave(commentRepository);
+        Staccato staccato = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        Comment comment = CommentFixtures.ofDefault(staccato, member).buildAndSave(commentRepository);
 
         // when
         commentService.deleteComment(comment.getId(), member);
@@ -216,13 +216,13 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void deleteCommentFail() {
         // given
-        Member commentOwner = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member unexpectedMember = MemberFixtures.defaultMember().withNickname("otherMem")
+        Member commentOwner = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Member unexpectedMember = MemberFixtures.ofDefault().withNickname("otherMem")
                 .buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(commentOwner).buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
-        Comment comment = CommentFixtures.defaultComment(staccato, commentOwner).buildAndSave(commentRepository);
+        Staccato staccato = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
+        Comment comment = CommentFixtures.ofDefault(staccato, commentOwner).buildAndSave(commentRepository);
 
         // when & then
         assertThatThrownBy(() -> commentService.deleteComment(comment.getId(), unexpectedMember))

@@ -47,19 +47,19 @@ public class CommentControllerTest extends ControllerTest {
 
     static Stream<Arguments> invalidCommentRequestProvider() {
         return Stream.of(
-            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+            Arguments.of(CommentRequestFixtures.ofDefault()
                             .withStaccatoId(null).build(),
                     "스타카토를 선택해주세요."),
-            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+            Arguments.of(CommentRequestFixtures.ofDefault()
                             .withStaccatoId(MIN_STACCATO_ID - 1).build(),
                     "스타카토 식별자는 양수로 이루어져야 합니다."),
-            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+            Arguments.of(CommentRequestFixtures.ofDefault()
                             .withContent(null).build(),
                     "댓글 내용을 입력해주세요."),
-            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+            Arguments.of(CommentRequestFixtures.ofDefault()
                             .withContent("").build(),
                     "댓글 내용을 입력해주세요."),
-            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+            Arguments.of(CommentRequestFixtures.ofDefault()
                             .withContent("  ").build(),
                     "댓글 내용을 입력해주세요.")
         );
@@ -69,7 +69,7 @@ public class CommentControllerTest extends ControllerTest {
     @Test
     void createComment() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
         String commentRequest = """
             {
                 "staccatoId": 1,
@@ -93,7 +93,7 @@ public class CommentControllerTest extends ControllerTest {
     void createCommentFail(CommentRequest commentRequest, String expectedMessage)
         throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
@@ -110,14 +110,14 @@ public class CommentControllerTest extends ControllerTest {
     @Test
     void readCommentsByStaccatoId() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory().build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato(category).build();
-        Member member = MemberFixtures.defaultMember()
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
+        Category category = CategoryFixtures.ofDefault().build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category).build();
+        Member member = MemberFixtures.ofDefault()
                 .withNickname("member")
                 .withImageUrl("image.jpg")
                 .build();
-        Comment comment = CommentFixtures.defaultComment(staccato, member)
+        Comment comment = CommentFixtures.ofDefault(staccato, member)
                 .withContent("내용")
                 .build();
         CommentResponseV2 commentResponseV2 = new CommentResponseV2(comment);
@@ -150,7 +150,7 @@ public class CommentControllerTest extends ControllerTest {
     @Test
     void readCommentsByStaccatoIdFail() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
 
@@ -167,7 +167,7 @@ public class CommentControllerTest extends ControllerTest {
     @Test
     void updateComment() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
         String commentUpdateRequest = """
             {
                 "content": "content"
@@ -186,8 +186,8 @@ public class CommentControllerTest extends ControllerTest {
     @Test
     void updateCommentFail() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.ofDefault().build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
 
@@ -206,8 +206,8 @@ public class CommentControllerTest extends ControllerTest {
     @ValueSource(strings = {"", " "})
     void updateCommentFailByBlank(String updatedContent) throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest()
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.ofDefault()
                 .withContent(updatedContent).build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "댓글 내용을 입력해주세요.");
@@ -225,7 +225,7 @@ public class CommentControllerTest extends ControllerTest {
     @Test
     void deleteComment() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
 
         // when & then
         mockMvc.perform(delete("/comments/{commentId}", 1)
@@ -238,7 +238,7 @@ public class CommentControllerTest extends ControllerTest {
     @Test
     void deleteCommentFail() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
 

@@ -4,7 +4,7 @@ import com.staccato.auth.service.dto.request.LoginRequest;
 
 public class LoginRequestFixtures {
 
-    public static LoginRequestBuilder defaultLoginRequest() {
+    public static LoginRequestBuilder ofDefault() {
         return new LoginRequestBuilder()
                 .withNickname("nickname");
     }

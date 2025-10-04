@@ -4,7 +4,7 @@ import com.staccato.comment.service.dto.request.CommentRequest;
 
 public class CommentRequestFixtures {
 
-    public static CommentRequestBuilder defaultCommentRequest() {
+    public static CommentRequestBuilder ofDefault() {
         return new CommentRequestBuilder()
                 .withStaccatoId(1L)
                 .withContent("commentContent");
