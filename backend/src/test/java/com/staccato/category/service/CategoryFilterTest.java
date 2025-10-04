@@ -79,7 +79,6 @@ class CategoryFilterTest extends ServiceSliceTest {
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category1 = CategoryFixtures.defaultCategory()
                 .withTitle("first")
-                .withTerm(null, null)
                 .withHost(member)
                 .buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
@@ -109,7 +108,6 @@ class CategoryFilterTest extends ServiceSliceTest {
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category1 = CategoryFixtures.defaultCategory()
                 .withTitle("first")
-                .withTerm(null, null)
                 .withHost(member)
                 .buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()

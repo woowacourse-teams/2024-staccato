@@ -92,8 +92,7 @@ class CategoryTest {
     @Test
     void doesNotHaveTerm() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(null, null).build();
+        Category category = CategoryFixtures.defaultCategory().build();
 
         // when
         boolean result = category.hasTerm();

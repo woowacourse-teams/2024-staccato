@@ -46,8 +46,7 @@ class CategoryControllerV3Test extends ControllerTest {
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                         .withTerm(LocalDate.of(2024, 1, 1),
                                 LocalDate.of(2024, 12, 31)).build(),
-                CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
-                        .withTerm(null, null).build(),
+                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(),
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                         .withIsShared(false).build(),
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
@@ -176,7 +175,12 @@ class CategoryControllerV3Test extends ControllerTest {
         Member host = MemberFixtures.defaultMember().withNickname("host").build();
         Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
         when(authService.extractFromToken(anyString())).thenReturn(host);
-        Category category = CategoryFixtures.defaultCategory().withHost(host).withGuests(List.of(guest)).build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 1, 1),
+                    LocalDate.of(2024, 12, 31))
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
@@ -234,7 +238,6 @@ class CategoryControllerV3Test extends ControllerTest {
         Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category = CategoryFixtures.defaultCategory()
-                .withTerm(null, null)
                 .withHost(member)
                 .build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
@@ -295,7 +298,7 @@ class CategoryControllerV3Test extends ControllerTest {
         Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
                 .withHost(host)
-                .withTerm(null, null).build();
+                .build();
         CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
                 new CategoryResponseV3(categoryWithTerm, 0),
                 new CategoryResponseV3(categoryWithoutTerm, 0))

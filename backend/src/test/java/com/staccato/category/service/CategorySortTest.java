@@ -99,11 +99,9 @@ public class CategorySortTest extends ServiceSliceTest {
                 .buildAndSave(categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("third")
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("fourth")
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
 
         // when
@@ -135,11 +133,9 @@ public class CategorySortTest extends ServiceSliceTest {
                 .buildAndSave(categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("third")
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("fourth")
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
 
         // when

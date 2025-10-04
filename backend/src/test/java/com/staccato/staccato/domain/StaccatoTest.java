@@ -57,8 +57,7 @@ class StaccatoTest {
     @Test
     void createStaccatoInUndefinedDuration() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(null, null).build();
+        Category category = CategoryFixtures.defaultCategory().build();
         LocalDateTime visitedAt = LocalDateTime.of(2024, 6, 1, 0, 0);
 
         // when & then
@@ -311,7 +310,6 @@ class StaccatoTest {
         Member creator = MemberFixtures.defaultMember().withNickname("creator").build();
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(creator)
-                .withTerm(null, null)
                 .build();
 
         // when

@@ -12,8 +12,7 @@ public class CategoryRequestFixtures {
                 .withCategoryThumbnailUrl("https://example.com/categoryThumbnailUrl.jpg")
                 .withCategoryTitle("categoryTitle")
                 .withDescription("categoryDescription")
-                .withTerm(LocalDate.of(2024, 1, 1),
-                        LocalDate.of(2024, 12, 31));
+                .withTerm(null, null);
     }
 
     public static class CategoryRequestBuilder {

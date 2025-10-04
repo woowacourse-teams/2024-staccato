@@ -102,12 +102,10 @@ class CategoryRepositoryTest extends RepositoryTest {
         // given
         Category privateCategory = CategoryFixtures.defaultCategory()
                 .withHost(host)
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository);
         Category publicCategory = CategoryFixtures.defaultCategory()
                 .withHost(host)
                 .withGuests(List.of(guest))
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository);
 
         // when
@@ -124,12 +122,10 @@ class CategoryRepositoryTest extends RepositoryTest {
         // given
         Category privateCategory = CategoryFixtures.defaultCategory()
                 .withHost(host)
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository);
         Category publicCategory = CategoryFixtures.defaultCategory()
                 .withHost(host)
                 .withGuests(List.of(guest))
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository);
 
         // when

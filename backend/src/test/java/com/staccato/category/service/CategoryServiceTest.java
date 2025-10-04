@@ -90,8 +90,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void createCategory() {
         // given
-        CategoryCreateRequest categoryCreateRequest = CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
-                .build();
+        CategoryCreateRequest categoryCreateRequest = CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build();
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
 
         // when
@@ -110,8 +109,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void createCategoryWithoutTerm() {
         // given
-        CategoryCreateRequest categoryCreateRequest = CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
-                .withTerm(null, null).build();
+        CategoryCreateRequest categoryCreateRequest = CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build();
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
 
         // when
@@ -232,7 +230,6 @@ class CategoryServiceTest extends ServiceSliceTest {
                 // given
                 category = CategoryFixtures.defaultCategory()
                         .withHost(host)
-                        .withTerm(null, null)
                         .buildAndSave(categoryRepository);
 
                 // when
@@ -331,7 +328,6 @@ class CategoryServiceTest extends ServiceSliceTest {
                 // given
                 category = CategoryFixtures.defaultCategory()
                         .withHost(host)
-                        .withTerm(null, null)
                         .buildAndSave(categoryRepository);
 
                 // when
@@ -491,7 +487,6 @@ class CategoryServiceTest extends ServiceSliceTest {
         void setup() {
             member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             category = CategoryFixtures.defaultCategory()
-                    .withTerm(null, null)
                     .withHost(member)
                     .buildAndSave(categoryRepository);
             staccatos = new ArrayList<>();
@@ -630,11 +625,12 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), member);
+                CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
+                        .withTerm(LocalDate.of(2024, 1, 1),
+                                LocalDate.of(2024, 12, 31)).build(), member);
 
         // when
-        CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest()
-                .withTerm(null, null).build();
+        CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest().build();
         categoryService.updateCategory(categoryUpdateRequest, categoryIdResponse.categoryId(), member);
         Category foundedCategory = categoryRepository.findById(categoryIdResponse.categoryId()).get();
 

@@ -60,8 +60,7 @@ class CategoryControllerTest extends ControllerTest {
                 CategoryRequestFixtures.defaultCategoryRequest()
                         .withTerm(LocalDate.of(2024, 1, 1),
                                 LocalDate.of(2024, 12, 31)).build(),
-                CategoryRequestFixtures.defaultCategoryRequest()
-                        .withTerm(null, null).build()
+                CategoryRequestFixtures.defaultCategoryRequest().build()
         );
     }
 
@@ -182,7 +181,7 @@ class CategoryControllerTest extends ControllerTest {
                         LocalDate.of(2024, 12, 31)).build();
         Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
-                .withTerm(null, null).build();
+                .build();
         CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
                 new CategoryResponseV3(categoryWithTerm, 0),
                 new CategoryResponseV3(categoryWithoutTerm, 0))
@@ -343,8 +342,6 @@ class CategoryControllerTest extends ControllerTest {
                     "categoryId": null,
                     "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
                     "categoryTitle": "categoryTitle",
-                    "startAt": "2024-01-01",
-                    "endAt": "2024-12-31",
                     "description": "categoryDescription",
                     "mates": [
                         {
@@ -380,7 +377,6 @@ class CategoryControllerTest extends ControllerTest {
         Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category = CategoryFixtures.defaultCategory()
-                .withTerm(null, null)
                 .withHost(member)
                 .build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()

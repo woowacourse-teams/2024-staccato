@@ -303,7 +303,6 @@ class StaccatoRepositoryTest extends RepositoryTest {
         void setUp() {
             member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             category = CategoryFixtures.defaultCategory()
-                    .withTerm(null, null)
                     .withHost(member)
                     .buildAndSave(categoryRepository);
             staccatos = new ArrayList<>();
@@ -452,7 +451,6 @@ class StaccatoRepositoryTest extends RepositoryTest {
         void setUp() {
             member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             category = CategoryFixtures.defaultCategory()
-                    .withTerm(null, null)
                     .withHost(member)
                     .buildAndSave(categoryRepository);
             staccatos = new ArrayList<>();

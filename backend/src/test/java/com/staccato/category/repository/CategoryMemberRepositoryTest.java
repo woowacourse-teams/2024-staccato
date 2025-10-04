@@ -58,7 +58,6 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         CategoryFixtures.defaultCategory()
-                .withTerm(null, null)
                 .withTitle("no-term")
                 .withHost(member)
                 .buildAndSave(categoryRepository);
@@ -139,7 +138,6 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
                         LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository);
         CategoryMemberFixtures.defaultCategoryMember()
                 .withMember(member)

@@ -46,7 +46,6 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
     List<DynamicTest> createStaccatoMetricsAspect() {
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .withTerm(null, null)
                 .withHost(member)
                 .buildAndSave(categoryRepository);
         LocalDateTime now = LocalDateTime.now();

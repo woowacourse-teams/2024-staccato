@@ -13,8 +13,7 @@ public class CategoryCreateRequestFixtures {
                 .withCategoryTitle("categoryTitle")
                 .withDescription("categoryDescription")
                 .withColor(Color.PINK.getName())
-                .withTerm(LocalDate.of(2024, 1, 1),
-                        LocalDate.of(2024, 12, 31))
+                .withTerm(null, null)
                 .withIsShared(false);
     }
 
