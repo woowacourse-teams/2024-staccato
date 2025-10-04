@@ -15,13 +15,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import com.staccato.ControllerTest;
+import com.staccato.category.domain.Category;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.service.dto.response.CommentResponseV2;
 import com.staccato.comment.service.dto.response.CommentResponsesV2;
 import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
+import com.staccato.staccato.domain.Staccato;
 
 public class CommentControllerV2Test extends ControllerTest {
 
@@ -29,13 +33,14 @@ public class CommentControllerV2Test extends ControllerTest {
     @Test
     void readCommentsByStaccatoId() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
-        Member member = MemberFixtures.defaultMember()
+        Category category = CategoryFixtures.ofDefault().build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category).build();
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
+        Member member = MemberFixtures.ofDefault()
                 .withNickname("member")
                 .withImageUrl("image.jpg")
                 .build();
-        Comment comment = CommentFixtures.defaultComment()
-                .withMember(member)
+        Comment comment = CommentFixtures.ofDefault(staccato, member)
                 .withContent("내용")
                 .build();
         CommentResponseV2 commentResponse = new CommentResponseV2(comment);
@@ -70,7 +75,7 @@ public class CommentControllerV2Test extends ControllerTest {
     @Test
     void readCommentsByStaccatoIdFail() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.ofDefault().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
 

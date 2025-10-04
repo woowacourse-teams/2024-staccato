@@ -41,13 +41,12 @@ class ImageServiceTest extends ServiceSliceTest {
     @Test
     void deleteUnusedImages() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault()
                 .withThumbnailUrl(FAKE_CLOUD_FRONT_END_POINT + "/" + "images/category.jpg")
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        StaccatoFixtures.defaultStaccato()
-                .withCategory(category).withStaccatoImages(
+        StaccatoFixtures.ofDefault(category).withStaccatoImages(
                         List.of(FAKE_CLOUD_FRONT_END_POINT + "/" + "images/staccato1-1.jpg",
                                 FAKE_CLOUD_FRONT_END_POINT + "/" + "images/staccato1-2.jpg"))
                 .buildAndSave(staccatoRepository);

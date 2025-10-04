@@ -52,28 +52,28 @@ class StaccatoControllerTest extends ControllerTest {
 
     static Stream<Arguments> invalidStaccatoRequestProvider() {
         return Stream.of(
-                Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                Arguments.of(StaccatoRequestFixtures.ofDefault()
                                 .withCategoryId(0L).build(),
                         "카테고리 식별자는 양수로 이루어져야 합니다."),
-                Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                Arguments.of(StaccatoRequestFixtures.ofDefault()
                                 .withStaccatoTitle(null).build(),
                         "스타카토 제목을 입력해주세요."),
-                Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                Arguments.of(StaccatoRequestFixtures.ofDefault()
                                 .withStaccatoTitle("").build(),
                         "스타카토 제목을 입력해주세요."),
-                Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                Arguments.of(StaccatoRequestFixtures.ofDefault()
                                 .withPlaceName(null).build(),
                         "장소 이름을 입력해주세요."),
-                Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                Arguments.of(StaccatoRequestFixtures.ofDefault()
                                 .withLatitude(null).build(),
                         "스타카토의 위도를 입력해주세요."),
-                Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                Arguments.of(StaccatoRequestFixtures.ofDefault()
                                 .withLongitude(null).build(),
                         "스타카토의 경도를 입력해주세요."),
-                Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                Arguments.of(StaccatoRequestFixtures.ofDefault()
                                 .withAddress(null).build(),
                         "스타카토의 주소를 입력해주세요."),
-                Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                Arguments.of(StaccatoRequestFixtures.ofDefault()
                                 .withVisitedAt(null).build(),
                         "스타카토 날짜를 입력해주세요.")
         );
@@ -100,7 +100,7 @@ class StaccatoControllerTest extends ControllerTest {
                     "staccatoId": 1
                 }
                 """;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
         when(staccatoService.createStaccato(any(StaccatoRequest.class),
                 any(Member.class))).thenReturn(new StaccatoIdResponse(1L));
 
@@ -129,7 +129,7 @@ class StaccatoControllerTest extends ControllerTest {
                         "categoryId": 1
                     }
                 """;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
         when(staccatoService.createStaccato(any(StaccatoRequest.class),
                 any(Member.class))).thenReturn(new StaccatoIdResponse(1L));
 
@@ -149,7 +149,7 @@ class StaccatoControllerTest extends ControllerTest {
         // given
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 HttpStatus.BAD_REQUEST.toString(), expectedMessage);
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
         when(staccatoService.createStaccato(any(StaccatoRequest.class),
                 any(Member.class))).thenReturn(new StaccatoIdResponse(1L));
 
@@ -166,16 +166,14 @@ class StaccatoControllerTest extends ControllerTest {
     @Test
     void readAllStaccato() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
+        Category category = CategoryFixtures.ofDefault().withColor(Color.PINK).build();
         StaccatoLocationResponseV2 response1 = new StaccatoLocationResponseV2(
-                StaccatoFixtures.defaultStaccato()
-                        .withCategory(category)
+                StaccatoFixtures.ofDefault(category)
                         .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build()
         );
         StaccatoLocationResponseV2 response2 = new StaccatoLocationResponseV2(
-                StaccatoFixtures.defaultStaccato()
-                        .withCategory(category)
+                StaccatoFixtures.ofDefault(category)
                         .withSpot(new BigDecimal("123.456789"), new BigDecimal("123.456789")).build()
         );
         StaccatoLocationResponsesV2 responses = new StaccatoLocationResponsesV2(List.of(response1, response2));
@@ -210,12 +208,11 @@ class StaccatoControllerTest extends ControllerTest {
     void readStaccatoById() throws Exception {
         // given
         long staccatoId = 1L;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory()
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
+        Category category = CategoryFixtures.ofDefault()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.ofDefault(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         StaccatoDetailResponseV2 response = new StaccatoDetailResponseV2(staccato);
         when(staccatoService.readStaccatoById(anyLong(), any(Member.class))).thenReturn(response);
@@ -276,7 +273,7 @@ class StaccatoControllerTest extends ControllerTest {
                     ]
                 }
                 """;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
 
         // when & then
         mockMvc.perform(put("/staccatos/{staccatoId}", staccatoId)
@@ -291,10 +288,10 @@ class StaccatoControllerTest extends ControllerTest {
     void failUpdateStaccatoById() throws Exception {
         // given
         long staccatoId = 0L;
-        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest().build();
+        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.ofDefault().build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
 
         // when & then
         mockMvc.perform(put("/staccatos/{staccatoId}", staccatoId)
@@ -310,7 +307,7 @@ class StaccatoControllerTest extends ControllerTest {
     void deleteStaccatoById() throws Exception {
         // given
         long staccatoId = 1L;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
 
         // when & then
         mockMvc.perform(delete("/staccatos/{staccatoId}", staccatoId)
@@ -378,23 +375,18 @@ class StaccatoControllerTest extends ControllerTest {
         // given
         String token = "sample-token";
         LocalDateTime expiredAt = LocalDateTime.of(2024, 6, 1, 0, 0, 0);
-        Category category = CategoryFixtures.defaultCategory().build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Category category = CategoryFixtures.ofDefault().build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category)
                 .withStaccatoImages(List.of("https://example.com/stacccatoImage1.jpg",
                         "https://example.com/stacccatoImage2.jpg")).build();
-        Member member1 = MemberFixtures.defaultMember()
+        Member member1 = MemberFixtures.ofDefault()
                 .withNickname("nickname1")
                 .withImageUrl("memberImageUrl1.jpg").build();
-        Member member2 = MemberFixtures.defaultMember()
+        Member member2 = MemberFixtures.ofDefault()
                 .withNickname("nickname2")
                 .withImageUrl("memberImageUrl2.jpg").build();
-        Comment comment1 = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(member1).build();
-        Comment comment2 = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(member2).build();
+        Comment comment1 = CommentFixtures.ofDefault(staccato, member1).build();
+        Comment comment2 = CommentFixtures.ofDefault(staccato, member2).build();
         StaccatoSharedResponse staccatoSharedResponse = new StaccatoSharedResponse(expiredAt, staccato, member1, List.of(comment1, comment2));
         when(staccatoShareService.readSharedStaccatoByToken(token)).thenReturn(staccatoSharedResponse);
         String expectedResponse = """

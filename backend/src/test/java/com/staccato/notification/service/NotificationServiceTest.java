@@ -67,28 +67,25 @@ class NotificationServiceTest extends ServiceSliceTest {
 
     @BeforeEach
     void setUp() {
-        host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-        other = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
-        category = CategoryFixtures.defaultCategory()
+        host = MemberFixtures.ofDefault().withNickname("host").buildAndSave(memberRepository);
+        guest = MemberFixtures.ofDefault().withNickname("guest").buildAndSave(memberRepository);
+        other = MemberFixtures.ofDefault().withNickname("other").buildAndSave(memberRepository);
+        category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
-        staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        staccato = StaccatoFixtures.ofDefault(category)
                 .buildAndSave(staccatoRepository);
-        comment = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(host)
+        comment = CommentFixtures.ofDefault(staccato, host)
                 .buildAndSave(commentRepository);
 
-        NotificationTokenFixtures.defaultNotificationToken(host)
+        NotificationTokenFixtures.ofDefault(host)
                 .withToken("hostToken")
                 .buildAndSave(notificationTokenRepository);
-        NotificationTokenFixtures.defaultNotificationToken(guest)
+        NotificationTokenFixtures.ofDefault(guest)
                 .withToken("guestToken")
                 .buildAndSave(notificationTokenRepository);
-        NotificationTokenFixtures.defaultNotificationToken(other)
+        NotificationTokenFixtures.ofDefault(other)
                 .withToken("otherToken")
                 .buildAndSave(notificationTokenRepository);
     }
@@ -172,8 +169,8 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void registerNewToken() {
         // given
-        Member member = MemberFixtures.defaultMember().withNickname("newbie").buildAndSave(memberRepository);
-        NotificationToken notificationToken = NotificationTokenFixtures.defaultNotificationToken(member).build();
+        Member member = MemberFixtures.ofDefault().withNickname("newbie").buildAndSave(memberRepository);
+        NotificationToken notificationToken = NotificationTokenFixtures.ofDefault(member).build();
         NotificationTokenRequest notificationTokenRequest = new NotificationTokenRequest(
                 notificationToken.getToken(),
                 notificationToken.getDeviceType().getName(),
@@ -198,8 +195,8 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void updateTokenValueWhenSameTokenExists() {
         // given
-        Member member = MemberFixtures.defaultMember().withNickname("member").buildAndSave(memberRepository);
-        NotificationToken oldToken = NotificationTokenFixtures.defaultNotificationToken(member)
+        Member member = MemberFixtures.ofDefault().withNickname("member").buildAndSave(memberRepository);
+        NotificationToken oldToken = NotificationTokenFixtures.ofDefault(member)
                 .withToken("old-token").buildAndSave(notificationTokenRepository);
         NotificationTokenRequest notificationTokenRequest = new NotificationTokenRequest("updated-token", oldToken.getDeviceType()
                 .getName(), oldToken.getDeviceId());
@@ -222,9 +219,9 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void updateDeviceIdWhenSameTokenValueExistsOnce() {
         // given
-        Member member = MemberFixtures.defaultMember().withNickname("member").buildAndSave(memberRepository);
+        Member member = MemberFixtures.ofDefault().withNickname("member").buildAndSave(memberRepository);
         String tokenValue = "token-value";
-        NotificationTokenFixtures.defaultNotificationToken(member)
+        NotificationTokenFixtures.ofDefault(member)
                 .withToken(tokenValue)
                 .withDeviceId("old-device-id")
                 .buildAndSave(notificationTokenRepository);
@@ -248,13 +245,13 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void deleteAllAndSaveOneWhenSameTokenValueExistsMoreThanTwice() {
         // given
-        Member member = MemberFixtures.defaultMember().withNickname("member").buildAndSave(memberRepository);
+        Member member = MemberFixtures.ofDefault().withNickname("member").buildAndSave(memberRepository);
         String tokenValue = "token-value";
-        NotificationTokenFixtures.defaultNotificationToken(member)
+        NotificationTokenFixtures.ofDefault(member)
                 .withToken(tokenValue)
                 .withDeviceId("old-device-id1")
                 .buildAndSave(notificationTokenRepository);
-        NotificationTokenFixtures.defaultNotificationToken(member)
+        NotificationTokenFixtures.ofDefault(member)
                 .withToken(tokenValue)
                 .withDeviceId("old-device-id2")
                 .buildAndSave(notificationTokenRepository);

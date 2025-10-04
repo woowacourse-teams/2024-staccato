@@ -49,16 +49,14 @@ class StaccatoControllerV2Test extends ControllerTest {
     @Test
     void readAllStaccato() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
+        Category category = CategoryFixtures.ofDefault().withColor(Color.PINK).build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category)
                 .withSpot(BigDecimal.ZERO, BigDecimal.ZERO)
                 .withTitle("title")
                 .withVisitedAt(LocalDateTime.of(2024, 5, 1, 0, 0))
                 .build();
-        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato2 = StaccatoFixtures.ofDefault(category)
                 .withSpot(new BigDecimal("123.456789"), new BigDecimal("123.456789"))
                 .withTitle("title2")
                 .withVisitedAt(LocalDateTime.of(2024, 5, 2, 0, 0))
@@ -121,12 +119,11 @@ class StaccatoControllerV2Test extends ControllerTest {
     void readStaccatoById() throws Exception {
         // given
         long staccatoId = 1L;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory()
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
+        Category category = CategoryFixtures.ofDefault()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.ofDefault(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         StaccatoDetailResponseV2 response = new StaccatoDetailResponseV2(staccato);
         when(staccatoService.readStaccatoById(anyLong(), any(Member.class))).thenReturn(response);

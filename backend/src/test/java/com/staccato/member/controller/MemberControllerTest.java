@@ -23,8 +23,8 @@ class MemberControllerTest extends ControllerTest {
     @Test
     void readMembersByNickname() throws Exception {
         // given
-        Member member = MemberFixtures.defaultMember().withNickname("스타카토").build();
-        Member member2 = MemberFixtures.defaultMember().withNickname("스타").build();
+        Member member = MemberFixtures.ofDefault().withNickname("스타카토").build();
+        Member member2 = MemberFixtures.ofDefault().withNickname("스타").build();
         MemberSearchResponses memberSearchResponses = MemberSearchResponses.none(List.of(member2));
         when(authService.extractFromToken(anyString())).thenReturn(member);
         when(memberService.readMembersByNickname(any(Member.class), any(MemberReadRequest.class))).thenReturn(memberSearchResponses);
@@ -55,7 +55,7 @@ class MemberControllerTest extends ControllerTest {
     @Test
     void readMemberWithoutNickname() throws Exception {
         // given
-        Member member = MemberFixtures.defaultMember().withNickname("스타카토").build();
+        Member member = MemberFixtures.ofDefault().withNickname("스타카토").build();
         MemberSearchResponses response = MemberSearchResponses.empty();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         when(memberService.readMembersByNickname(any(Member.class), any(MemberReadRequest.class))).thenReturn(response);
@@ -78,8 +78,8 @@ class MemberControllerTest extends ControllerTest {
     @Test
     void readMemberWithoutCategoryId() throws Exception {
         // given
-        Member member = MemberFixtures.defaultMember().withNickname("스타카토").build();
-        Member member2 = MemberFixtures.defaultMember().withNickname("스타").build();
+        Member member = MemberFixtures.ofDefault().withNickname("스타카토").build();
+        Member member2 = MemberFixtures.ofDefault().withNickname("스타").build();
         MemberSearchResponses response = MemberSearchResponses.none(List.of(member2));
         when(authService.extractFromToken(anyString())).thenReturn(member);
         when(memberService.readMembersByNickname(any(Member.class), any(MemberReadRequest.class))).thenReturn(response);

@@ -27,7 +27,7 @@ class CategoryTest {
     void createBasicCategoryWithMemberNickname() {
         // given
         String nickname = "staccato";
-        Member member = MemberFixtures.defaultMember()
+        Member member = MemberFixtures.ofDefault()
                 .withNickname(nickname)
                 .build();
 
@@ -42,15 +42,15 @@ class CategoryTest {
     @Test
     void validateDuration() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
-        Category updatedCategory = CategoryFixtures.defaultCategory()
+        Category updatedCategory = CategoryFixtures.ofDefault()
                 .withTerm(LocalDate.of(2023, 1, 1),
                         LocalDate.of(2023, 12, 31)).build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
+        Staccato staccato = StaccatoFixtures.ofDefault(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
-                .withCategory(category).build();
+                .build();
 
         // when & then
         assertThatThrownBy(() -> category.update(updatedCategory, List.of(staccato)))
@@ -63,7 +63,7 @@ class CategoryTest {
     void isNotSameTitle() {
         // given
         String title = "title";
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withTitle(title).build();
 
         // when
@@ -77,7 +77,7 @@ class CategoryTest {
     @Test
     void hasTerm() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
 
@@ -92,8 +92,7 @@ class CategoryTest {
     @Test
     void doesNotHaveTerm() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(null, null).build();
+        Category category = CategoryFixtures.ofDefault().build();
 
         // when
         boolean result = category.hasTerm();
@@ -129,9 +128,9 @@ class CategoryTest {
 
         @BeforeEach
         void setUp() {
-            host = MemberFixtures.defaultMember().withNickname("host").build();
-            guest = MemberFixtures.defaultMember().withNickname("guest").build();
-            category = CategoryFixtures.defaultCategory()
+            host = MemberFixtures.ofDefault().withNickname("host").build();
+            guest = MemberFixtures.ofDefault().withNickname("guest").build();
+            category = CategoryFixtures.ofDefault()
                     .withHost(host)
                     .withGuests(List.of(guest))
                     .build();
@@ -152,7 +151,7 @@ class CategoryTest {
         @DisplayName("카테고리의 함께하는 사람이 아니면 카테고리 안에 있는 스타카토의 소유자가 아니다.")
         @Test
         void failValidateOwnerIfMemberNotInCategory() {
-            Member other = MemberFixtures.defaultMember().withNickname("other").build();
+            Member other = MemberFixtures.ofDefault().withNickname("other").build();
             assertThatThrownBy(() -> category.validateOwner(other))
                     .isInstanceOf(ForbiddenException.class);
         }
@@ -168,9 +167,9 @@ class CategoryTest {
 
         @BeforeEach
         void setUp() {
-            host = MemberFixtures.defaultMember().withNickname("host").build();
-            guest = MemberFixtures.defaultMember().withNickname("guest").build();
-            category = CategoryFixtures.defaultCategory()
+            host = MemberFixtures.ofDefault().withNickname("host").build();
+            guest = MemberFixtures.ofDefault().withNickname("guest").build();
+            category = CategoryFixtures.ofDefault()
                     .withHost(host)
                     .withGuests(List.of(guest))
                     .build();
@@ -192,7 +191,7 @@ class CategoryTest {
         @DisplayName("validateHost는 멤버가 카테고리에 소속되어 있지 않으면 예외를 발생시킨다.")
         @Test
         void failValidateHostIfMemberNotInCategory() {
-            Member other = MemberFixtures.defaultMember().withNickname("other").build();
+            Member other = MemberFixtures.ofDefault().withNickname("other").build();
             assertThatThrownBy(() -> category.validateHost(other))
                     .isInstanceOf(ForbiddenException.class);
         }
@@ -213,7 +212,7 @@ class CategoryTest {
         @DisplayName("validateGuest는 멤버가 카테고리에 소속되어 있지 않으면 예외를 발생시킨다.")
         @Test
         void failValidateGuestIfMemberNotInCategory() {
-            Member other = MemberFixtures.defaultMember().withNickname("other").build();
+            Member other = MemberFixtures.ofDefault().withNickname("other").build();
             assertThatThrownBy(() -> category.validateMemberCanLeave(other))
                     .isInstanceOf(ForbiddenException.class);
         }
@@ -223,9 +222,9 @@ class CategoryTest {
     @Test
     void changeUpdatedAtWhenAddGuest() {
         // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").build();
-        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
-        Category category = CategoryFixtures.defaultCategory()
+        Member host = MemberFixtures.ofDefault().withNickname("host").build();
+        Member guest = MemberFixtures.ofDefault().withNickname("guest").build();
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .build();
 

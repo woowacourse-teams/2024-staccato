@@ -76,13 +76,12 @@ class CategoryFilterTest extends ServiceSliceTest {
     @Test
     void readAllCategoriesWithTerm() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category1 = CategoryFixtures.defaultCategory()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category1 = CategoryFixtures.ofDefault()
                 .withTitle("first")
-                .withTerm(null, null)
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        Category category2 = CategoryFixtures.defaultCategory()
+        Category category2 = CategoryFixtures.ofDefault()
                 .withTitle("second")
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
@@ -106,13 +105,12 @@ class CategoryFilterTest extends ServiceSliceTest {
     @Test
     void readAllCategoriesWithoutTerm() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category1 = CategoryFixtures.defaultCategory()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category1 = CategoryFixtures.ofDefault()
                 .withTitle("first")
-                .withTerm(null, null)
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        Category category2 = CategoryFixtures.defaultCategory()
+        Category category2 = CategoryFixtures.ofDefault()
                 .withTitle("second")
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
