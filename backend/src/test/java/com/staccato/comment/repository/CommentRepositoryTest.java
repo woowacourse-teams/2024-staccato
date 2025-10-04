@@ -40,8 +40,8 @@ class CommentRepositoryTest extends RepositoryTest {
         Category category = CategoryFixtures.ofDefault().buildAndSave(categoryRepository);
         Staccato staccato1 = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
         Staccato staccato2 = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
-        CommentFixtures.ofDefault(staccato1, member).build();
-        CommentFixtures.ofDefault(staccato2, member).build();
+        CommentFixtures.ofDefault(staccato1, member).buildAndSave(commentRepository);
+        CommentFixtures.ofDefault(staccato2, member).buildAndSave(commentRepository);
 
         // when
         commentRepository.deleteAllByStaccatoIdInBulk(List.of(staccato1.getId(), staccato2.getId()));
