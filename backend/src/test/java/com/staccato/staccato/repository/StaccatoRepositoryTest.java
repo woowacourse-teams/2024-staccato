@@ -66,13 +66,11 @@ class StaccatoRepositoryTest extends RepositoryTest {
                     .withTitle("category2")
                     .withHost(member)
                     .buildAndSave(categoryRepository);
-            staccatoInCategory1 = StaccatoFixtures.defaultStaccato()
+            staccatoInCategory1 = StaccatoFixtures.defaultStaccato(category1ByMember)
                     .withSpot(MIN_LATITUDE, MAX_LONGITUDE)
-                    .withCategory(category1ByMember)
                     .buildAndSave(staccatoRepository);
-            staccatoInCategory2 = StaccatoFixtures.defaultStaccato()
+            staccatoInCategory2 = StaccatoFixtures.defaultStaccato(category2ByMember)
                     .withSpot(MAX_LATITUDE, MIN_LONGITUDE)
-                    .withCategory(category2ByMember)
                     .buildAndSave(staccatoRepository);
         }
 
@@ -88,8 +86,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
                 Category anotherCategory = CategoryFixtures.defaultCategory()
                         .withHost(anotherMember)
                         .buildAndSave(categoryRepository);
-                Staccato anotherStaccato = StaccatoFixtures.defaultStaccato()
-                        .withCategory(anotherCategory)
+                Staccato anotherStaccato = StaccatoFixtures.defaultStaccato(anotherCategory)
                         .buildAndSave(staccatoRepository);
 
                 // when
@@ -105,20 +102,16 @@ class StaccatoRepositoryTest extends RepositoryTest {
             void findAllStaccatoByMemberWithLocationRange() {
                 // given
                 BigDecimal threshold = new BigDecimal("0.01");
-                Staccato underMinLatitude = StaccatoFixtures.defaultStaccato()
-                        .withCategory(category1ByMember)
+                Staccato underMinLatitude = StaccatoFixtures.defaultStaccato(category1ByMember)
                         .withSpot(MIN_LATITUDE.subtract(threshold), MAX_LONGITUDE)
                         .buildAndSave(staccatoRepository);
-                Staccato overMaxLatitude = StaccatoFixtures.defaultStaccato()
-                        .withCategory(category1ByMember)
+                Staccato overMaxLatitude = StaccatoFixtures.defaultStaccato(category1ByMember)
                         .withSpot(MAX_LATITUDE.add(threshold), MIN_LONGITUDE)
                         .buildAndSave(staccatoRepository);
-                Staccato underMinLongitude = StaccatoFixtures.defaultStaccato()
-                        .withCategory(category1ByMember)
+                Staccato underMinLongitude = StaccatoFixtures.defaultStaccato(category1ByMember)
                         .withSpot(MAX_LATITUDE, MIN_LONGITUDE.subtract(threshold))
                         .buildAndSave(staccatoRepository);
-                Staccato overMaxLongitude = StaccatoFixtures.defaultStaccato()
-                        .withCategory(category1ByMember)
+                Staccato overMaxLongitude = StaccatoFixtures.defaultStaccato(category1ByMember)
                         .withSpot(MIN_LATITUDE, MAX_LONGITUDE.add(threshold))
                         .buildAndSave(staccatoRepository);
 
@@ -153,20 +146,16 @@ class StaccatoRepositoryTest extends RepositoryTest {
             void findAllStaccatoByMemberWithCategoryAndInRange() {
                 // given
                 BigDecimal threshold = new BigDecimal("0.01");
-                Staccato underMinLatitude = StaccatoFixtures.defaultStaccato()
-                        .withCategory(category1ByMember)
+                Staccato underMinLatitude = StaccatoFixtures.defaultStaccato(category1ByMember)
                         .withSpot(MIN_LATITUDE.subtract(threshold), MAX_LONGITUDE)
                         .buildAndSave(staccatoRepository);
-                Staccato overMaxLatitude = StaccatoFixtures.defaultStaccato()
-                        .withCategory(category1ByMember)
+                Staccato overMaxLatitude = StaccatoFixtures.defaultStaccato(category1ByMember)
                         .withSpot(MAX_LATITUDE.add(threshold), MIN_LONGITUDE)
                         .buildAndSave(staccatoRepository);
-                Staccato underMinLongitude = StaccatoFixtures.defaultStaccato()
-                        .withCategory(category1ByMember)
+                Staccato underMinLongitude = StaccatoFixtures.defaultStaccato(category1ByMember)
                         .withSpot(MAX_LATITUDE, MIN_LONGITUDE.subtract(threshold))
                         .buildAndSave(staccatoRepository);
-                Staccato overMaxLongitude = StaccatoFixtures.defaultStaccato()
-                        .withCategory(category1ByMember)
+                Staccato overMaxLongitude = StaccatoFixtures.defaultStaccato(category1ByMember)
                         .withSpot(MIN_LATITUDE, MAX_LONGITUDE.add(threshold))
                         .buildAndSave(staccatoRepository);
 
@@ -192,12 +181,9 @@ class StaccatoRepositoryTest extends RepositoryTest {
                 .withMember(member)
                 .withCategory(category).buildAndSave(categoryMemberRepository);
 
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
-        Staccato staccato1 = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
-        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
+        Staccato staccato1 = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
 
         // when
         staccatoRepository.deleteAllByCategoryIdInBulk(category.getId());
@@ -223,15 +209,15 @@ class StaccatoRepositoryTest extends RepositoryTest {
                 .withMember(member)
                 .withCategory(category).buildAndSave(categoryMemberRepository);
 
-        Staccato staccato1 = StaccatoFixtures.defaultStaccato()
+        Staccato staccato1 = StaccatoFixtures.defaultStaccato(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
-                .withCategory(category).buildAndSave(staccatoRepository);
-        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
+                .buildAndSave(staccatoRepository);
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 2, 0, 0))
-                .withCategory(category).buildAndSave(staccatoRepository);
-        Staccato staccato3 = StaccatoFixtures.defaultStaccato()
+                .buildAndSave(staccatoRepository);
+        Staccato staccato3 = StaccatoFixtures.defaultStaccato(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 3, 0, 0))
-                .withCategory(category).buildAndSave(staccatoRepository);
+                .buildAndSave(staccatoRepository);
 
         // when
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(category.getId());
@@ -253,12 +239,12 @@ class StaccatoRepositoryTest extends RepositoryTest {
                 .withMember(member)
                 .withCategory(category).buildAndSave(categoryMemberRepository);
 
-        Staccato staccato1 = StaccatoFixtures.defaultStaccato()
+        Staccato staccato1 = StaccatoFixtures.defaultStaccato(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
-                .withCategory(category).buildAndSave(staccatoRepository);
-        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
+                .buildAndSave(staccatoRepository);
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
-                .withCategory(category).buildAndSave(staccatoRepository);
+                .buildAndSave(staccatoRepository);
 
         // when
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(category.getId());
@@ -280,8 +266,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
                 .withHost(host)
                 .buildAndSave(categoryRepository);
         for (int count = 1; count <= staccatoCount; count++) {
-            StaccatoFixtures.defaultStaccato()
-                    .withCategory(category)
+            StaccatoFixtures.defaultStaccato(category)
                     .buildAndSave(staccatoRepository);
         }
 
@@ -307,8 +292,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
                     .buildAndSave(categoryRepository);
             staccatos = new ArrayList<>();
             for (int count = 1; count <= 3; count++) {
-                staccatos.add(StaccatoFixtures.defaultStaccato()
-                        .withCategory(category)
+                staccatos.add(StaccatoFixtures.defaultStaccato(category)
                         .withCreator(member)
                         .withTitle("staccato " + count)
                         .withVisitedAt(LocalDateTime.of(2024, 1, count, 0, 0, 0))
@@ -326,7 +310,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
         void readStaccatosByCategoryId() {
             // given
             Category otherCategory = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-            Staccato otherStaccato = StaccatoFixtures.defaultStaccato().withCategory(otherCategory)
+            Staccato otherStaccato = StaccatoFixtures.defaultStaccato(otherCategory)
                     .buildAndSave(staccatoRepository);
             Staccato cursorStaccato = staccatos.get(0);
 
@@ -455,8 +439,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
                     .buildAndSave(categoryRepository);
             staccatos = new ArrayList<>();
             for (int count = 1; count <= 3; count++) {
-                staccatos.add(StaccatoFixtures.defaultStaccato()
-                        .withCategory(category)
+                staccatos.add(StaccatoFixtures.defaultStaccato(category)
                         .withCreator(member)
                         .withTitle("staccato " + count)
                         .withVisitedAt(LocalDateTime.of(2024, 1, count, 0, 0, 0))
@@ -474,7 +457,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
         void readStaccatosByCategoryId() {
             // given
             Category otherCategory = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-            Staccato otherStaccato = StaccatoFixtures.defaultStaccato().withCategory(otherCategory)
+            Staccato otherStaccato = StaccatoFixtures.defaultStaccato(otherCategory)
                     .buildAndSave(staccatoRepository);
 
             // when
@@ -500,12 +483,12 @@ class StaccatoRepositoryTest extends RepositoryTest {
         @Test
         void readStaccatosOrderByCreatedAtDesc() {
             // given
-            Staccato first = StaccatoFixtures.defaultStaccato()
+            Staccato first = StaccatoFixtures.defaultStaccato(category)
                     .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
-                    .withCategory(category).buildAndSave(staccatoRepository);
-            Staccato second = StaccatoFixtures.defaultStaccato()
+                    .buildAndSave(staccatoRepository);
+            Staccato second = StaccatoFixtures.defaultStaccato(category)
                     .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
-                    .withCategory(category).buildAndSave(staccatoRepository);
+                    .buildAndSave(staccatoRepository);
 
             // when
             List<Staccato> result = staccatoRepository.findFirstPageByCategoryId(category.getId(), 2);

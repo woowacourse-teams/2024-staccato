@@ -32,12 +32,10 @@ class StaccatoImageRepositoryTest extends RepositoryTest {
     void deleteAllByStaccatoIdInBulk() {
         // given
         Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        Staccato staccato1 = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato1 = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("url1", "url2"))
                 .buildAndSave(staccatoRepository);
-        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("url1", "url2"))
                 .buildAndSave(staccatoRepository);
 
@@ -60,8 +58,7 @@ class StaccatoImageRepositoryTest extends RepositoryTest {
     void deleteAllByIdInBulk() {
         // given
         Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("url1", "url2", "url3"))
                 .buildAndSave(staccatoRepository);
 

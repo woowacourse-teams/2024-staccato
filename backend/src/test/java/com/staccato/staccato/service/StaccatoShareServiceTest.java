@@ -53,8 +53,7 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
 
         // when
         StaccatoShareLinkResponse response = staccatoShareService.createStaccatoShareLink(staccato.getId(), member);
@@ -84,8 +83,7 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
 
         // when & then
         assertThatThrownBy(() -> staccatoShareService.createStaccatoShareLink(staccato.getId(), otherMember))
@@ -101,8 +99,7 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
 
         // when
         StaccatoShareLinkResponse response = staccatoShareService.createStaccatoShareLink(staccato.getId(), member);
@@ -119,8 +116,7 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
 
         StaccatoShareLinkResponse response = staccatoShareService.createStaccatoShareLink(staccato.getId(), member);
 
@@ -138,8 +134,7 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
 
         StaccatoShareLinkResponse response = staccatoShareService.createStaccatoShareLink(staccato.getId(), member);
 
@@ -158,8 +153,7 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
 
         StaccatoShareLinkResponse response = staccatoShareService.createStaccatoShareLink(staccato.getId(), member);
 
@@ -176,8 +170,7 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
         Member member2 = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member1).buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
         Comment comment1 = CommentFixtures.defaultComment()
                 .withStaccato(staccato)
                 .withMember(member1).buildAndSave(commentRepository);

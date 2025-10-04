@@ -234,8 +234,7 @@ class CategoryControllerV2Test extends ControllerTest {
         Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category = CategoryFixtures.defaultCategory().withHost(member).build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
         when(categoryService.readCategoryWithStaccatosById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
@@ -282,8 +281,7 @@ class CategoryControllerV2Test extends ControllerTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
         when(categoryService.readCategoryWithStaccatosById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);

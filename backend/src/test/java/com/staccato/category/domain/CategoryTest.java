@@ -48,9 +48,9 @@ class CategoryTest {
         Category updatedCategory = CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2023, 1, 1),
                         LocalDate.of(2023, 12, 31)).build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
-                .withCategory(category).build();
+                .build();
 
         // when & then
         assertThatThrownBy(() -> category.update(updatedCategory, List.of(staccato)))

@@ -23,14 +23,14 @@ import com.staccato.staccato.domain.Staccato;
 
 class CommentTest {
     private Member member;
+    private Category category;
     private Staccato staccato;
 
     @BeforeEach
     void init() {
         member = MemberFixtures.defaultMember().build();
-        staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(CategoryFixtures.defaultCategory().build())
-                .build();
+        category = CategoryFixtures.defaultCategory().build();
+        staccato = StaccatoFixtures.defaultStaccato(category).build();
     }
 
     @DisplayName("정상적인 댓글은 생성에 성공한다.")
@@ -83,9 +83,7 @@ class CommentTest {
             category = CategoryFixtures.defaultCategory()
                     .withHost(member)
                     .build();
-            staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category)
-                    .build();
+            staccato = StaccatoFixtures.defaultStaccato(category).build();
         }
 
         @DisplayName("댓글 작성자 본인만 댓글을 수정할 수 있다.")

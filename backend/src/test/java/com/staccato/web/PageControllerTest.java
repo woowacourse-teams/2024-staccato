@@ -44,8 +44,7 @@ public class PageControllerTest extends ControllerTest {
         );
 
         Category category = CategoryFixtures.defaultCategory().build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(imageUrls).build();
         Member member = MemberFixtures.defaultMember().build();
         StaccatoSharedResponse response = new StaccatoSharedResponse(LocalDateTime.now(), staccato, member, List.of());
@@ -68,8 +67,7 @@ public class PageControllerTest extends ControllerTest {
         List<String> imageUrls = List.of();
 
         Category category = CategoryFixtures.defaultCategory().build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(imageUrls).build();
         Member member = MemberFixtures.defaultMember().build();
         StaccatoSharedResponse response = new StaccatoSharedResponse(LocalDateTime.now(), staccato, member, List.of());

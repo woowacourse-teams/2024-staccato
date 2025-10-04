@@ -83,8 +83,7 @@ class StaccatoImagesTest {
         StaccatoImages updatedImages = new StaccatoImages(updatedImageNames);
 
         // when
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).build();
         existingImages.update(updatedImages, staccato);
         List<String> images = existingImages.getImages().stream().map(StaccatoImage::getImageUrl).toList();
 
@@ -117,8 +116,7 @@ class StaccatoImagesTest {
                 .buildAndSave(categoryRepository);
             List<String> imageUrls = List.of("same1.jpg", "same2.jpg");
 
-            Staccato staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category)
+            Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                     .withStaccatoImages(imageUrls).buildAndSave(staccatoRepository);
             entityManager.flush();
             entityManager.clear();
@@ -145,8 +143,7 @@ class StaccatoImagesTest {
                 .buildAndSave(categoryRepository);
             List<String> imageUrls = List.of("img1.jpg", "img2.jpg");
 
-            Staccato staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category)
+            Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                     .withStaccatoImages(imageUrls).buildAndSave(staccatoRepository);
             entityManager.flush();
             entityManager.clear();

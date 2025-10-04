@@ -332,8 +332,7 @@ class CategoryControllerTest extends ControllerTest {
         Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category = CategoryFixtures.defaultCategory().withHost(member).build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
         when(categoryService.readCategoryWithStaccatosById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
@@ -379,8 +378,7 @@ class CategoryControllerTest extends ControllerTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
         when(categoryService.readCategoryWithStaccatosById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
@@ -422,13 +420,11 @@ class CategoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
         CategoryStaccatoLocationResponse response1 = new CategoryStaccatoLocationResponse(
-                StaccatoFixtures.defaultStaccato()
-                        .withCategory(category)
+                StaccatoFixtures.defaultStaccato(category)
                         .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build()
         );
         CategoryStaccatoLocationResponse response2 = new CategoryStaccatoLocationResponse(
-                StaccatoFixtures.defaultStaccato()
-                        .withCategory(category)
+                StaccatoFixtures.defaultStaccato(category)
                         .withSpot(new BigDecimal("80.456789"), new BigDecimal("123.456789")).build()
         );
         CategoryStaccatoLocationResponses responses = new CategoryStaccatoLocationResponses(List.of(response1, response2));
@@ -470,8 +466,7 @@ class CategoryControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), StaccatoCursor.empty());
 
@@ -506,8 +501,7 @@ class CategoryControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .build();
         CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), StaccatoCursor.empty());
 
@@ -527,8 +521,7 @@ class CategoryControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryStaccatoResponses responses = CategoryStaccatoResponses.of(List.of(staccato), StaccatoCursor.empty());
 

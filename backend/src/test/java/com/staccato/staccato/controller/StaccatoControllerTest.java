@@ -169,13 +169,11 @@ class StaccatoControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
         StaccatoLocationResponseV2 response1 = new StaccatoLocationResponseV2(
-                StaccatoFixtures.defaultStaccato()
-                        .withCategory(category)
+                StaccatoFixtures.defaultStaccato(category)
                         .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build()
         );
         StaccatoLocationResponseV2 response2 = new StaccatoLocationResponseV2(
-                StaccatoFixtures.defaultStaccato()
-                        .withCategory(category)
+                StaccatoFixtures.defaultStaccato(category)
                         .withSpot(new BigDecimal("123.456789"), new BigDecimal("123.456789")).build()
         );
         StaccatoLocationResponsesV2 responses = new StaccatoLocationResponsesV2(List.of(response1, response2));
@@ -214,8 +212,7 @@ class StaccatoControllerTest extends ControllerTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         StaccatoDetailResponseV2 response = new StaccatoDetailResponseV2(staccato);
         when(staccatoService.readStaccatoById(anyLong(), any(Member.class))).thenReturn(response);
@@ -379,8 +376,7 @@ class StaccatoControllerTest extends ControllerTest {
         String token = "sample-token";
         LocalDateTime expiredAt = LocalDateTime.of(2024, 6, 1, 0, 0, 0);
         Category category = CategoryFixtures.defaultCategory().build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of("https://example.com/stacccatoImage1.jpg",
                         "https://example.com/stacccatoImage2.jpg")).build();
         Member member1 = MemberFixtures.defaultMember()

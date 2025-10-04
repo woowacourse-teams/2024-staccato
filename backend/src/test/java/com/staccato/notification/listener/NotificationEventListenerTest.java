@@ -115,8 +115,7 @@ class NotificationEventListenerTest extends ServiceSliceTest {
                 .withHost(host)
                 .withGuests(List.of(guest, commentCreator))
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .buildAndSave(staccatoRepository);
 
         CommentRequest commentRequest = CommentRequestFixtures.defaultCommentRequest()

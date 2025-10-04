@@ -268,13 +268,11 @@ class CategoryServiceTest extends ServiceSliceTest {
 
             @BeforeEach
             void setUpStaccatos() {
-                staccato = StaccatoFixtures.defaultStaccato()
+                staccato = StaccatoFixtures.defaultStaccato(category)
                         .withVisitedAt(LocalDateTime.of(2024, 1, 3, 0, 0, 0))
-                        .withCategory(category)
                         .build();
-                staccato2 = StaccatoFixtures.defaultStaccato()
+                staccato2 = StaccatoFixtures.defaultStaccato(category)
                         .withVisitedAt(LocalDateTime.of(2024, 1, 2, 0, 0, 0))
-                        .withCategory(category)
                         .build();
                 staccatoRepository.saveAll(List.of(staccato, staccato2));
             }
@@ -374,12 +372,9 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withColor(Color.PINK)
                 .withHost(member2)
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
-        Staccato otherStaccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category2).buildAndSave(staccatoRepository);
-        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
+        Staccato otherStaccato = StaccatoFixtures.defaultStaccato(category2).buildAndSave(staccatoRepository);
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
 
         // when
         CategoryStaccatoLocationResponses responses = categoryService.readStaccatoLocationsByCategory(
@@ -406,8 +401,8 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withHost(member)
                 .buildAndSave(categoryRepository);
 
-        StaccatoFixtures.defaultStaccato().withCategory(category).buildAndSave(staccatoRepository);
-        StaccatoFixtures.defaultStaccato().withCategory(category).buildAndSave(staccatoRepository);
+        StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
+        StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
 
         CategoryReadRequest request = new CategoryReadRequest(null, null);
 
@@ -491,8 +486,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                     .buildAndSave(categoryRepository);
             staccatos = new ArrayList<>();
             for (int count = 1; count <= 10; count++) {
-                staccatos.add(StaccatoFixtures.defaultStaccato()
-                        .withCategory(category)
+                staccatos.add(StaccatoFixtures.defaultStaccato(category)
                         .withCreator(member)
                         .withTitle("staccato " + count)
                         .withVisitedAt(LocalDateTime.of(2024, 1, count, 0, 0, 0))
@@ -756,8 +750,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
         CommentFixtures.defaultComment()
                 .withStaccato(staccato)
                 .withMember(host).buildAndSave(commentRepository);

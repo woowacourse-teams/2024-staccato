@@ -104,8 +104,7 @@ class StaccatoTest {
         Category category = CategoryFixtures.defaultCategory().build();
         String thumbnail = "https://example.com/staccatoImage1.jpg";
 
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of(thumbnail, "https://example.com/staccatoImage2.jpg")).build();
 
         // when
@@ -120,8 +119,7 @@ class StaccatoTest {
     void noThumbnail() {
         // given
         Category category = CategoryFixtures.defaultCategory().build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category)
                 .withStaccatoImages(List.of()).build();
 
         // when
@@ -155,8 +153,7 @@ class StaccatoTest {
             LocalDateTime beforeCreate = category.getUpdatedAt();
 
             // when
-            StaccatoFixtures.defaultStaccato()
-                    .withCategory(category).buildAndSave(staccatoRepository);
+            StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
             entityManager.flush();
             entityManager.refresh(category);
             LocalDateTime afterCreate = category.getUpdatedAt();
@@ -173,8 +170,7 @@ class StaccatoTest {
             Category category = CategoryFixtures.defaultCategory()
                     .withHost(member)
                     .buildAndSave(categoryRepository);
-            Staccato staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category).buildAndSave(staccatoRepository);
+            Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeUpdate = category.getUpdatedAt();
 
             // when
@@ -195,8 +191,7 @@ class StaccatoTest {
             Category category = CategoryFixtures.defaultCategory()
                     .withHost(member)
                     .buildAndSave(categoryRepository);
-            Staccato staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category).buildAndSave(staccatoRepository);
+            Staccato staccato = StaccatoFixtures.defaultStaccato(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeDelete = category.getUpdatedAt();
 
             // when
@@ -219,8 +214,7 @@ class StaccatoTest {
                 .withColor(Color.PINK)
                 .withHost(member)
                 .build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).build();
 
         // when
         Color color = staccato.getColor();
@@ -244,10 +238,8 @@ class StaccatoTest {
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).build();
-        Staccato sharedStaccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(sharedCategory).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato(category).build();
+        Staccato sharedStaccato = StaccatoFixtures.defaultStaccato(sharedCategory).build();
 
         // when & then
         assertAll(
@@ -277,9 +269,7 @@ class StaccatoTest {
                     .withHost(host)
                     .withGuests(List.of(guest))
                     .build();
-            staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category)
-                    .build();
+            staccato = StaccatoFixtures.defaultStaccato(category).build();
         }
 
         @DisplayName("카테고리의 HOST는 카테고리 안에 있는 스타카토의 소유자이다.")
@@ -340,13 +330,11 @@ class StaccatoTest {
         Member updater = MemberFixtures.defaultMember().withNickname("updater").build();
         Category category = CategoryFixtures.defaultCategory().withHost(creator).build();
 
-        Staccato original = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato original = StaccatoFixtures.defaultStaccato(category)
                 .withCreator(creator)
                 .build();
 
-        Staccato updateData = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato updateData = StaccatoFixtures.defaultStaccato(category)
                 .withCreator(updater)
                 .build();
 
@@ -365,13 +353,11 @@ class StaccatoTest {
         Member updater = MemberFixtures.defaultMember().withNickname("updater").build();
         Category category = CategoryFixtures.defaultCategory().withHost(creator).build();
 
-        Staccato original = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato original = StaccatoFixtures.defaultStaccato(category)
                 .withCreator(creator)
                 .build();
 
-        Staccato updateData = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato updateData = StaccatoFixtures.defaultStaccato(category)
                 .withCreator(updater)
                 .build();
 
