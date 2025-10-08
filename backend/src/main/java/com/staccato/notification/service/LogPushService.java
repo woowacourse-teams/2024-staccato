@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Trace
 @Slf4j
 @Service
-@Profile({"local","test"})
+@Profile({"local", "test"})
 public class LogPushService implements PushService {
 
     @Override
