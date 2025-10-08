@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class NotificationService {
     private final CategoryInvitationRepository categoryInvitationRepository;
     private final NotificationTokenRepository notificationTokenRepository;
-    private final FcmService fcmService;
+    private final PushService pushService;
 
     @Transactional(readOnly = true)
     public NotificationExistResponse isExistNotifications(Member member) {
@@ -88,6 +88,6 @@ public class NotificationService {
         List<String> tokens = notificationTokens.stream()
                 .map(NotificationToken::getToken)
                 .toList();
-        fcmService.sendPush(tokens, pushMessage);
+        pushService.sendPush(tokens, pushMessage);
     }
 }
