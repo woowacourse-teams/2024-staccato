@@ -29,11 +29,25 @@ public class FcmConfig {
     }
 
     private void initializeFirebase(String adminSdk) {
-        if (!FirebaseApp.getApps().isEmpty()) {
+        if (isFirebaseInitialized()) {
             log.info(SUCCESS_LOG + "기존 FirebaseApp 인스턴스가 존재하므로 초기화 생략");
             return;
         }
 
+        log.info("[FCM] 기본 FirebaseApp이 초기화되지 않았습니다. 초기화를 시작합니다.");
+        initializeFirebaseApp(adminSdk);
+    }
+
+    private boolean isFirebaseInitialized() {
+        try {
+            FirebaseApp.getInstance();
+            return true;
+        } catch (IllegalStateException e) {
+            return false;
+        }
+    }
+
+    private void initializeFirebaseApp(String adminSdk) {
         try {
             FirebaseApp.initializeApp(buildFirebaseOptions(adminSdk));
             log.info(SUCCESS_LOG + "설정 성공");
