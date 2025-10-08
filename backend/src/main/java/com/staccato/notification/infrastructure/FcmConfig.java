@@ -22,7 +22,7 @@ public class FcmConfig {
     private static final String FAIL_LOG = "[FCM][연결 실패] ";
 
     @Bean
-    @Profile("prod")
+    @Profile({"prod", "dev"})
     public FirebaseMessaging firebaseMessaging(@Value("${fcm.admin-sdk}") String adminSdk) {
         initializeFirebase(adminSdk);
         return FirebaseMessaging.getInstance();
