@@ -56,7 +56,7 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Autowired
     private CategoryInvitationRepository categoryInvitationRepository;
     @MockBean
-    private FcmService fcmService;
+    private PushService pushService;
 
     private Member host;
     private Member guest;
@@ -123,7 +123,7 @@ class NotificationServiceTest extends ServiceSliceTest {
         List<String> expectedTokens = List.of("otherToken");
         PushMessage expectedMessage = new ReceiveInvitationMessage(host, category);
 
-        verify(fcmService).sendPush(expectedTokens, expectedMessage);
+        verify(pushService).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("초대 수락 알림을 전송한다.")
@@ -136,7 +136,7 @@ class NotificationServiceTest extends ServiceSliceTest {
         List<String> expectedTokens = List.of("hostToken", "guestToken");
         PushMessage expectedMessage = new AcceptInvitationMessage(other, category);
 
-        verify(fcmService).sendPush(expectedTokens, expectedMessage);
+        verify(pushService).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("새로운 스타카토 알림을 전송한다.")
@@ -149,7 +149,7 @@ class NotificationServiceTest extends ServiceSliceTest {
         List<String> expectedTokens = List.of("guestToken");
         PushMessage expectedMessage = new StaccatoCreatedMessage(host, staccato, category);
 
-        verify(fcmService).sendPush(expectedTokens, expectedMessage);
+        verify(pushService).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("새로운 코멘트 알림을 전송한다.")
@@ -162,7 +162,7 @@ class NotificationServiceTest extends ServiceSliceTest {
         List<String> expectedTokens = List.of("guestToken");
         PushMessage expectedMessage = new CommentCreatedMessage(host, staccato, comment);
 
-        verify(fcmService).sendPush(expectedTokens, expectedMessage);
+        verify(pushService).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("토큰이 존재하지 않으면 새로 저장한다.")
