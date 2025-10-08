@@ -19,10 +19,9 @@ public class LogPushService implements PushService {
 
     @Override
     public void sendPush(List<String> tokens, PushMessage pushMessage) {
-        int size = (tokens == null) ? 0 : tokens.size();
+        int tokenCount = (tokens == null) ? 0 : tokens.size();
         Map<String, String> data = pushMessage.toData();
 
-        log.info("[DRY-PUSH] tokens={}, title={}, body={}, data={}",
-                size, data.get("title"), data.get("body"), data);
+        log.info("[DRY-PUSH] tokenCount={}, data={}", tokenCount, data);
     }
 }
