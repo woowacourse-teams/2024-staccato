@@ -44,14 +44,14 @@ security:
       secret-key: ENC(w6iIOc1EMsu5lNXZZF7wz+wo/KziZPWM3jzsF6yeWnjnrfIaUifO6TD+i6jIeQMIB7EyY5Bj2rD2l4VZgDxuR38F1tIxp+RwofkPiaht+E+0WIR8GB94ur9whNL4oUQp)
 cloud:
   aws:
-    region: unused-for-local
-    access-key: unused-for-local
-    secret-access-key: unused-for-local
+    region: dummy-region
+    access-key: dummy-access
+    secret-access-key: dummy-secret
     s3:
-      bucket: unused-for-local
-      endpoint: unused-for-local
+      bucket: dummy-region
+      endpoint: http://dummy-endpoint
     cloudfront:
-      endpoint: unused-for-local
+      endpoint: http://dummy-cloudfront
 image:
   folder:
     name: local/

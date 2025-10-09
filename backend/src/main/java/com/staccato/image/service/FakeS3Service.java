@@ -2,13 +2,28 @@ package com.staccato.image.service;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 import com.staccato.image.service.dto.DeletionResult;
 
+@Service
+@Profile("local")
 public class FakeS3Service implements CloudStorageService {
-    public static final String FAKE_CLOUD_FRONT_END_POINT = "fakeCloudFrontEndPoint";
+
     private final Set<String> storedKeys = new HashSet<>();
+    private final String endPoint;
+    private final String cloudFrontEndPoint;
+
+    public FakeS3Service(
+            @Value("${cloud.aws.s3.endpoint:}") String endPoint,
+            @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint
+    ) {
+        this.endPoint = endPoint;
+        this.cloudFrontEndPoint = cloudFrontEndPoint;
+    }
 
     @Override
     public void putS3Object(String objectKey, String contentType, byte[] imageBytes) {
@@ -17,20 +32,40 @@ public class FakeS3Service implements CloudStorageService {
 
     @Override
     public String getUrl(String keyName) {
-        return FAKE_CLOUD_FRONT_END_POINT + "/" + keyName;
+        String base = "http://fake-s3";
+        if (hasText(cloudFrontEndPoint)) {
+            base = cloudFrontEndPoint;
+        } else if (hasText(endPoint)) {
+            base = endPoint;
+        }
+
+        if (base.endsWith("/")) {
+            return base + keyName;
+        }
+        return base + "/" + keyName;
     }
 
     @Override
     public String extractKeyFromUrl(String url) {
-        return url.replace(FAKE_CLOUD_FRONT_END_POINT + "/", "");
+        if (hasText(cloudFrontEndPoint)) {
+            return url.replace(cloudFrontEndPoint + "/", "");
+        }
+        if (hasText(endPoint)) {
+            return url.replace(endPoint + "/", "");
+        }
+        int idx = url.lastIndexOf('/');
+        return (idx >= 0) ? url.substring(idx + 1) : url;
     }
 
     @Override
     public DeletionResult deleteUnusedObjects(Set<String> usedKeys) {
-        Set<String> toDelete = storedKeys.stream()
-                .filter(stored -> !usedKeys.contains(stored))
-                .collect(Collectors.toSet());
-        storedKeys.removeAll(toDelete);
-        return new DeletionResult(toDelete.size(), 0);
+        int before = storedKeys.size();
+        storedKeys.removeIf(key -> !usedKeys.contains(key));
+        int deleted = before - storedKeys.size();
+        return new DeletionResult(deleted, 0);
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 }
