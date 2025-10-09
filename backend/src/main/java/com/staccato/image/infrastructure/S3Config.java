@@ -7,9 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.staccato.image.service.CloudStorageService;
-import com.staccato.image.service.FakeS3Service;
-
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -44,11 +41,5 @@ public class S3Config {
                 .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test", "test")))
                 .build();
-    }
-
-    @Bean
-    @Profile("local")
-    public CloudStorageService fakeS3Service() {
-        return new FakeS3Service();
     }
 }
