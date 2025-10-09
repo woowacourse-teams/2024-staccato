@@ -32,13 +32,14 @@ security:
       secret-key: mock
 cloud:
   aws:
-    access-key: mock
-    secret-access-key: mock
+    region: ap-northeast-2
+    access-key: test
+    secret-access-key: test
     s3:
-      bucket: mock
-      endpoint: mock
+      bucket: test-bucket
+      endpoint: http://localhost:4566
     cloudfront:
-      endpoint: mock
+      endpoint: http://localhost:4566
 image:
   folder:
     name: mock/
