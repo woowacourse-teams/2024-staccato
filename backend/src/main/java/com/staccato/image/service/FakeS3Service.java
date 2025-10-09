@@ -53,8 +53,7 @@ public class FakeS3Service implements CloudStorageService {
         if (hasText(endPoint)) {
             return url.replace(endPoint + "/", "");
         }
-        int idx = url.lastIndexOf('/');
-        return (idx >= 0) ? url.substring(idx + 1) : url;
+        return url;
     }
 
     @Override
