@@ -36,10 +36,10 @@ cloud:
     access-key: test
     secret-access-key: test
     s3:
-      bucket: test-bucket
+      bucket: staccato-test-bucket
       endpoint: http://localhost:4566
     cloudfront:
-      endpoint: http://localhost:4566
+      endpoint: http://cdn.localstack.test
 image:
   folder:
     name: mock/

@@ -62,6 +62,7 @@ dependencies {
 	testImplementation 'org.testcontainers:testcontainers-bom:1.20.5'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:mysql'
+	testImplementation 'org.testcontainers:localstack'
 
 	testImplementation 'io.rest-assured:rest-assured:5.3.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
