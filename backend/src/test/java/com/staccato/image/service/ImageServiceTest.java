@@ -2,7 +2,7 @@ package com.staccato.image.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import static com.staccato.image.infrastructure.FakeS3Service.FAKE_CLOUD_FRONT_END_POINT;
+import static com.staccato.image.service.FakeS3Service.FAKE_CLOUD_FRONT_END_POINT;
 
 import java.util.List;
 
@@ -16,7 +16,6 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
-import com.staccato.image.infrastructure.CloudStorageService;
 import com.staccato.image.service.dto.DeletionResult;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;

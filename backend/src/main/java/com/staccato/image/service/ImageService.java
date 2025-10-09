@@ -18,7 +18,6 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.StaccatoException;
 import com.staccato.image.domain.ImageExtension;
-import com.staccato.image.infrastructure.CloudStorageService;
 import com.staccato.image.service.dto.DeletionResult;
 import com.staccato.image.service.dto.ImageUrlResponse;
 import com.staccato.staccato.repository.StaccatoImageRepository;
