@@ -44,17 +44,14 @@ security:
       secret-key: ENC(w6iIOc1EMsu5lNXZZF7wz+wo/KziZPWM3jzsF6yeWnjnrfIaUifO6TD+i6jIeQMIB7EyY5Bj2rD2l4VZgDxuR38F1tIxp+RwofkPiaht+E+0WIR8GB94ur9whNL4oUQp)
 cloud:
   aws:
-    access-key: accessKey
-    secret-access-key: secretAccessKey
+    region: unused-for-local
+    access-key: unused-for-local
+    secret-access-key: unused-for-local
     s3:
-      bucket: bucket
-      endpoint: endpoint
+      bucket: unused-for-local
+      endpoint: unused-for-local
     cloudfront:
-      endpoint: endpoint
-    region:
-      static: static
-    stack:
-      auto: false
+      endpoint: unused-for-local
 image:
   folder:
     name: local/
