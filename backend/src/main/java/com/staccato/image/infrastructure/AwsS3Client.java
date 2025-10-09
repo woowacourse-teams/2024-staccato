@@ -30,8 +30,8 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 @Component
-public class S3ObjectClient implements CloudStorageClient {
-    private static final Logger log = LoggerFactory.getLogger(S3ObjectClient.class);
+public class AwsS3Client implements CloudStorageClient {
+    private static final Logger log = LoggerFactory.getLogger(AwsS3Client.class);
     private static final int S3_DELETE_BATCH_LIMIT = 1000;
 
     private final S3Client s3Client;
@@ -39,7 +39,7 @@ public class S3ObjectClient implements CloudStorageClient {
     private final String endPoint;
     private final String cloudFrontEndPoint;
 
-    public S3ObjectClient(
+    public AwsS3Client(
             @Value("${cloud.aws.s3.bucket}") String bucketName,
             @Value("${cloud.aws.s3.endpoint}") String endPoint,
             @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint,
