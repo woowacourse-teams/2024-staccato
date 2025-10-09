@@ -75,17 +75,35 @@ public class AwsS3Service implements CloudStorageService {
 
     @Override
     public String extractKeyFromUrl(String url) {
+        String result = url;
+
         if (hasText(cloudFrontEndPoint)) {
-            return url.replace(cloudFrontEndPoint + "/", "");
+            result = stripPrefix(result, normalize(cloudFrontEndPoint));
         }
         if (hasText(endPoint)) {
-            return url.replace(endPoint + "/", "");
+            result = stripPrefix(result, normalize(endPoint));
         }
-        return url;
+
+        result = result.replaceFirst("^/+", "");
+
+        String bucketPrefix = bucketName + "/";
+        if (result.startsWith(bucketPrefix)) {
+            result = result.substring(bucketPrefix.length());
+        }
+
+        return result;
     }
 
     private boolean hasText(String value) {
         return value != null && !value.isBlank();
+    }
+
+    private static String normalize(String base) {
+        return base.endsWith("/") ? base : base + "/";
+    }
+
+    private static String stripPrefix(String text, String prefix) {
+        return text.startsWith(prefix) ? text.substring(prefix.length()) : text;
     }
 
     @Override
