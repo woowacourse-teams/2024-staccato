@@ -42,4 +42,10 @@ public class S3Config {
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test", "test")))
                 .build();
     }
+
+    @Bean
+    @Profile("local")
+    public CloudStorageService fakeS3Service() {
+        return new FakeS3Service();
+    }
 }
