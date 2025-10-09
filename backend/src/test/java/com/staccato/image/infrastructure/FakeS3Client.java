@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import com.staccato.image.service.dto.DeletionResult;
 
-public class FakeS3ObjectClient implements CloudStorageClient {
+public class FakeS3Client implements CloudStorageClient {
     public static final String FAKE_CLOUD_FRONT_END_POINT = "fakeCloudFrontEndPoint";
     private final Set<String> storedKeys = new HashSet<>();
 

@@ -2,7 +2,7 @@ package com.staccato.image.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import static com.staccato.image.infrastructure.FakeS3ObjectClient.FAKE_CLOUD_FRONT_END_POINT;
+import static com.staccato.image.infrastructure.FakeS3Client.FAKE_CLOUD_FRONT_END_POINT;
 
 import java.util.List;
 
