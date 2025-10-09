@@ -8,15 +8,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 import com.staccato.image.service.dto.DeletionResult;
 
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Delete;
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
@@ -44,15 +42,9 @@ public class AwsS3Service implements CloudStorageService {
             S3Client s3Client,
             @Value("${cloud.aws.s3.bucket}") String bucketName,
             @Value("${cloud.aws.s3.endpoint}") String endPoint,
-            @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint,
-            @Value("${cloud.aws.access-key}") String accessKey,
-            @Value("${cloud.aws.secret-access-key}") String secretAccessKey
+            @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint
     ) {
-        AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretAccessKey);
-        this.s3Client = S3Client.builder()
-                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
-                .region(Region.AP_NORTHEAST_2)
-                .build();
+        this.s3Client = s3Client;
         this.bucketName = bucketName;
         this.endPoint = endPoint;
         this.cloudFrontEndPoint = cloudFrontEndPoint;
@@ -71,19 +63,29 @@ public class AwsS3Service implements CloudStorageService {
 
     @Override
     public String getUrl(String keyName) {
-        GetUrlRequest request = GetUrlRequest.builder()
-                .bucket(bucketName)
-                .key(keyName)
-                .build();
+        String url = s3Client.utilities()
+                .getUrl(GetUrlRequest.builder().bucket(bucketName).key(keyName).build())
+                .toString();
 
-        String url = s3Client.utilities().getUrl(request).toString();
-
-        return url.replace(endPoint, cloudFrontEndPoint);
+        if (hasText(endPoint) && hasText(cloudFrontEndPoint)) {
+            return url.replace(endPoint, cloudFrontEndPoint);
+        }
+        return url;
     }
 
     @Override
     public String extractKeyFromUrl(String url) {
-        return url.replace(cloudFrontEndPoint + "/", "");
+        if (hasText(cloudFrontEndPoint)) {
+            return url.replace(cloudFrontEndPoint + "/", "");
+        }
+        if (hasText(endPoint)) {
+            return url.replace(endPoint + "/", "");
+        }
+        return url;
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 
     @Override
