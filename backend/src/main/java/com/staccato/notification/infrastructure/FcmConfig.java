@@ -39,12 +39,7 @@ public class FcmConfig {
     }
 
     private boolean isFirebaseInitialized() {
-        try {
-            FirebaseApp.getInstance();
-            return true;
-        } catch (IllegalStateException e) {
-            return false;
-        }
+        return !FirebaseApp.getApps().isEmpty();
     }
 
     private void initializeFirebaseApp(String adminSdk) {
