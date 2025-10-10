@@ -48,7 +48,7 @@ cloud:
     access-key: dummy-access
     secret-access-key: dummy-secret
     s3:
-      bucket: dummy-region
+      bucket: dummy-bucket
       endpoint: http://dummy-endpoint
     cloudfront:
       endpoint: http://dummy-cloudfront
