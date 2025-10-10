@@ -60,7 +60,7 @@ public class ImageServiceTest extends ServiceSliceTest {
         String key = cloudStorageService.extractKeyFromUrl(url);
 
         assertAll(
-                () -> assertThat(url).startsWith("http://dummy-cloudfront"),
+                () -> assertThat(url).startsWith(cloudFrontEndpoint),
                 () -> assertThat(key).startsWith("test/"),
                 () -> assertThat(key).endsWith(".png")
         );
