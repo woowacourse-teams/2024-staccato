@@ -14,15 +14,14 @@ import com.staccato.image.service.dto.DeletionResult;
 public class FakeS3Service implements CloudStorageService {
 
     private final Set<String> storedKeys = new HashSet<>();
-    private final String endPoint;
-    private final String cloudFrontEndPoint;
+    private final S3UrlResolver s3UrlResolver;
 
     public FakeS3Service(
+            @Value("${cloud.aws.s3.bucket:dummy-bucket}") String bucket,
             @Value("${cloud.aws.s3.endpoint:}") String endPoint,
-            @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint
+            @Value("${cloud.aws.cloudfront.endpoint:}") String cloudFrontEndPoint
     ) {
-        this.endPoint = endPoint;
-        this.cloudFrontEndPoint = cloudFrontEndPoint;
+        this.s3UrlResolver = new S3UrlResolver(bucket, endPoint, cloudFrontEndPoint);
     }
 
     @Override
@@ -32,28 +31,12 @@ public class FakeS3Service implements CloudStorageService {
 
     @Override
     public String getUrl(String keyName) {
-        String base = "http://fake-s3";
-        if (hasText(cloudFrontEndPoint)) {
-            base = cloudFrontEndPoint;
-        } else if (hasText(endPoint)) {
-            base = endPoint;
-        }
-
-        if (base.endsWith("/")) {
-            return base + keyName;
-        }
-        return base + "/" + keyName;
+        return s3UrlResolver.toPublicUrl(keyName);
     }
 
     @Override
     public String extractKeyFromUrl(String url) {
-        if (hasText(cloudFrontEndPoint)) {
-            return url.replace(cloudFrontEndPoint + "/", "");
-        }
-        if (hasText(endPoint)) {
-            return url.replace(endPoint + "/", "");
-        }
-        return url;
+        return s3UrlResolver.extractKey(url);
     }
 
     @Override
@@ -62,9 +45,5 @@ public class FakeS3Service implements CloudStorageService {
         storedKeys.removeIf(key -> !usedKeys.contains(key));
         int deleted = before - storedKeys.size();
         return new DeletionResult(deleted, 0);
-    }
-
-    private static boolean hasText(String value) {
-        return value != null && !value.isBlank();
     }
 }

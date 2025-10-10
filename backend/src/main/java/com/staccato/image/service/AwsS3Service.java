@@ -19,7 +19,6 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Delete;
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectsResponse;
-import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
@@ -35,8 +34,7 @@ public class AwsS3Service implements CloudStorageService {
 
     private final S3Client s3Client;
     private final String bucketName;
-    private final String endPoint;
-    private final String cloudFrontEndPoint;
+    private final S3UrlResolver s3UrlResolver;
 
     public AwsS3Service(
             S3Client s3Client,
@@ -46,8 +44,7 @@ public class AwsS3Service implements CloudStorageService {
     ) {
         this.s3Client = s3Client;
         this.bucketName = bucketName;
-        this.endPoint = endPoint;
-        this.cloudFrontEndPoint = cloudFrontEndPoint;
+        this.s3UrlResolver = new S3UrlResolver(bucketName, endPoint, cloudFrontEndPoint);
     }
 
     @Override
@@ -63,47 +60,12 @@ public class AwsS3Service implements CloudStorageService {
 
     @Override
     public String getUrl(String keyName) {
-        String url = s3Client.utilities()
-                .getUrl(GetUrlRequest.builder().bucket(bucketName).key(keyName).build())
-                .toString();
-
-        if (hasText(endPoint) && hasText(cloudFrontEndPoint)) {
-            return url.replace(endPoint, cloudFrontEndPoint);
-        }
-        return url;
+        return s3UrlResolver.toPublicUrl(keyName);
     }
 
     @Override
     public String extractKeyFromUrl(String url) {
-        String result = url;
-
-        if (hasText(cloudFrontEndPoint)) {
-            result = stripPrefix(result, normalize(cloudFrontEndPoint));
-        }
-        if (hasText(endPoint)) {
-            result = stripPrefix(result, normalize(endPoint));
-        }
-
-        result = result.replaceFirst("^/+", "");
-
-        String bucketPrefix = bucketName + "/";
-        if (result.startsWith(bucketPrefix)) {
-            result = result.substring(bucketPrefix.length());
-        }
-
-        return result;
-    }
-
-    private boolean hasText(String value) {
-        return value != null && !value.isBlank();
-    }
-
-    private static String normalize(String base) {
-        return base.endsWith("/") ? base : base + "/";
-    }
-
-    private static String stripPrefix(String text, String prefix) {
-        return text.startsWith(prefix) ? text.substring(prefix.length()) : text;
+        return s3UrlResolver.extractKey(url);
     }
 
     @Override
