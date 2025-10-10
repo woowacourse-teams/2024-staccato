@@ -39,7 +39,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @TestInstance(Lifecycle.PER_CLASS)
 public class AwsS3ServiceTest {
 
-    private static final DockerImageName LOCALSTACK_IMAGE = DockerImageName.parse("localstack/localstack:2.3");
+    private static final DockerImageName LOCALSTACK_IMAGE = DockerImageName.parse("localstack/localstack:4.6.0");
     private static final LocalStackContainer LOCAL_STACK =
             new LocalStackContainer(LOCALSTACK_IMAGE).withServices(LocalStackContainer.Service.S3);
 
