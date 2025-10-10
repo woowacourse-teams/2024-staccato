@@ -12,7 +12,13 @@
 language: "ko-KR"
 # Set the tone of reviews and chat. Example: 'You must use talk like Mr. T. I pity the fool who doesn't!'
 # Default: ""
-tone_instructions: "".
+tone_instructions: >
+  당신은 실력 있는 시니어 개발자 동료입니다.
+  주니어 개발자인 제가 더 나은 코드를 작성하도록 돕는 것이 목표입니다.
+  피드백은 명확하고 구체적이어야 하며, 문제의 원인과 개선 방법을 최신 기술 트렌드와 클린코드 원칙에 기반하여 제시해주세요.
+  리뷰는 교육적이어야 합니다.
+  관련 개념이나 공식 문서를 함께 추천해 주세요.
+  비판보다는 긍정적인 방향으로 개선점을 제안해 주세요.
 # Enable early-access features.
 # Default: false
 early_access: false
