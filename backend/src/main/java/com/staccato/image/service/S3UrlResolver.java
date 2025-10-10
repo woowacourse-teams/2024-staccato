@@ -40,29 +40,51 @@ public final class S3UrlResolver {
     public String extractKey(String urlOrPath) {
         String result = urlOrPath;
 
+        result = removeBaseEndpoints(result);
+        result = stripQueryAndFragment(result);
+        result = extractPathIfUrl(result);
+        result = result.replaceFirst("^/+", "");
+        result = removeBucketPrefix(result);
+
+        return result;
+    }
+
+    private String removeBaseEndpoints(String s) {
+        String result = s;
         if (hasText(cloudFrontEndPoint)) {
             result = stripPrefix(result, normalize(cloudFrontEndPoint));
         }
         if (hasText(endPoint)) {
             result = stripPrefix(result, normalize(endPoint));
         }
+        return result;
+    }
 
-        if (looksLikeUrl(result)) {
+    private String stripQueryAndFragment(String s) {
+        int queryIdx = s.indexOf('?');
+        int fragmentIdx = s.indexOf('#');
+        int cutIdx = (queryIdx == -1) ? fragmentIdx
+                : (fragmentIdx == -1 ? queryIdx : Math.min(queryIdx, fragmentIdx));
+        return (cutIdx != -1) ? s.substring(0, cutIdx) : s;
+    }
+
+    private String extractPathIfUrl(String s) {
+        if (looksLikeUrl(s)) {
             try {
-                String path = URI.create(result).getPath();
-                result = path != null ? path : result;
+                String path = URI.create(s).getPath();
+                return path != null ? path : s;
             } catch (IllegalArgumentException ignore) {
             }
         }
+        return s;
+    }
 
-        result = result.replaceFirst("^/+", "");
-
+    private String removeBucketPrefix(String s) {
         String bucketPrefix = bucketName + "/";
-        if (hasText(bucketName) && result.startsWith(bucketPrefix)) {
-            result = result.substring(bucketPrefix.length());
+        if (hasText(bucketName) && s.startsWith(bucketPrefix)) {
+            return s.substring(bucketPrefix.length());
         }
-
-        return result;
+        return s;
     }
 
     private static boolean hasText(String s) {
