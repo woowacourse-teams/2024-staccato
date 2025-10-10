@@ -33,13 +33,15 @@ public class S3Config {
     @Profile("test")
     public S3Client localstackClient(
             @Value("${cloud.aws.s3.endpoint}") String endpoint,
-            @Value("${cloud.aws.region}") String region
+            @Value("${cloud.aws.region}") String region,
+            @Value("${cloud.aws.access-key}") String accessKey,
+            @Value("${cloud.aws.secret-access-key}") String secretKey
     ) {
         return S3Client.builder()
                 .endpointOverride(URI.create(endpoint))
                 .region(Region.of(region))
                 .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test", "test")))
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
                 .build();
     }
 }
