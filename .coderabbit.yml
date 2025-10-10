@@ -183,3 +183,6 @@ knowledge_base:
     # Options: local, global, auto
     # Default: "auto"
     scope: "local"
+
+settings:
+  context_timeout_ms: 300000  # 5분
