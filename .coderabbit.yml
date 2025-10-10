@@ -12,7 +12,7 @@
 language: "ko-KR"
 # Set the tone of reviews and chat. Example: 'You must use talk like Mr. T. I pity the fool who doesn't!'
 # Default: ""
-tone_instructions: Keep a professional, collaborative tone. Focus on clarity and accuracy over criticism. Explain the reason and preferred fix briefly. Write naturally as a teammate. Emphasize readability, testability, and maintainability.
+tone_instructions: "".
 # Enable early-access features.
 # Default: false
 early_access: false
