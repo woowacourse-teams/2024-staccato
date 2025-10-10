@@ -1,10 +1,8 @@
 package com.staccato.image.service;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +15,8 @@ public class FakeS3Service implements CloudStorageService {
     private final Set<String> storedKeys = ConcurrentHashMap.newKeySet();
     private final S3UrlResolver s3UrlResolver;
 
-    public FakeS3Service(
-            @Value("${cloud.aws.s3.bucket:dummy-bucket}") String bucket,
-            @Value("${cloud.aws.s3.endpoint:}") String endPoint,
-            @Value("${cloud.aws.cloudfront.endpoint:}") String cloudFrontEndPoint
-    ) {
-        this.s3UrlResolver = new S3UrlResolver(bucket, endPoint, cloudFrontEndPoint);
+    public FakeS3Service(S3UrlResolver s3UrlResolver) {
+        this.s3UrlResolver = s3UrlResolver;
     }
 
     @Override

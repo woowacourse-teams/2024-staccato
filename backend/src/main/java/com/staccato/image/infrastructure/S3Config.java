@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.staccato.image.service.S3UrlResolver;
+
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -43,5 +45,14 @@ public class S3Config {
                 .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
                 .build();
+    }
+
+    @Bean
+    public S3UrlResolver s3UrlResolver(
+            @Value("${cloud.aws.s3.bucket}") String bucket,
+            @Value("${cloud.aws.s3.endpoint}") String endpoint,
+            @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint
+    ) {
+        return new S3UrlResolver(bucket, endpoint, cloudFrontEndPoint);
     }
 }

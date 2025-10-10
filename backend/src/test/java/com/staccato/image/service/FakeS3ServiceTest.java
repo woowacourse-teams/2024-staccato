@@ -5,19 +5,27 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Set;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.staccato.image.service.dto.DeletionResult;
+import com.sun.java.accessibility.util.EventID;
 
 class FakeS3ServiceTest {
+
+    private FakeS3Service fakeS3Service;
+
+    @BeforeEach
+    void setup() {
+        S3UrlResolver resolver = new S3UrlResolver("dummy-bucket", "", "https://cdn.example.com");
+        fakeS3Service = new FakeS3Service(resolver);
+    }
 
     @Test
     @DisplayName("putS3Object -> getUrl -> extractKeyFromUrl 흐름이 정상 동작한다")
     void putAndGetAndExtract() {
         // given
-        FakeS3Service fakeS3Service = new FakeS3Service(
-                "dummy-bucket", "", "https://cdn.example.com");
         String key = "images/hello.png";
 
         // when
@@ -36,13 +44,12 @@ class FakeS3ServiceTest {
     @DisplayName("deleteUnusedObjects는 usedKeys에 없는 객체만 삭제한다")
     void deleteUnusedObjects() {
         // given
-        FakeS3Service svc = new FakeS3Service("dummy-bucket", "", "https://cdn.example.com");
-        svc.putS3Object("images/k1.jpg", "image/jpeg", new byte[]{});
-        svc.putS3Object("images/k2.jpg", "image/jpeg", new byte[]{});
-        svc.putS3Object("images/k3.jpg", "image/jpeg", new byte[]{});
+        fakeS3Service.putS3Object("images/k1.jpg", "image/jpeg", new byte[]{});
+        fakeS3Service.putS3Object("images/k2.jpg", "image/jpeg", new byte[]{});
+        fakeS3Service.putS3Object("images/k3.jpg", "image/jpeg", new byte[]{});
 
         // when
-        DeletionResult result = svc.deleteUnusedObjects(Set.of("images/k1.jpg"));
+        DeletionResult result = fakeS3Service.deleteUnusedObjects(Set.of("images/k1.jpg"));
 
         // then
         assertAll(

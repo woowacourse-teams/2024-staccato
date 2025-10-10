@@ -38,13 +38,12 @@ public class AwsS3Service implements CloudStorageService {
 
     public AwsS3Service(
             S3Client s3Client,
-            @Value("${cloud.aws.s3.bucket}") String bucketName,
-            @Value("${cloud.aws.s3.endpoint}") String endPoint,
-            @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint
+            S3UrlResolver s3UrlResolver,
+            @Value("${cloud.aws.s3.bucket}") String bucketName
     ) {
         this.s3Client = s3Client;
+        this.s3UrlResolver = s3UrlResolver;
         this.bucketName = bucketName;
-        this.s3UrlResolver = new S3UrlResolver(bucketName, endPoint, cloudFrontEndPoint);
     }
 
     @Override
