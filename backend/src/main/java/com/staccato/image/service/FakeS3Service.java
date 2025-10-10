@@ -2,6 +2,7 @@ package com.staccato.image.service;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -13,7 +14,7 @@ import com.staccato.image.service.dto.DeletionResult;
 @Profile("local")
 public class FakeS3Service implements CloudStorageService {
 
-    private final Set<String> storedKeys = new HashSet<>();
+    private final Set<String> storedKeys = ConcurrentHashMap.newKeySet();
     private final S3UrlResolver s3UrlResolver;
 
     public FakeS3Service(
