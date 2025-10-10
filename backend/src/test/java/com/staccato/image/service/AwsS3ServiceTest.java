@@ -119,8 +119,6 @@ public class AwsS3ServiceTest {
         // when
         DeletionResult result = awsS3Service.deleteUnusedObjects(Set.of("k1"));
 
-        System.out.println(result);
-
         // then
         assertAll(
                 () -> assertThat(result.successCount()).isEqualTo(2),
