@@ -34,7 +34,7 @@ public class ImageServiceTest extends ServiceSliceTest {
     @Autowired
     private ImageService imageService;
     @Autowired
-    private CloudStorageService cloudStorageService;
+    private CloudStorageClient cloudStorageClient;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -57,7 +57,7 @@ public class ImageServiceTest extends ServiceSliceTest {
 
         // then
         String url = response.imageUrl();
-        String key = cloudStorageService.extractKeyFromUrl(url);
+        String key = cloudStorageClient.extractKeyFromUrl(url);
 
         assertAll(
                 () -> assertThat(url).startsWith(cloudFrontEndpoint),
@@ -81,11 +81,11 @@ public class ImageServiceTest extends ServiceSliceTest {
                         cloudFrontEndpoint + "/images/staccato1-2.jpg"))
                 .buildAndSave(staccatoRepository);
 
-        cloudStorageService.putS3Object("images/category.jpg", "image/jpeg", new byte[]{});
-        cloudStorageService.putS3Object("images/category2.jpg", "image/jpeg", new byte[]{});
-        cloudStorageService.putS3Object("images/staccato1-1.jpg", "image/jpeg", new byte[]{});
-        cloudStorageService.putS3Object("images/staccato1-2.jpg", "image/jpeg", new byte[]{});
-        cloudStorageService.putS3Object("images/staccato1-4.jpg", "image/jpeg", new byte[]{});
+        cloudStorageClient.putS3Object("images/category.jpg", "image/jpeg", new byte[]{});
+        cloudStorageClient.putS3Object("images/category2.jpg", "image/jpeg", new byte[]{});
+        cloudStorageClient.putS3Object("images/staccato1-1.jpg", "image/jpeg", new byte[]{});
+        cloudStorageClient.putS3Object("images/staccato1-2.jpg", "image/jpeg", new byte[]{});
+        cloudStorageClient.putS3Object("images/staccato1-4.jpg", "image/jpeg", new byte[]{});
 
         // when
         DeletionResult deleted = imageService.deleteUnusedImages();

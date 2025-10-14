@@ -28,15 +28,15 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 @Service
 @Profile({"dev", "prod", "test"})
-public class AwsS3Service implements CloudStorageService {
-    private static final Logger log = LoggerFactory.getLogger(AwsS3Service.class);
+public class AwsS3Client implements CloudStorageClient {
+    private static final Logger log = LoggerFactory.getLogger(AwsS3Client.class);
     private static final int S3_DELETE_BATCH_LIMIT = 1000;
 
     private final S3Client s3Client;
     private final String bucketName;
     private final S3UrlResolver s3UrlResolver;
 
-    public AwsS3Service(
+    public AwsS3Client(
             S3Client s3Client,
             S3UrlResolver s3UrlResolver,
             @Value("${cloud.aws.s3.bucket}") String bucketName

@@ -33,7 +33,7 @@ public class ImageService {
 
     @Value("${image.folder.name}")
     private String imageFolderName;
-    private final CloudStorageService cloudStorageService;
+    private final CloudStorageClient cloudStorageClient;
     private final StaccatoImageRepository staccatoImageRepository;
     private final CategoryRepository categoryRepository;
 
@@ -44,8 +44,8 @@ public class ImageService {
         byte[] imageBytes = getImageBytes(image);
 
         try {
-            cloudStorageService.putS3Object(key, contentType, imageBytes);
-            String imageUrl = cloudStorageService.getUrl(key);
+            cloudStorageClient.putS3Object(key, contentType, imageBytes);
+            String imageUrl = cloudStorageClient.getUrl(key);
             log.info("Image uploaded successfully: {}", imageUrl);
             return new ImageUrlResponse(imageUrl);
         } catch (Exception e) {
@@ -74,7 +74,7 @@ public class ImageService {
     public DeletionResult deleteUnusedImages() {
         Set<String> allImageUrls = extractAllImageUrls();
         try {
-            return cloudStorageService.deleteUnusedObjects(allImageUrls);
+            return cloudStorageClient.deleteUnusedObjects(allImageUrls);
         } catch (Exception e) {
             throw new RuntimeException("사용하지 않는 이미지 삭제 중 오류 발생", e);
         }
@@ -85,7 +85,7 @@ public class ImageService {
              Stream<String> staccatoUrls = staccatoImageRepository.findAllImageUrls()) {
             List<String> allUrls = Stream.concat(categoryUrls, staccatoUrls).toList();
             return allUrls.stream()
-                    .map(cloudStorageService::extractKeyFromUrl)
+                    .map(cloudStorageClient::extractKeyFromUrl)
                     .collect(Collectors.toSet());
         } catch (Exception e) {
             throw new RuntimeException("사용 이미지 키 추출 중 오류 발생", e);

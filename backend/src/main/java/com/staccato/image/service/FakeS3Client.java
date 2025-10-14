@@ -10,12 +10,12 @@ import com.staccato.image.service.dto.DeletionResult;
 
 @Service
 @Profile("local")
-public class FakeS3Service implements CloudStorageService {
+public class FakeS3Client implements CloudStorageClient {
 
     private final Set<String> storedKeys = ConcurrentHashMap.newKeySet();
     private final S3UrlResolver s3UrlResolver;
 
-    public FakeS3Service(S3UrlResolver s3UrlResolver) {
+    public FakeS3Client(S3UrlResolver s3UrlResolver) {
         this.s3UrlResolver = s3UrlResolver;
     }
 

@@ -37,7 +37,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
-public class AwsS3ServiceTest {
+public class AwsS3ClientTest {
 
     private static final DockerImageName LOCALSTACK_IMAGE = DockerImageName.parse("localstack/localstack:4.6.0");
     private static final LocalStackContainer LOCAL_STACK =
@@ -59,14 +59,14 @@ public class AwsS3ServiceTest {
     }
 
     @Configuration
-    @Import({S3Config.class, AwsS3Service.class})
+    @Import({S3Config.class, AwsS3Client.class})
     static class TestConfig {
     }
 
     @Autowired
     private S3Client s3Client;
     @Autowired
-    private AwsS3Service awsS3Service;
+    private AwsS3Client awsS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -96,9 +96,9 @@ public class AwsS3ServiceTest {
         byte[] body = new byte[]{1, 2, 3};
 
         // when
-        awsS3Service.putS3Object(key, "image/png", body);
-        String url = awsS3Service.getUrl(key);
-        String extracted = awsS3Service.extractKeyFromUrl(url);
+        awsS3Client.putS3Object(key, "image/png", body);
+        String url = awsS3Client.getUrl(key);
+        String extracted = awsS3Client.extractKeyFromUrl(url);
 
         // then
         assertAll(
@@ -117,7 +117,7 @@ public class AwsS3ServiceTest {
         put("k3");
 
         // when
-        DeletionResult result = awsS3Service.deleteUnusedObjects(Set.of("k1"));
+        DeletionResult result = awsS3Client.deleteUnusedObjects(Set.of("k1"));
 
         // then
         assertAll(

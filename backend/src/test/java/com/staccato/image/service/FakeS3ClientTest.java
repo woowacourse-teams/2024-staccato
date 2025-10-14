@@ -10,16 +10,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.staccato.image.service.dto.DeletionResult;
-import com.sun.java.accessibility.util.EventID;
 
-class FakeS3ServiceTest {
+class FakeS3ClientTest {
 
-    private FakeS3Service fakeS3Service;
+    private FakeS3Client fakeS3Service;
 
     @BeforeEach
     void setup() {
         S3UrlResolver resolver = new S3UrlResolver("dummy-bucket", "", "https://cdn.example.com");
-        fakeS3Service = new FakeS3Service(resolver);
+        fakeS3Service = new FakeS3Client(resolver);
     }
 
     @Test
