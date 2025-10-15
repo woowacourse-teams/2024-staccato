@@ -74,6 +74,13 @@ reviews:
     # ===============================
     # Security tools
     # ===============================
+    # GitHub Checks integration configuration.
+    # Default: {}
+    github-checks:
+      # Time in milliseconds to wait for all GitHub Checks to conclude. Default 90 seconds, max 15 minutes (900000ms).
+      # Default: 90000
+      # 5 minutes: 300000
+      timeout_ms: 300000
     # Detects hardcoded secrets like API keys, passwords, and tokens.
     # Helps prevent sensitive information leaks in commits.
     gitleaks:
@@ -189,6 +196,3 @@ knowledge_base:
     # Options: local, global, auto
     # Default: "auto"
     scope: "local"
-
-settings:
-  context_timeout_ms: 600000  # 10분
