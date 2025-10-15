@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 
 import com.staccato.image.service.dto.DeletionResult;
@@ -27,7 +27,7 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 @Service
-@Profile({"dev", "prod", "test"})
+@ConditionalOnExpression("'${cloud.storage.mode}'=='aws' or '${cloud.storage.mode}'=='localstack'")
 public class AwsS3Client implements CloudStorageClient {
     private static final Logger log = LoggerFactory.getLogger(AwsS3Client.class);
     private static final int S3_DELETE_BATCH_LIMIT = 1000;

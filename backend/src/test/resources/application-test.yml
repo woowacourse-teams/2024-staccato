@@ -31,6 +31,8 @@ security:
     token:
       secret-key: mock
 cloud:
+  storage:
+    mode: localstack
   aws:
     region: ap-northeast-2
     access-key: test

@@ -47,6 +47,8 @@ security:
     token:
       secret-key: ENC(JvrdRNom3HUASeKu0KZWarAyIvp9dYgCa8WdtHTONUYNTHFiiOXLx6iTE+ePBXBFJ8wiuEE/xi4wLAXsq8O8OlsCiieO3I8LQPNJgEVo8y0=)
 cloud:
+  storage:
+    mode: aws
   aws:
     access-key: ENC(esOew5zDP7xeUY4rqpHQIWRJvnyh4qC9HHMzFI9Bek4gu65ZxgQOaGT40tXaJ/kLBsPAXM4NIYF7g64+67gfHg==)
     secret-access-key: ENC(osZssrZ+Z1Mraw1D8Rd0tXOk0VfMj/8uaGeRrH7/pF+PMJQQga6EBCp14HbGE/zwsSKaZ4xyI5tBy6hwSCJFqKPzzgTN4/Y/AQX3bFp6k90=)

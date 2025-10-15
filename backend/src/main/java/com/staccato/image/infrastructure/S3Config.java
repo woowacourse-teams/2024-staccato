@@ -3,9 +3,9 @@ package com.staccato.image.infrastructure;
 import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import com.staccato.image.service.S3UrlResolver;
 
@@ -19,7 +19,7 @@ import software.amazon.awssdk.services.s3.S3Configuration;
 public class S3Config {
 
     @Bean
-    @Profile({"dev", "prod"})
+    @ConditionalOnProperty(name = "cloud.storage.mode", havingValue = "aws", matchIfMissing = true)
     public S3Client awsClient(
             @Value("${cloud.aws.access-key}") String accessKey,
             @Value("${cloud.aws.secret-access-key}") String secretKey,
@@ -32,7 +32,7 @@ public class S3Config {
     }
 
     @Bean
-    @Profile("test")
+    @ConditionalOnProperty(name = "cloud.storage.mode", havingValue = "localstack")
     public S3Client localstackClient(
             @Value("${cloud.aws.s3.endpoint}") String endpoint,
             @Value("${cloud.aws.region}") String region,

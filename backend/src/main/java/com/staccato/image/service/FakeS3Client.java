@@ -3,13 +3,13 @@ package com.staccato.image.service;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import com.staccato.image.service.dto.DeletionResult;
 
 @Service
-@Profile("local")
+@ConditionalOnProperty(name = "cloud.storage.mode", havingValue = "fake")
 public class FakeS3Client implements CloudStorageClient {
 
     private final Set<String> storedKeys = ConcurrentHashMap.newKeySet();
