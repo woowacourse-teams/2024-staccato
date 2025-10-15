@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Profile({"prod", "dev"})
-public class FcmPushService implements PushService {
+public class FcmPushClient implements PushClient {
     private static final int FCM_MULTICAST_LIMIT = 500;
     private static final String SEND_SUCCESS_LOG = "[FCM][전송 완료] ";
     private static final String SEND_FAIL_LOG = "[FCM][전송 실패] ";

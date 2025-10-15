@@ -26,14 +26,14 @@ import com.staccato.notification.service.dto.message.PushMessage;
 import com.staccato.notification.service.dto.message.ReceiveInvitationMessage;
 
 @ExtendWith(MockitoExtension.class)
-public class FcmPushServiceTest {
+public class FcmPushClientTest {
 
     @Mock
     private FirebaseMessaging firebaseMessaging;
     @Mock
     private ApiFuture<BatchResponse> future;
     @InjectMocks
-    private FcmPushService fcmPushService;
+    private FcmPushClient fcmPushClient;
 
     @DisplayName("정상적인 메시지를 전송하면 FCM을 호출한다.")
     @Test
@@ -43,7 +43,7 @@ public class FcmPushServiceTest {
         when(firebaseMessaging.sendEachForMulticastAsync(any(MulticastMessage.class))).thenReturn(future);
 
         // when
-        fcmPushService.sendPush(tokens, dummyPushMessage());
+        fcmPushClient.sendPush(tokens, dummyPushMessage());
 
         // then
         verify(firebaseMessaging).sendEachForMulticastAsync(any(MulticastMessage.class));
@@ -53,7 +53,7 @@ public class FcmPushServiceTest {
     @Test
     void failSendPush() {
         // given
-        fcmPushService.sendPush(List.of(), dummyPushMessage());
+        fcmPushClient.sendPush(List.of(), dummyPushMessage());
 
         // when & then
         verifyNoInteractions(firebaseMessaging);

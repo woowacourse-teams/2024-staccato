@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @Profile({"local", "test"})
-public class LogPushService implements PushService {
+public class FakePushClient implements PushClient {
 
     @Override
     public void sendPush(List<String> tokens, PushMessage pushMessage) {

@@ -4,6 +4,6 @@ import java.util.List;
 
 import com.staccato.notification.service.dto.message.PushMessage;
 
-public interface PushService {
+public interface PushClient {
     void sendPush(List<String> tokens, PushMessage pushMessage);
 }
