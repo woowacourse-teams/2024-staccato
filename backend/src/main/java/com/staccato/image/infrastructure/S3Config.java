@@ -20,7 +20,7 @@ public class S3Config {
 
     @Bean
     @ConditionalOnProperty(name = "cloud.storage.mode", havingValue = "aws", matchIfMissing = true)
-    public S3Client awsClient(
+    public S3Client awsS3(
             @Value("${cloud.aws.access-key}") String accessKey,
             @Value("${cloud.aws.secret-access-key}") String secretKey,
             @Value("${cloud.aws.region}") String region
@@ -33,7 +33,7 @@ public class S3Config {
 
     @Bean
     @ConditionalOnProperty(name = "cloud.storage.mode", havingValue = "localstack")
-    public S3Client localstackClient(
+    public S3Client localstackS3(
             @Value("${cloud.aws.s3.endpoint}") String endpoint,
             @Value("${cloud.aws.region}") String region,
             @Value("${cloud.aws.access-key}") String accessKey,
