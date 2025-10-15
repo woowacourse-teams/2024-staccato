@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "push.mode", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "push.enabled", havingValue = "true", matchIfMissing = true)
 public class FcmPushClient implements PushClient {
     private static final int FCM_MULTICAST_LIMIT = 500;
     private static final String SEND_SUCCESS_LOG = "[FCM][전송 완료] ";

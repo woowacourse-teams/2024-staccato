@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Trace
 @Slf4j
 @Service
-@ConditionalOnProperty(name = "push.mode", havingValue = "false")
+@ConditionalOnProperty(name = "push.enabled", havingValue = "false")
 public class FakePushClient implements PushClient {
 
     @Override
