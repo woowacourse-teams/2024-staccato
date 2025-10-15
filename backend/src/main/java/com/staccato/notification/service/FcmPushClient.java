@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import com.google.api.core.ApiFuture;
@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Profile({"prod", "dev"})
+@ConditionalOnProperty(name = "push.mode", havingValue = "true", matchIfMissing = true)
 public class FcmPushClient implements PushClient {
     private static final int FCM_MULTICAST_LIMIT = 500;
     private static final String SEND_SUCCESS_LOG = "[FCM][전송 완료] ";
