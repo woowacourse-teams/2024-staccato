@@ -11,7 +11,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.on.staccato.benchmark.trace
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
 
@@ -19,25 +18,23 @@ private const val PROFILE_IMAGE_SIZE = 25
 
 @Composable
 fun ParticipantItem(
-    profileImageUrl: String? = null,
     modifier: Modifier = Modifier,
+    profileImageUrl: String? = null,
 ) {
-    trace("ParticipantItem") {
-        DefaultAsyncImage(
-            modifier =
-                modifier.size(PROFILE_IMAGE_SIZE.dp)
-                    .shadow(2.dp, shape = CircleShape)
-                    .background(Color.White, shape = CircleShape)
-                    .padding(1.dp)
-                    .clip(CircleShape)
-                    .background(Color.White),
-            imageSizeDp = PROFILE_IMAGE_SIZE.dp,
-            url = profileImageUrl,
-            placeHolder = R.drawable.icon_member,
-            errorImageRes = R.drawable.icon_member,
-            contentDescription = R.string.mates_profile_image_description,
-        )
-    }
+    DefaultAsyncImage(
+        modifier =
+            modifier.size(PROFILE_IMAGE_SIZE.dp)
+                .shadow(2.dp, shape = CircleShape)
+                .background(Color.White, shape = CircleShape)
+                .padding(1.dp)
+                .clip(CircleShape)
+                .background(Color.White),
+        imageSizeDp = PROFILE_IMAGE_SIZE.dp,
+        url = profileImageUrl,
+        placeHolder = R.drawable.icon_member,
+        errorImageRes = R.drawable.icon_member,
+        contentDescription = R.string.mates_profile_image_description,
+    )
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
