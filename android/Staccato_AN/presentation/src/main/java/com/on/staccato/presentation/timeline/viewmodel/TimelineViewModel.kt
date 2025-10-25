@@ -14,9 +14,9 @@ import com.on.staccato.presentation.common.MessageEvent
 import com.on.staccato.presentation.common.event.MutableSingleLiveData
 import com.on.staccato.presentation.common.event.SingleLiveData
 import com.on.staccato.presentation.mapper.toTimelineUiModel
+import com.on.staccato.presentation.timeline.model.CategoryUiModel
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
-import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,8 +39,8 @@ class TimelineViewModel
         val filterType: LiveData<FilterType?>
             get() = _filterType
 
-        private val _timeline = MutableStateFlow<List<TimelineUiModel>>(emptyList())
-        val timeline: StateFlow<List<TimelineUiModel>> = _timeline.asStateFlow()
+        private val _timeline = MutableStateFlow<List<CategoryUiModel>>(emptyList())
+        val timeline: StateFlow<List<CategoryUiModel>> = _timeline.asStateFlow()
 
         private val _isTimelineLoading = MutableLiveData(false)
         val isTimelineLoading: LiveData<Boolean>

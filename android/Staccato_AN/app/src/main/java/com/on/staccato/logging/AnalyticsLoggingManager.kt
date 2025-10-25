@@ -1,11 +1,15 @@
-package com.on.staccato.util.logging
+package com.on.staccato.logging
 
 import android.os.Build
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.on.staccato.util.logging.AnalyticsEvent
+import com.on.staccato.util.logging.LoggingManager
+import com.on.staccato.util.logging.Param
 import com.on.staccato.util.logging.Param.Companion.KEY_SDK_VERSION
+import com.on.staccato.util.logging.putInto
 
 class AnalyticsLoggingManager : LoggingManager {
     private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
@@ -26,18 +30,8 @@ class AnalyticsLoggingManager : LoggingManager {
         val event = AnalyticsEvent.of(name, *params)
         val param =
             Bundle().apply {
-                event.params.forEach {
-                    when (it.value) {
-                        is String -> putString(it.key, it.value)
-                        is Int -> putInt(it.key, it.value)
-                        is Long -> putLong(it.key, it.value)
-                        is Double -> putDouble(it.key, it.value)
-                        is Boolean -> putBoolean(it.key, it.value)
-                        is Throwable -> {
-                            putString(it.key, "cause: ${it.value.cause}")
-                            putString(it.key, "message: ${it.value.message}")
-                        }
-                    }
+                event.params.forEach { param ->
+                    param.putInto(this)
                 }
             }
 

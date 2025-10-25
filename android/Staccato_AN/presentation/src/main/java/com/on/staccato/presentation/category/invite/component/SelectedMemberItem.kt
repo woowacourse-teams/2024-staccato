@@ -28,6 +28,8 @@ import com.on.staccato.presentation.component.clickableWithoutRipple
 import com.on.staccato.theme.Body5
 import com.on.staccato.theme.Gray2
 
+private const val PROFILE_IMAGE_SIZE = 40
+
 @Composable
 fun SelectedMemberItem(
     item: Member,
@@ -43,12 +45,12 @@ fun SelectedMemberItem(
         Box(modifier = Modifier.size(44.dp)) {
             DefaultAsyncImage(
                 url = item.memberImage,
-                bitmapPixelSize = 150,
+                imageSizeDp = PROFILE_IMAGE_SIZE.dp,
                 placeHolder = R.drawable.icon_member,
                 errorImageRes = R.drawable.icon_member,
                 modifier =
                     Modifier
-                        .size(40.dp)
+                        .size(PROFILE_IMAGE_SIZE.dp)
                         .border(
                             width = 0.3.dp,
                             color = Gray2,

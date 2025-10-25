@@ -18,7 +18,7 @@ fun ProfileImage(
 ) {
     DefaultAsyncImage(
         modifier = modifier.clip(shape = CircleShape),
-        bitmapPixelSize = 150,
+        imageSizeDp = 16.dp,
         url = url,
         placeHolder = R.drawable.icon_member,
         errorImageRes = R.drawable.icon_member,

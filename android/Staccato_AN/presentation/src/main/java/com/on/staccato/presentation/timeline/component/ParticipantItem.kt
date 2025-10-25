@@ -1,7 +1,6 @@
 package com.on.staccato.presentation.timeline.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -10,31 +9,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
-import com.on.staccato.theme.White
+
+private const val PROFILE_IMAGE_SIZE = 25
 
 @Composable
-fun ParticipantItem(profileImageUrl: String? = null) {
-    Box(
+fun ParticipantItem(
+    modifier: Modifier = Modifier,
+    profileImageUrl: String? = null,
+) {
+    DefaultAsyncImage(
         modifier =
-            Modifier.size(25.dp)
-                .shadow(2.dp, shape = CircleShape, clip = true)
-                .background(Color.White)
-                .padding(1.dp),
-    ) {
-        DefaultAsyncImage(
-            modifier = Modifier.clip(CircleShape),
-            bitmapPixelSize = 150,
-            url = profileImageUrl,
-            errorImageRes = R.drawable.icon_member,
-            contentDescription = R.string.mates_profile_image_description,
-            contentScale = ContentScale.Crop,
-        )
-    }
+            modifier.size(PROFILE_IMAGE_SIZE.dp)
+                .shadow(2.dp, shape = CircleShape)
+                .background(Color.White, shape = CircleShape)
+                .padding(1.dp)
+                .clip(CircleShape)
+                .background(Color.White),
+        imageSizeDp = PROFILE_IMAGE_SIZE.dp,
+        url = profileImageUrl,
+        placeHolder = R.drawable.icon_member,
+        errorImageRes = R.drawable.icon_member,
+        contentDescription = R.string.mates_profile_image_description,
+    )
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)

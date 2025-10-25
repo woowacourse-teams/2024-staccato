@@ -84,7 +84,7 @@ class TimelineFragment :
         binding.viewModel = timelineViewModel
         binding.handler = this
         binding.cvTimelineCategories.setContent {
-            TimelineScreen(sharedViewModel = sharedViewModel) {
+            CategoriesScreen(sharedViewModel = sharedViewModel) {
                 onCategoryClicked(it)
             }
         }
