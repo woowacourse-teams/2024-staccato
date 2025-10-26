@@ -35,7 +35,7 @@ class InvitationControllerTest extends ControllerTest {
     void inviteMembers() throws Exception {
         // given
         long categoryId = 1L;
-        Member member = MemberFixtures.defaultMember().build();
+        Member member = MemberFixtures.ofDefault().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         String invitationRequest = """
                 {
@@ -83,7 +83,7 @@ class InvitationControllerTest extends ControllerTest {
     void cancel() throws Exception {
         // given
         long invitationId = 1L;
-        Member member = MemberFixtures.defaultMember().build();
+        Member member = MemberFixtures.ofDefault().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
 
         // when & then
@@ -110,7 +110,7 @@ class InvitationControllerTest extends ControllerTest {
     @Test
     void readSentInvitations() throws Exception {
         // given
-        Member member = MemberFixtures.defaultMember().build();
+        Member member = MemberFixtures.ofDefault().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
 
         when(invitationService.readSentInvitations(any(Member.class)))
@@ -154,7 +154,7 @@ class InvitationControllerTest extends ControllerTest {
     void accept() throws Exception {
         // given
         long invitationId = 1L;
-        Member member = MemberFixtures.defaultMember().build();
+        Member member = MemberFixtures.ofDefault().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
 
         // when & then
@@ -182,7 +182,7 @@ class InvitationControllerTest extends ControllerTest {
     void reject() throws Exception {
         // given
         long invitationId = 1L;
-        Member member = MemberFixtures.defaultMember().build();
+        Member member = MemberFixtures.ofDefault().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
 
         // when & then
@@ -209,7 +209,7 @@ class InvitationControllerTest extends ControllerTest {
     @Test
     void readReceivedInvitations() throws Exception {
         // given
-        Member member = MemberFixtures.defaultMember().build();
+        Member member = MemberFixtures.ofDefault().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
 
         when(invitationService.readReceivedInvitations(any(Member.class)))

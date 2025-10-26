@@ -7,7 +7,7 @@ import com.staccato.notification.repository.NotificationTokenRepository;
 
 public class NotificationTokenFixtures {
 
-    public static NotificationTokenBuilder defaultNotificationToken(Member member) {
+    public static NotificationTokenBuilder ofDefault(Member member) {
         return new NotificationTokenBuilder()
                 .withToken("default-token")
                 .withMember(member)

@@ -35,7 +35,7 @@ class StaccatoTest {
     @Test
     void createStaccato() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
         LocalDateTime visitedAt = LocalDateTime.of(2024, 6, 1, 0, 0);
@@ -57,8 +57,7 @@ class StaccatoTest {
     @Test
     void createStaccatoInUndefinedDuration() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(null, null).build();
+        Category category = CategoryFixtures.ofDefault().build();
         LocalDateTime visitedAt = LocalDateTime.of(2024, 6, 1, 0, 0);
 
         // when & then
@@ -78,7 +77,7 @@ class StaccatoTest {
     @Test
     void failCreateStaccato() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
         LocalDateTime visitedAt = LocalDateTime.of(2023, 6, 1, 0, 0);
@@ -102,11 +101,10 @@ class StaccatoTest {
     @Test
     void thumbnail() {
         // given
-        Category category = CategoryFixtures.defaultCategory().build();
+        Category category = CategoryFixtures.ofDefault().build();
         String thumbnail = "https://example.com/staccatoImage1.jpg";
 
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.ofDefault(category)
                 .withStaccatoImages(List.of(thumbnail, "https://example.com/staccatoImage2.jpg")).build();
 
         // when
@@ -120,9 +118,8 @@ class StaccatoTest {
     @Test
     void noThumbnail() {
         // given
-        Category category = CategoryFixtures.defaultCategory().build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Category category = CategoryFixtures.ofDefault().build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category)
                 .withStaccatoImages(List.of()).build();
 
         // when
@@ -149,15 +146,14 @@ class StaccatoTest {
         @Test
         void updateCategoryUpdatedDateWhenStaccatoCreated() {
             // given
-            Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-            Category category = CategoryFixtures.defaultCategory()
+            Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+            Category category = CategoryFixtures.ofDefault()
                     .withHost(member)
                     .buildAndSave(categoryRepository);
             LocalDateTime beforeCreate = category.getUpdatedAt();
 
             // when
-            StaccatoFixtures.defaultStaccato()
-                    .withCategory(category).buildAndSave(staccatoRepository);
+            StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
             entityManager.flush();
             entityManager.refresh(category);
             LocalDateTime afterCreate = category.getUpdatedAt();
@@ -170,12 +166,11 @@ class StaccatoTest {
         @Test
         void updateCategoryUpdatedDateWhenStaccatoUpdated() {
             // given
-            Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-            Category category = CategoryFixtures.defaultCategory()
+            Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+            Category category = CategoryFixtures.ofDefault()
                     .withHost(member)
                     .buildAndSave(categoryRepository);
-            Staccato staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category).buildAndSave(staccatoRepository);
+            Staccato staccato = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeUpdate = category.getUpdatedAt();
 
             // when
@@ -192,12 +187,11 @@ class StaccatoTest {
         @Test
         void updateCategoryUpdatedDateWhenStaccatoDeleted() {
             // given
-            Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-            Category category = CategoryFixtures.defaultCategory()
+            Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+            Category category = CategoryFixtures.ofDefault()
                     .withHost(member)
                     .buildAndSave(categoryRepository);
-            Staccato staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category).buildAndSave(staccatoRepository);
+            Staccato staccato = StaccatoFixtures.ofDefault(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeDelete = category.getUpdatedAt();
 
             // when
@@ -215,13 +209,12 @@ class StaccatoTest {
     @Test
     void getColor() {
         // given
-        Member member = MemberFixtures.defaultMember().build();
-        Category category = CategoryFixtures.defaultCategory()
+        Member member = MemberFixtures.ofDefault().build();
+        Category category = CategoryFixtures.ofDefault()
                 .withColor(Color.PINK)
                 .withHost(member)
                 .build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category).build();
 
         // when
         Color color = staccato.getColor();
@@ -234,21 +227,19 @@ class StaccatoTest {
     @Test
     void validateCategoryChangeable() {
         // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").build();
-        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
-        Category category = CategoryFixtures.defaultCategory()
+        Member host = MemberFixtures.ofDefault().withNickname("host").build();
+        Member guest = MemberFixtures.ofDefault().withNickname("guest").build();
+        Category category = CategoryFixtures.ofDefault()
                 .withTitle("non-shared")
                 .withHost(host)
                 .build();
-        Category sharedCategory = CategoryFixtures.defaultCategory()
+        Category sharedCategory = CategoryFixtures.ofDefault()
                 .withTitle("shared")
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).build();
-        Staccato sharedStaccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(sharedCategory).build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category).build();
+        Staccato sharedStaccato = StaccatoFixtures.ofDefault(sharedCategory).build();
 
         // when & then
         assertAll(
@@ -272,15 +263,13 @@ class StaccatoTest {
 
         @BeforeEach
         void setUp() {
-            host = MemberFixtures.defaultMember().withNickname("host").build();
-            guest = MemberFixtures.defaultMember().withNickname("guest").build();
-            category = CategoryFixtures.defaultCategory()
+            host = MemberFixtures.ofDefault().withNickname("host").build();
+            guest = MemberFixtures.ofDefault().withNickname("guest").build();
+            category = CategoryFixtures.ofDefault()
                     .withHost(host)
                     .withGuests(List.of(guest))
                     .build();
-            staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category)
-                    .build();
+            staccato = StaccatoFixtures.ofDefault(category).build();
         }
 
         @DisplayName("카테고리의 HOST는 카테고리 안에 있는 스타카토의 소유자이다.")
@@ -298,7 +287,7 @@ class StaccatoTest {
         @DisplayName("카테고리의 함께하는 사람이 아니면 카테고리 안에 있는 스타카토의 소유자가 아니다.")
         @Test
         void failValidateOwnerIfMemberNotInCategory() {
-            Member other = MemberFixtures.defaultMember().withNickname("other").build();
+            Member other = MemberFixtures.ofDefault().withNickname("other").build();
             assertThatThrownBy(() -> staccato.validateOwner(other))
                     .isInstanceOf(ForbiddenException.class);
         }
@@ -308,10 +297,9 @@ class StaccatoTest {
     @Test
     void createdAndModifiedBySameWhenCreated() {
         // given
-        Member creator = MemberFixtures.defaultMember().withNickname("creator").build();
-        Category category = CategoryFixtures.defaultCategory()
+        Member creator = MemberFixtures.ofDefault().withNickname("creator").build();
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(creator)
-                .withTerm(null, null)
                 .build();
 
         // when
@@ -338,17 +326,15 @@ class StaccatoTest {
     @Test
     void createdByDoesNotChangeOnUpdate() {
         // given
-        Member creator = MemberFixtures.defaultMember().withNickname("creator").build();
-        Member updater = MemberFixtures.defaultMember().withNickname("updater").build();
-        Category category = CategoryFixtures.defaultCategory().withHost(creator).build();
+        Member creator = MemberFixtures.ofDefault().withNickname("creator").build();
+        Member updater = MemberFixtures.ofDefault().withNickname("updater").build();
+        Category category = CategoryFixtures.ofDefault().withHost(creator).build();
 
-        Staccato original = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato original = StaccatoFixtures.ofDefault(category)
                 .withCreator(creator)
                 .build();
 
-        Staccato updateData = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato updateData = StaccatoFixtures.ofDefault(category)
                 .withCreator(updater)
                 .build();
 
@@ -363,17 +349,15 @@ class StaccatoTest {
     @Test
     void modifiedByChangesOnUpdate() {
         // given
-        Member creator = MemberFixtures.defaultMember().withNickname("creator").build();
-        Member updater = MemberFixtures.defaultMember().withNickname("updater").build();
-        Category category = CategoryFixtures.defaultCategory().withHost(creator).build();
+        Member creator = MemberFixtures.ofDefault().withNickname("creator").build();
+        Member updater = MemberFixtures.ofDefault().withNickname("updater").build();
+        Category category = CategoryFixtures.ofDefault().withHost(creator).build();
 
-        Staccato original = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato original = StaccatoFixtures.ofDefault(category)
                 .withCreator(creator)
                 .build();
 
-        Staccato updateData = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato updateData = StaccatoFixtures.ofDefault(category)
                 .withCreator(updater)
                 .build();
 

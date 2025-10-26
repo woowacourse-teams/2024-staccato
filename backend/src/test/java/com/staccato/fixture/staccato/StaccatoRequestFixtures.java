@@ -8,7 +8,7 @@ import com.staccato.staccato.service.dto.request.StaccatoRequest;
 
 public class StaccatoRequestFixtures {
 
-    public static StaccatoBuilder defaultStaccatoRequest() {
+    public static StaccatoBuilder ofDefault() {
         return new StaccatoBuilder()
                 .withStaccatoTitle("staccatoTitle")
                 .withPlaceName("placeName")

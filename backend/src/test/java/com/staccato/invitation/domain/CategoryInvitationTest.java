@@ -23,9 +23,9 @@ class CategoryInvitationTest {
 
     @BeforeEach
     void init() {
-        host = MemberFixtures.defaultMember().withNickname("host").build();
-        guest = MemberFixtures.defaultMember().withNickname("guest").build();
-        category = CategoryFixtures.defaultCategory().withHost(host).build();
+        host = MemberFixtures.ofDefault().withNickname("host").build();
+        guest = MemberFixtures.ofDefault().withNickname("guest").build();
+        category = CategoryFixtures.ofDefault().withHost(host).build();
     }
 
     @DisplayName("주어진 카테고리, 초대자, 초대 대상에 대한 초대 내역(REQUESTED)를 생성한다.")

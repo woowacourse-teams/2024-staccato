@@ -43,11 +43,10 @@ public class PageControllerTest extends ControllerTest {
                 "https://image.staccato.kr/test-image3.png"
         );
 
-        Category category = CategoryFixtures.defaultCategory().build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Category category = CategoryFixtures.ofDefault().build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category)
                 .withStaccatoImages(imageUrls).build();
-        Member member = MemberFixtures.defaultMember().build();
+        Member member = MemberFixtures.ofDefault().build();
         StaccatoSharedResponse response = new StaccatoSharedResponse(LocalDateTime.now(), staccato, member, List.of());
 
         when(staccatoShareService.readSharedStaccatoByToken(token)).thenReturn(response);
@@ -67,11 +66,10 @@ public class PageControllerTest extends ControllerTest {
         String token = "test-token";
         List<String> imageUrls = List.of();
 
-        Category category = CategoryFixtures.defaultCategory().build();
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Category category = CategoryFixtures.ofDefault().build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category)
                 .withStaccatoImages(imageUrls).build();
-        Member member = MemberFixtures.defaultMember().build();
+        Member member = MemberFixtures.ofDefault().build();
         StaccatoSharedResponse response = new StaccatoSharedResponse(LocalDateTime.now(), staccato, member, List.of());
 
         when(staccatoShareService.readSharedStaccatoByToken(token)).thenReturn(response);

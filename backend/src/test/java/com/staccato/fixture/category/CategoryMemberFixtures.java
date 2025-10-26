@@ -8,7 +8,7 @@ import com.staccato.member.domain.Member;
 
 public class CategoryMemberFixtures {
 
-    public static CategoryMemberBuilder defaultCategoryMember() {
+    public static CategoryMemberBuilder ofDefault() {
         return new CategoryMemberBuilder()
                 .withRole(Role.HOST);
     }

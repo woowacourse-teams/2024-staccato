@@ -67,6 +67,16 @@ android {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-DEV"
         }
+
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            buildConfigField("String", "BASE_URL", "${localProperties["dev_base_url"]}")
+            manifestPlaceholders["appName"] = "@string/app_name_benchmark"
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
+        }
+
         release {
             buildConfigField("String", "BASE_URL", "${localProperties["base_url"]}")
             manifestPlaceholders["appName"] = "@string/app_name"

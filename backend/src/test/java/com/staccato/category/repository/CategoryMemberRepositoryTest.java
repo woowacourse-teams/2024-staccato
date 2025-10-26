@@ -35,13 +35,13 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     @Test
     void findAllByMemberId() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category1 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        Category category2 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category1 = CategoryFixtures.ofDefault().buildAndSave(categoryRepository);
+        Category category2 = CategoryFixtures.ofDefault().buildAndSave(categoryRepository);
+        CategoryMemberFixtures.ofDefault()
                 .withMember(member)
                 .withCategory(category1).buildAndSave(categoryMemberRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
+        CategoryMemberFixtures.ofDefault()
                 .withMember(member)
                 .withCategory(category2).buildAndSave(categoryMemberRepository);
 
@@ -56,13 +56,12 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     @Test
     void findAllByMemberIdAndDate() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        CategoryFixtures.defaultCategory()
-                .withTerm(null, null)
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        CategoryFixtures.ofDefault()
                 .withTitle("no-term")
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        CategoryFixtures.defaultCategory()
+        CategoryFixtures.ofDefault()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
                 .withTitle("term")
@@ -94,16 +93,16 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     @Test
     void findAllByMemberIdAndFlag() {
         // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-        CategoryFixtures.defaultCategory()
+        Member host = MemberFixtures.ofDefault().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.ofDefault().withNickname("guest").buildAndSave(memberRepository);
+        CategoryFixtures.ofDefault()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
                 .withTitle("shared")
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
-        CategoryFixtures.defaultCategory()
+        CategoryFixtures.ofDefault()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
                 .withTitle("nonShared")
@@ -133,18 +132,17 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     @Test
     void findAllByMemberIdAndDateWhenNull() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category1 = CategoryFixtures.defaultCategory()
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category1 = CategoryFixtures.ofDefault()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository);
-        Category category2 = CategoryFixtures.defaultCategory()
-                .withTerm(null, null)
+        Category category2 = CategoryFixtures.ofDefault()
                 .buildAndSave(categoryRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
+        CategoryMemberFixtures.ofDefault()
                 .withMember(member)
                 .withCategory(category1).buildAndSave(categoryMemberRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
+        CategoryMemberFixtures.ofDefault()
                 .withMember(member)
                 .withCategory(category2).buildAndSave(categoryMemberRepository);
 
@@ -159,13 +157,13 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByCategoryIdInBulk() {
         // given
-        Member member1 = MemberFixtures.defaultMember().withNickname("member1").buildAndSave(memberRepository);
-        Member member2 = MemberFixtures.defaultMember().withNickname("member2").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        CategoryMember categoryMember1 = CategoryMemberFixtures.defaultCategoryMember()
+        Member member1 = MemberFixtures.ofDefault().withNickname("member1").buildAndSave(memberRepository);
+        Member member2 = MemberFixtures.ofDefault().withNickname("member2").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault().buildAndSave(categoryRepository);
+        CategoryMember categoryMember1 = CategoryMemberFixtures.ofDefault()
                 .withMember(member1)
                 .withCategory(category).buildAndSave(categoryMemberRepository);
-        CategoryMember categoryMember2 = CategoryMemberFixtures.defaultCategoryMember()
+        CategoryMember categoryMember2 = CategoryMemberFixtures.ofDefault()
                 .withMember(member2)
                 .withCategory(category).buildAndSave(categoryMemberRepository);
 
@@ -184,13 +182,13 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     @DisplayName("카테고리 멤버는 (카테고리, 멤버) 쌍으로 유일해야 한다.")
     @Test
     void categoryMemberShouldBeUniqueByCategoryAndMember() {
-        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        CategoryMember categoryMember1 = CategoryMemberFixtures.defaultCategoryMember()
+        Category category = CategoryFixtures.ofDefault().buildAndSave(categoryRepository);
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        CategoryMember categoryMember1 = CategoryMemberFixtures.ofDefault()
                 .withCategory(category)
                 .withMember(member)
                 .build();
-        CategoryMember categoryMember2 = CategoryMemberFixtures.defaultCategoryMember()
+        CategoryMember categoryMember2 = CategoryMemberFixtures.ofDefault()
                 .withCategory(category)
                 .withMember(member)
                 .build();
@@ -208,16 +206,16 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     @Test
     void findAllMembersByCategoryId() {
         // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        Member host = MemberFixtures.ofDefault().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.ofDefault().withNickname("guest").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.ofDefault().withNickname("guest2").buildAndSave(memberRepository);
 
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withTitle("category")
                 .withHost(host)
                 .withGuests(List.of(guest, guest2))
                 .buildAndSave(categoryRepository);
-        CategoryFixtures.defaultCategory()
+        CategoryFixtures.ofDefault()
                 .withTitle("anotherCategory")
                 .withHost(host)
                 .withGuests(List.of(guest))

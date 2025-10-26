@@ -9,8 +9,8 @@ import com.on.staccato.presentation.R
 import com.on.staccato.presentation.category.model.CategoryStaccatoUiModel
 import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
 import com.on.staccato.presentation.photo.PhotoUploadState
+import com.on.staccato.presentation.timeline.model.CategoryUiModel
 import com.on.staccato.presentation.timeline.model.FilterType
-import com.on.staccato.presentation.timeline.model.TimelineUiModel
 
 @BindingAdapter("visibleOrGone")
 fun View.setVisibility(isVisible: Boolean?) {
@@ -53,7 +53,7 @@ fun View.setThumbnailLoadingVisibility(thumbnail: ThumbnailUiModel) {
     value = ["visibilityByTimeline", "visibilityByFilterType", "isEmptyView", "isTimelineLoading"],
 )
 fun View.setVisibilityByTimelineAndFilter(
-    timeLine: List<TimelineUiModel>? = null,
+    timeLine: List<CategoryUiModel>? = null,
     filterType: FilterType?,
     isEmptyView: Boolean?,
     isTimelineLoading: Boolean?,
@@ -87,7 +87,7 @@ fun ViewGroup.setBackgroundBy(isBottomSheetExpanded: Boolean) {
 private fun getVisibilityForFilteredCategories(isEmptyView: Boolean?) = if (isEmptyView == true) View.GONE else View.VISIBLE
 
 private fun getVisibilityForAllCategories(
-    timeLine: List<TimelineUiModel>?,
+    timeLine: List<CategoryUiModel>?,
     isEmptyView: Boolean?,
     isTimelineLoading: Boolean?,
 ): Int {
@@ -99,7 +99,7 @@ private fun getVisibilityForAllCategories(
 }
 
 private fun isEmptyTimeline(
-    timeLine: List<TimelineUiModel>?,
+    timeLine: List<CategoryUiModel>?,
     filterType: FilterType?,
 ) = timeLine.isNullOrEmpty() && filterType == null
 

@@ -64,19 +64,19 @@ class NotificationEventListenerTest extends ServiceSliceTest {
     @Test
     void handleNewStaccato() {
         // given
-        Member host = MemberFixtures.defaultMember()
+        Member host = MemberFixtures.ofDefault()
                 .withNickname("host").buildAndSave(memberRepository);
-        Member guest = MemberFixtures.defaultMember()
+        Member guest = MemberFixtures.ofDefault()
                 .withNickname("guest").buildAndSave(memberRepository);
-        Member staccatoCreator = MemberFixtures.defaultMember()
+        Member staccatoCreator = MemberFixtures.ofDefault()
                 .withNickname("creator").buildAndSave(memberRepository);
 
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest, staccatoCreator))
                 .buildAndSave(categoryRepository);
 
-        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.ofDefault()
                 .withCategoryId(category.getId()).build();
 
         // when
@@ -104,22 +104,21 @@ class NotificationEventListenerTest extends ServiceSliceTest {
     @Test
     void handleNewComment() {
         // given
-        Member host = MemberFixtures.defaultMember()
+        Member host = MemberFixtures.ofDefault()
                 .withNickname("host").buildAndSave(memberRepository);
-        Member guest = MemberFixtures.defaultMember()
+        Member guest = MemberFixtures.ofDefault()
                 .withNickname("guest").buildAndSave(memberRepository);
-        Member commentCreator = MemberFixtures.defaultMember()
+        Member commentCreator = MemberFixtures.ofDefault()
                 .withNickname("creator").buildAndSave(memberRepository);
 
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest, commentCreator))
                 .buildAndSave(categoryRepository);
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        Staccato staccato = StaccatoFixtures.ofDefault(category)
                 .buildAndSave(staccatoRepository);
 
-        CommentRequest commentRequest = CommentRequestFixtures.defaultCommentRequest()
+        CommentRequest commentRequest = CommentRequestFixtures.ofDefault()
                 .withStaccatoId(staccato.getId()).build();
 
         // when
@@ -147,16 +146,16 @@ class NotificationEventListenerTest extends ServiceSliceTest {
     @Test
     void handleInvitation() {
         // given
-        Member host = MemberFixtures.defaultMember()
+        Member host = MemberFixtures.ofDefault()
                 .withNickname("host").buildAndSave(memberRepository);
-        Member guest = MemberFixtures.defaultMember()
+        Member guest = MemberFixtures.ofDefault()
                 .withNickname("guest").buildAndSave(memberRepository);
-        Member invitee1 = MemberFixtures.defaultMember()
+        Member invitee1 = MemberFixtures.ofDefault()
                 .withNickname("invitee1").buildAndSave(memberRepository);
-        Member invitee2 = MemberFixtures.defaultMember()
+        Member invitee2 = MemberFixtures.ofDefault()
                 .withNickname("invitee2").buildAndSave(memberRepository);
 
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
@@ -183,14 +182,14 @@ class NotificationEventListenerTest extends ServiceSliceTest {
     @Test
     void handleInvitationAccepted() {
         // given
-        Member host = MemberFixtures.defaultMember()
+        Member host = MemberFixtures.ofDefault()
                 .withNickname("host").buildAndSave(memberRepository);
-        Member guest = MemberFixtures.defaultMember()
+        Member guest = MemberFixtures.ofDefault()
                 .withNickname("guest").buildAndSave(memberRepository);
-        Member invitee = MemberFixtures.defaultMember()
+        Member invitee = MemberFixtures.ofDefault()
                 .withNickname("invitee").buildAndSave(memberRepository);
 
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);

@@ -7,14 +7,13 @@ import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 
 public class CategoryUpdateRequestFixtures {
 
-    public static CategoryUpdateRequestBuilder defaultCategoryUpdateRequest() {
+    public static CategoryUpdateRequestBuilder ofDefault() {
         return new CategoryUpdateRequestBuilder()
                 .withCategoryThumbnailUrl("https://example.com/categoryThumbnailUrl.jpg")
                 .withCategoryTitle("categoryTitle")
                 .withDescription("categoryDescription")
                 .withColor(Color.PINK.getName())
-                .withTerm(LocalDate.of(2024, 1, 1),
-                        LocalDate.of(2024, 12, 31));
+                .withTerm(null, null);
     }
 
     public static class CategoryUpdateRequestBuilder {
