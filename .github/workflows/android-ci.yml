@@ -138,79 +138,80 @@ jobs:
         with:
           files: '**/build/test-results/**/*.xml'
 
-#  ui-tests:
-#    name: Run UI Test on [API ${{ matrix.api-level }} - ${{ matrix.profile }}]
-#    runs-on: ubuntu-latest
-#    needs: setup
-#    timeout-minutes: 20
-#    defaults:
-#      run:
-#        shell: bash
-#        working-directory: ./android/Staccato_AN
-#    strategy:
-#      matrix:
-#        include:
-#          - api-level: 28
-#            profile: "pixel_4"
-#          - api-level: 32
-#            profile: "pixel_6"
-#          - api-level: 32
-#            profile: "Nexus 7"
-#      fail-fast: false
-#    permissions:
-#      contents: read
-#      actions: read
-#      checks: write
-#      pull-requests: write
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#      - name: Enable KVM
-#        run: |
-#          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-#          sudo udevadm control --reload-rules
-#          sudo udevadm trigger --name-match=kvm
-#      - name: Setup JDK 17
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '17'
-#          distribution: 'temurin'
-#          cache: gradle
-#      - name: Download Config Files
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: config-files
-#          path: ./android/Staccato_AN
-#      - name: Cache Gradle
-#        uses: gradle/actions/setup-gradle@v3
-#      - name: Grant Execute Permission for Gradlew
-#        run: chmod +x gradlew
-#
-#      - name: Run UI Test with Emulator
-#        uses: reactivecircus/android-emulator-runner@v2
-#        with:
-#          api-level: ${{ matrix.api-level }}
-#          profile: ${{ matrix.profile }}
-#          target: google_apis
-#          arch: x86_64
-#          working-directory: ./android/Staccato_AN
-#          script: ./gradlew connectedCheck --stacktrace
-#      - name: Upload UI Test Results
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: test-results-${{ matrix.api-level }}-${{ matrix.profile }}
-#          path: |
-#            **/build/reports/*
-#            **/build/outputs/*/connected/*
-#      - name: Publish UI Test Results
-#        uses: dorny/test-reporter@v2
-#        if: always()
-#        with:
-#          name: UI Tests
-#          badge-title: 'UI Tests'
-#          reporter: java-junit
-#          working-directory: ./android/Staccato_AN
-#          path: '**/build/outputs/androidTest-results/connected/**/*.xml'
-#          fail-on-empty: 'false'
-#          fail-on-error: 'false'
+  ui-tests:
+    name: Run UI Test on [API ${{ matrix.api-level }} - ${{ matrix.profile }}]
+    runs-on: ubuntu-latest
+    needs: setup
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./android/Staccato_AN
+    strategy:
+      matrix:
+        include:
+          - api-level: 28
+            profile: "pixel_4"
+          - api-level: 32
+            profile: "pixel_6"
+          - api-level: 32
+            profile: "Nexus 7"
+      fail-fast: false
+    permissions:
+      contents: read
+      actions: read
+      checks: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Download Config Files
+        uses: actions/download-artifact@v4
+        with:
+          name: config-files
+          path: ./android/Staccato_AN
+      - name: Cache Gradle
+        uses: gradle/actions/setup-gradle@v3
+      - name: Grant Execute Permission for Gradlew
+        run: chmod +x gradlew
+
+      - name: Run UI Test with Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          profile: ${{ matrix.profile }}
+          target: google_apis
+          arch: x86_64
+          working-directory: ./android/Staccato_AN
+          script: ./gradlew connectedCheck -x :macrobenchmark:connectedBenchmarkAndroidTest --stacktrace
+      - name: Upload UI Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.api-level }}-${{ matrix.profile }}
+          path: |
+            **/build/reports/*
+            **/build/outputs/*/connected/*
+      - name: Publish UI Test Results
+        if: ${{ !cancelled() }}
+        uses: mikepenz/action-junit-report@v5
+        with:
+          report_paths: '**/build/outputs/androidTest-results/connected/**/*.xml'
+          check_name: 'UI Test Reports'
+          comment: true
+          detailed_summary: true
+          include_time_in_summary: true
+          fail_on_failure: false
+          fail_on_parse_error: false
