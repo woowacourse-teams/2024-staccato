@@ -58,8 +58,8 @@ class FcmServiceTest {
     }
 
     private PushMessage dummyPushMessage() {
-        Member inviter = MemberFixtures.defaultMember().build();
-        Category category = CategoryFixtures.defaultCategory().build();
+        Member inviter = MemberFixtures.ofDefault().build();
+        Category category = CategoryFixtures.ofDefault().build();
 
         return new ReceiveInvitationMessage(inviter, category);
     }

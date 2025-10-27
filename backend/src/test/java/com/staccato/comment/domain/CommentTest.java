@@ -23,14 +23,14 @@ import com.staccato.staccato.domain.Staccato;
 
 class CommentTest {
     private Member member;
+    private Category category;
     private Staccato staccato;
 
     @BeforeEach
     void init() {
-        member = MemberFixtures.defaultMember().build();
-        staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(CategoryFixtures.defaultCategory().build())
-                .build();
+        member = MemberFixtures.ofDefault().build();
+        category = CategoryFixtures.ofDefault().build();
+        staccato = StaccatoFixtures.ofDefault(category).build();
     }
 
     @DisplayName("정상적인 댓글은 생성에 성공한다.")
@@ -79,23 +79,18 @@ class CommentTest {
 
         @BeforeEach
         void setUp() {
-            member = MemberFixtures.defaultMember().withNickname("member").build();
-            category = CategoryFixtures.defaultCategory()
+            member = MemberFixtures.ofDefault().withNickname("member").build();
+            category = CategoryFixtures.ofDefault()
                     .withHost(member)
                     .build();
-            staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category)
-                    .build();
+            staccato = StaccatoFixtures.ofDefault(category).build();
         }
 
         @DisplayName("댓글 작성자 본인만 댓글을 수정할 수 있다.")
         @Test
         void validateCommentOwnerSuccess() {
             // given
-            Comment comment = CommentFixtures.defaultComment()
-                    .withStaccato(staccato)
-                    .withMember(member)
-                    .build();
+            Comment comment = CommentFixtures.ofDefault(staccato, member).build();
 
             // when & then
             assertDoesNotThrow(() -> comment.validateOwner(member));
@@ -105,11 +100,8 @@ class CommentTest {
         @Test
         void validateCommentOwnerFail() {
             // given
-            Comment comment = CommentFixtures.defaultComment()
-                    .withStaccato(staccato)
-                    .withMember(member)
-                    .build();
-            Member other = MemberFixtures.defaultMember().withNickname("other").build();
+            Comment comment = CommentFixtures.ofDefault(staccato, member).build();
+            Member other = MemberFixtures.ofDefault().withNickname("other").build();
 
             // when & then
             assertThatThrownBy(() -> comment.validateOwner(other))

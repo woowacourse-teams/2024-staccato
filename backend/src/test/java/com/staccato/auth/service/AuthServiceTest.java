@@ -35,7 +35,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void login() {
         // given
-        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest().build();
+        LoginRequest loginRequest = LoginRequestFixtures.ofDefault().build();
 
         // when
         LoginResponseV2 loginResponse = authService.login(loginRequest);
@@ -51,7 +51,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void loginThenCreateBasicCategory() {
         // given
-        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest().build();
+        LoginRequest loginRequest = LoginRequestFixtures.ofDefault().build();
 
         // when
         LoginResponseV2 loginResponse = authService.login(loginRequest);
@@ -68,9 +68,9 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void cannotLoginByDuplicated() {
         // given
-        MemberFixtures.defaultMember()
+        MemberFixtures.ofDefault()
                 .withNickname("nickname").buildAndSave(memberRepository);
-        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest()
+        LoginRequest loginRequest = LoginRequestFixtures.ofDefault()
                 .withNickname("nickname").build();
 
         // when & then
@@ -83,7 +83,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void cannotExtractMemberByUnknown() {
         // given
-        MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        MemberFixtures.ofDefault().buildAndSave(memberRepository);
 
         // when & then
         assertThatThrownBy(() -> authService.extractFromToken(null))
@@ -96,7 +96,7 @@ class AuthServiceTest extends ServiceSliceTest {
     void createTokenByCode() {
         // given
         String code = UUID.randomUUID().toString();
-        Member member = MemberFixtures.defaultMember()
+        Member member = MemberFixtures.ofDefault()
                 .withCode(code).buildAndSave(memberRepository);
 
         // when

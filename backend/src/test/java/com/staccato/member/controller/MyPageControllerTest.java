@@ -50,7 +50,7 @@ class MyPageControllerTest extends ControllerTest {
     @Test
     void readMyPage() throws Exception {
         // given
-        Member member = MemberFixtures.defaultMember()
+        Member member = MemberFixtures.ofDefault()
                 .withCode("550e8400-e29b-41d4-a716-446655440000").build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         String expectedResponse = """

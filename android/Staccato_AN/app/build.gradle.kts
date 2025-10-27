@@ -10,14 +10,14 @@ val localProperties =
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.kotlinCompose)
-    alias(libs.plugins.kotlinSerialization)
     id("kotlin-kapt")
-    alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.androidJUnit5)
     alias(libs.plugins.firebaseCrashlytics)
     alias(libs.plugins.googleServices)
+    alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.kotlinCompose)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.mapsplatformSecretsGradlePlugin)
-    alias(libs.plugins.androidJUnit5)
 }
 
 android {
@@ -31,9 +31,7 @@ android {
         versionCode = 15
         versionName = "2.1.2"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] =
-            "de.mannodermaus.junit5.AndroidJUnit5Builder"
+        testInstrumentationRunner = "com.on.staccato.HiltTestRunner"
 
         buildConfigField("String", "TOKEN", "${localProperties["token"]}")
     }
@@ -70,6 +68,16 @@ android {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-DEV"
         }
+
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            buildConfigField("String", "BASE_URL", "${localProperties["dev_base_url"]}")
+            manifestPlaceholders["appName"] = "@string/app_name_benchmark"
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
+        }
+
         release {
             buildConfigField("String", "BASE_URL", "${localProperties["base_url"]}")
             manifestPlaceholders["appName"] = "@string/app_name"
@@ -124,7 +132,10 @@ dependencies {
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.junitparams)
+
+    // Android Hilt Test
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.android.compiler)
 
     // Espresso
     androidTestImplementation(libs.androidx.test.espresso.core)

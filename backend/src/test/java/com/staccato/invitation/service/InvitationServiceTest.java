@@ -60,9 +60,9 @@ class InvitationServiceTest extends ServiceSliceTest {
 
     @BeforeEach
     void init() {
-        host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-        category = CategoryFixtures.defaultCategory()
+        host = MemberFixtures.ofDefault().withNickname("host").buildAndSave(memberRepository);
+        guest = MemberFixtures.ofDefault().withNickname("guest").buildAndSave(memberRepository);
+        category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .buildAndSave(categoryRepository);
     }
@@ -71,7 +71,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void invite() {
         // given
-        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.ofDefault().withNickname("guest2").buildAndSave(memberRepository);
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId(), guest2.getId()));
 
         // when
@@ -100,7 +100,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void failToInviteIfNotHost() {
         // given
-        Member anotherUser = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
+        Member anotherUser = MemberFixtures.ofDefault().withNickname("otherMem").buildAndSave(memberRepository);
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
 
         // when & then
@@ -132,7 +132,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void failIfAlreadyCategoryMember() {
         // given
-        category = CategoryFixtures.defaultCategory()
+        category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
@@ -167,10 +167,10 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void inviteMixedSuccessAndFailure() {
         // given
-        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
-        Member guest3 = MemberFixtures.defaultMember().withNickname("guest3").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.ofDefault().withNickname("guest2").buildAndSave(memberRepository);
+        Member guest3 = MemberFixtures.ofDefault().withNickname("guest3").buildAndSave(memberRepository);
 
-        category = CategoryFixtures.defaultCategory()
+        category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
@@ -192,7 +192,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void readAllSentInvitations() {
         // given
-        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.ofDefault().withNickname("guest2").buildAndSave(memberRepository);
         CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
         CategoryInvitation invitation2 = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest2));
 
@@ -305,7 +305,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     void acceptDoesNotThrowWhenMemberAlreadyInCategory() {
         // given
         CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
-        CategoryMemberFixtures.defaultCategoryMember()
+        CategoryMemberFixtures.ofDefault()
                 .withCategory(category)
                 .withMember(guest)
                 .buildAndSave(categoryMemberRepository);
@@ -368,7 +368,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void readAllReceivedInvitations() {
         // given
-        Member host2 = MemberFixtures.defaultMember().withNickname("host2").buildAndSave(memberRepository);
+        Member host2 = MemberFixtures.ofDefault().withNickname("host2").buildAndSave(memberRepository);
         CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
         CategoryInvitation invitation2 = categoryInvitationRepository.save(CategoryInvitation.invite(category, host2, guest));
 

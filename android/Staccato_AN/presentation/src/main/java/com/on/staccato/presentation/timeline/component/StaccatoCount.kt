@@ -10,15 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.on.staccato.presentation.R
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray3
+import com.on.staccato.theme.Icons
 
 @Composable
 fun StaccatoCount(
@@ -30,7 +28,7 @@ fun StaccatoCount(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.icon_marker),
+            imageVector = Icons.StaccatoCountMarker,
             contentDescription = "Marker Icon",
             tint = Color.Unspecified,
         )

@@ -30,6 +30,8 @@ import com.on.staccato.presentation.component.DefaultDivider
 import com.on.staccato.theme.Gray2
 import com.on.staccato.theme.Title3
 
+private const val PROFILE_IMAGE_SIZE = 35
+
 @Composable
 fun SearchedMemberItem(
     item: MemberUiModel,
@@ -48,12 +50,12 @@ fun SearchedMemberItem(
         Spacer(Modifier.width(16.dp))
         DefaultAsyncImage(
             url = item.member.memberImage,
-            bitmapPixelSize = 150,
+            imageSizeDp = PROFILE_IMAGE_SIZE.dp,
             placeHolder = R.drawable.icon_member,
             errorImageRes = R.drawable.icon_member,
             modifier =
                 Modifier
-                    .size(35.dp)
+                    .size(PROFILE_IMAGE_SIZE.dp)
                     .border(
                         width = 0.2.dp,
                         color = Gray2,

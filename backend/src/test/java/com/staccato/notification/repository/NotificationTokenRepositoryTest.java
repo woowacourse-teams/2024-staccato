@@ -26,14 +26,14 @@ class NotificationTokenRepositoryTest extends RepositoryTest {
 
     @BeforeEach
     void setUp() {
-        member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
     }
 
     @DisplayName("사용자의 토큰을 조회할 수 있다.")
     @Test
     void findByMember() {
         // given
-        NotificationToken token = NotificationTokenFixtures.defaultNotificationToken(member)
+        NotificationToken token = NotificationTokenFixtures.ofDefault(member)
                 .buildAndSave(notificationTokenRepository);
 
         // when
@@ -51,7 +51,7 @@ class NotificationTokenRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByToken() {
         // given
-        NotificationToken token = NotificationTokenFixtures.defaultNotificationToken(member)
+        NotificationToken token = NotificationTokenFixtures.ofDefault(member)
                 .withToken("token-to-delete")
                 .buildAndSave(notificationTokenRepository);
 
@@ -67,14 +67,14 @@ class NotificationTokenRepositoryTest extends RepositoryTest {
     @Test
     void findByMemberIn() {
         // given
-        Member member1 = MemberFixtures.defaultMember().withNickname("user1").buildAndSave(memberRepository);
-        Member member2 = MemberFixtures.defaultMember().withNickname("user2").buildAndSave(memberRepository);
+        Member member1 = MemberFixtures.ofDefault().withNickname("user1").buildAndSave(memberRepository);
+        Member member2 = MemberFixtures.ofDefault().withNickname("user2").buildAndSave(memberRepository);
 
-        NotificationToken token1 = NotificationTokenFixtures.defaultNotificationToken(member1)
+        NotificationToken token1 = NotificationTokenFixtures.ofDefault(member1)
                 .withToken("token-1")
                 .buildAndSave(notificationTokenRepository);
 
-        NotificationToken token2 = NotificationTokenFixtures.defaultNotificationToken(member2)
+        NotificationToken token2 = NotificationTokenFixtures.ofDefault(member2)
                 .withToken("token-2")
                 .buildAndSave(notificationTokenRepository);
 

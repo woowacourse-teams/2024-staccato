@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -24,18 +25,24 @@ fun DefaultAsyncImage(
     modifier: Modifier = Modifier,
     url: String? = null,
     radiusDp: Dp = 0.dp,
-    bitmapPixelSize: Int? = null,
+    imageSizeDp: Dp? = null,
     @DrawableRes placeHolder: Int? = null,
     @DrawableRes errorImageRes: Int? = null,
     contentScale: ContentScale = ContentScale.Crop,
 ) {
     val context = LocalContext.current
+    val density = LocalDensity.current
+    val imageSizePx: Int? =
+        imageSizeDp?.let {
+            with(density) { it.roundToPx() }
+        }
+
     val imageRequest =
-        remember(url, bitmapPixelSize, placeHolder, errorImageRes) {
+        remember(url, imageSizeDp, placeHolder, errorImageRes) {
             ImageRequest.Builder(context)
                 .data(url)
                 .apply {
-                    bitmapPixelSize?.let {
+                    imageSizePx?.let {
                         size(it)
                     }
                     placeHolder?.let {
@@ -79,7 +86,7 @@ private fun EmptyUrlAsyncImagePreview() {
 private fun PreviewAsyncImage(url: String?) {
     DefaultAsyncImage(
         url = url,
-        bitmapPixelSize = 150,
+        imageSizeDp = 90.dp,
         placeHolder = R.drawable.icon_member,
         errorImageRes = R.drawable.icon_member,
         contentDescription = R.string.all_category_thumbnail_photo_description,

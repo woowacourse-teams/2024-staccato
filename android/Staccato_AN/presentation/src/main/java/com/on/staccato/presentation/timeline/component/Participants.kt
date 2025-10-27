@@ -29,7 +29,7 @@ fun Participants(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         items(participants.profileImageUrls) { profileImageUrl ->
-            ParticipantItem(profileImageUrl)
+            ParticipantItem(profileImageUrl = profileImageUrl)
         }
 
         if (participants.hiddenCount != MIN_HIDDEN_COUNT) {

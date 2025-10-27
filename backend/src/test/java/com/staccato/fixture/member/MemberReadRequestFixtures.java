@@ -3,7 +3,8 @@ package com.staccato.fixture.member;
 import com.staccato.member.service.dto.request.MemberReadRequest;
 
 public class MemberReadRequestFixtures {
-    public static MemberReadRequestBuilder defaultMemberReadRequest() {
+
+    public static MemberReadRequestBuilder ofDefault() {
         return new MemberReadRequestBuilder()
                 .withNickname("member");
     }

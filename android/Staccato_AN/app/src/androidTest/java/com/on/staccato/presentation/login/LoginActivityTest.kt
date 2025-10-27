@@ -1,11 +1,5 @@
 package com.on.staccato.presentation.login
 
-class LoginActivityTest
-
-/*
- * [TODO]
- *   - Login 화면 Compose로 마이그레이션
- *   - Robolectric으로 마이그레이션하기
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.replaceText
@@ -21,8 +15,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.on.staccato.presentation.R
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Before
 import org.junit.Rule
@@ -55,10 +47,9 @@ class LoginActivityTest() {
     }
 
     @Test
-    @Parameters(method = "blankNicknames")
-    fun `공백만으로_이루어진_문자열을_입력하면_닉네임_입력_란에서_에러_메세지를_보여준다`(blank: String) {
+    fun `공백만으로_이루어진_문자열을_입력하면_닉네임_입력_란에서_에러_메세지를_보여준다`() {
         // when
-        nicknameInputEditText.perform(replaceText(blank))
+        nicknameInputEditText.perform(replaceText(" "))
 
         // then
         nicknameInputLayout
@@ -74,18 +65,10 @@ class LoginActivityTest() {
             )
     }
 
-    private fun blankNicknames(): List<String> =
-        listOf(
-            " ",
-            "    ",
-            "\n",
-        )
-
     @Test
-    @Parameters(method = "startsWithBlank")
-    fun `공백으로_시작하는_문자열을_입력하면_닉네임_입력_란에서_에러_메세지를_보여준다`(nickname: String) {
+    fun `공백으로_시작하는_문자열을_입력하면_닉네임_입력_란에서_에러_메세지를_보여준다`() {
         // when
-        nicknameInputEditText.perform(replaceText(nickname))
+        nicknameInputEditText.perform(replaceText("  nickname"))
 
         // then
         nicknameInputLayout
@@ -101,17 +84,10 @@ class LoginActivityTest() {
             )
     }
 
-    private fun startsWithBlank(): List<String> =
-        listOf(
-            "  nickname",
-            " 공백 먼저",
-        )
-
     @Test
-    @Parameters(method = "invalidFormatNicknames")
-    fun `잘못된_형식의_닉네임을_입력하면_닉네임_입력_란에서_에러_메세지를_보여준다`(invalidNickname: String) {
+    fun `잘못된_형식의_닉네임을_입력하면_닉네임_입력_란에서_에러_메세지를_보여준다`() {
         // when
-        nicknameInputEditText.perform(replaceText(invalidNickname))
+        nicknameInputEditText.perform(replaceText("!valid"))
 
         // then
         nicknameInputLayout
@@ -127,17 +103,10 @@ class LoginActivityTest() {
             )
     }
 
-    private fun invalidFormatNicknames(): List<String> =
-        listOf(
-            "!valid",
-            "쓸수없는닉네임!@#",
-        )
-
     @Test
-    @Parameters(method = "validNicknames")
-    fun `올바른_형식의_닉네임을_입력하면_에러_메세지가_나타나지_않는다`(validNickname: String) {
+    fun `올바른_형식의_닉네임을_입력하면_에러_메세지가_나타나지_않는다`() {
         // when
-        nicknameInputEditText.perform(replaceText(validNickname))
+        nicknameInputEditText.perform(replaceText("valid"))
 
         // then
         nicknameInputLayout
@@ -153,29 +122,14 @@ class LoginActivityTest() {
             )
     }
 
-    private fun validNicknames(): List<String> =
-        listOf(
-            "valid name",
-            "안녕하세요2",
-            "ㅎrㅇI",
-        )
-
     @Test
-    @Parameters(method = "invalidNicknames")
-    fun `올바르지_않은_닉네임을_입력하면_시작하기_버튼이_비활성화_상태이다`(invalidNickname: String) {
+    fun `올바르지_않은_닉네임을_입력하면_시작하기_버튼이_비활성화_상태이다`() {
         // when
-        nicknameInputEditText.perform(replaceText(invalidNickname))
+        nicknameInputEditText.perform(replaceText(" !valid"))
 
         // then
         startButton.check(matches(isNotEnabled()))
     }
-
-    private fun invalidNicknames(): List<String> =
-        listOf(
-            "   ",
-            "!valid",
-            " 공백 먼저",
-        )
 
     @Test
     fun `올바른_형식의_닉네임을_입력하면_시작하기_버튼이_활성화_상태이다`() {
@@ -186,4 +140,3 @@ class LoginActivityTest() {
         startButton.check(matches(isEnabled()))
     }
 }
-*/

@@ -1,12 +1,13 @@
 package com.staccato.staccato.repository;
 
 import java.util.List;
-
+import java.util.stream.Stream;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
-
 import com.staccato.staccato.domain.StaccatoImage;
 
 public interface StaccatoImageRepository extends JpaRepository<StaccatoImage, Long> {
@@ -18,4 +19,8 @@ public interface StaccatoImageRepository extends JpaRepository<StaccatoImage, Lo
     @Modifying
     @Query("DELETE FROM StaccatoImage si WHERE si.id In :ids")
     void deleteAllByIdInBulk(@Param("ids") List<Long> ids);
+
+    @Query("SELECT si.imageUrl FROM StaccatoImage si")
+    @QueryHints(@QueryHint(name = org.hibernate.jpa.HibernateHints.HINT_FETCH_SIZE, value = "100"))
+    Stream<String> findAllImageUrls();
 }

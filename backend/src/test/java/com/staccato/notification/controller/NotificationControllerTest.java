@@ -24,7 +24,7 @@ class NotificationControllerTest extends ControllerTest {
     @Test
     void readMyPage() throws Exception {
         // given
-        Member member = MemberFixtures.defaultMember().build();
+        Member member = MemberFixtures.ofDefault().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         when(notificationService.isExistNotifications(any(Member.class))).thenReturn(new NotificationExistResponse(true));
         String expectedResponse = """
@@ -44,7 +44,7 @@ class NotificationControllerTest extends ControllerTest {
     @Test
     void register() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
         String notificationTokenRequest = """
                 {
                   "token": "example-fcm-token",
@@ -63,7 +63,7 @@ class NotificationControllerTest extends ControllerTest {
     @Test
     void failRegister() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.ofDefault().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 HttpStatus.BAD_REQUEST.toString(), "토큰 값을 입력해주세요.");
         String notificationTokenRequest = """
