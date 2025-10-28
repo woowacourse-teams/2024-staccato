@@ -34,6 +34,8 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.kotlin.bom))
+
     // Android
     implementation(libs.androidx.core.ktx)
 
@@ -49,9 +51,8 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
     testImplementation(libs.okhttp.mockwebserver)
 
-    // Google Place
-    implementation(libs.places)
-    implementation(platform(libs.kotlin.bom))
+    // Google Play Service Location
+    implementation(libs.play.services.location)
 
     // Firebase
     implementation(libs.firebase.messaging.ktx)
@@ -68,7 +69,7 @@ dependencies {
     // AssertJ
     testImplementation(libs.assertj.core)
 
-    // Mockk
+    // MockK
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.agent)
 
