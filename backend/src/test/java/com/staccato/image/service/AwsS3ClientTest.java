@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,7 +21,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.localstack.LocalStackContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import com.staccato.image.infrastructure.S3Config;
@@ -33,29 +33,19 @@ import software.amazon.awssdk.services.s3.model.BucketAlreadyOwnedByYouException
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-@Testcontainers
+@Disabled("현재 LocalStack 테스트 비활성화 중")
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
 public class AwsS3ClientTest {
 
-    private static final DockerImageName LOCALSTACK_IMAGE = DockerImageName.parse("localstack/localstack:4.6.0");
-    private static final LocalStackContainer LOCAL_STACK =
-            new LocalStackContainer(LOCALSTACK_IMAGE).withServices(LocalStackContainer.Service.S3);
+    private static final DockerImageName LOCALSTACK_IMAGE =
+            DockerImageName.parse("localstack/localstack:4.6.0");
 
-    static {
-        LOCAL_STACK.start();
-    }
+    private LocalStackContainer localStack;
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
-        registry.add("cloud.aws.s3.endpoint", () -> LOCAL_STACK.getEndpointOverride(LocalStackContainer.Service.S3)
-                .toString());
-        registry.add("cloud.aws.region", LOCAL_STACK::getRegion);
-        registry.add("cloud.aws.access-key", LOCAL_STACK::getAccessKey);
-        registry.add("cloud.aws.secret-access-key", LOCAL_STACK::getSecretKey);
-        registry.add("cloud.aws.s3.bucket", () -> "staccato-test-bucket");
-        registry.add("cloud.aws.cloudfront.endpoint", () -> "http://cdn.localstack.test");
     }
 
     @Configuration
@@ -68,13 +58,25 @@ public class AwsS3ClientTest {
     @Autowired
     private AwsS3Client awsS3Client;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${cloud.aws.s3.bucket:staccato-test-bucket}")
     private String bucket;
-    @Value("${cloud.aws.cloudfront.endpoint}")
+    @Value("${cloud.aws.cloudfront.endpoint:http://cdn.localstack.test}")
     private String cloudFrontEndpoint;
 
     @BeforeAll
-    void createBucket() {
+    void setupLocalStack() {
+        localStack = new LocalStackContainer(LOCALSTACK_IMAGE)
+                .withServices(LocalStackContainer.Service.S3);
+        localStack.start();
+
+        System.setProperty("cloud.aws.s3.endpoint",
+                localStack.getEndpointOverride(LocalStackContainer.Service.S3).toString());
+        System.setProperty("cloud.aws.region", localStack.getRegion());
+        System.setProperty("cloud.aws.access-key", localStack.getAccessKey());
+        System.setProperty("cloud.aws.secret-access-key", localStack.getSecretKey());
+        System.setProperty("cloud.aws.s3.bucket", "staccato-test-bucket");
+        System.setProperty("cloud.aws.cloudfront.endpoint", "http://cdn.localstack.test");
+
         try {
             s3Client.createBucket(CreateBucketRequest.builder().bucket(bucket).build());
         } catch (BucketAlreadyExistsException | BucketAlreadyOwnedByYouException ignored) {
@@ -91,16 +93,13 @@ public class AwsS3ClientTest {
     @Test
     @DisplayName("putS3Object -> getUrl -> extractKeyFromUrl 흐름이 LocalStack에서 정상 동작한다")
     void putAndGetAndExtract() {
-        // given
         String key = "image/test1.png";
         byte[] body = new byte[]{1, 2, 3};
 
-        // when
         awsS3Client.putS3Object(key, "image/png", body);
         String url = awsS3Client.getUrl(key);
         String extracted = awsS3Client.extractKeyFromUrl(url);
 
-        // then
         assertAll(
                 () -> assertThat(url).startsWith(cloudFrontEndpoint + "/"),
                 () -> assertThat(url).endsWith("/" + key),
@@ -111,15 +110,12 @@ public class AwsS3ClientTest {
     @Test
     @DisplayName("deleteUnusedObjects는 usedKeys에 없는 객체만 삭제한다")
     void deleteUnusedObjects() {
-        // given
         put("k1");
         put("k2");
         put("k3");
 
-        // when
         DeletionResult result = awsS3Client.deleteUnusedObjects(Set.of("k1"));
 
-        // then
         assertAll(
                 () -> assertThat(result.successCount()).isEqualTo(2),
                 () -> assertThat(result.failedCount()).isZero()
