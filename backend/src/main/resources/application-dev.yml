@@ -50,6 +50,7 @@ cloud:
   storage:
     mode: aws
   aws:
+    region: ENC(VU25sKaZUPFns2J8GhgAyrioMpwOaWyMa4fBWSzX8LH3zInZc2upgBttgy7EaJWV)
     access-key: ENC(esOew5zDP7xeUY4rqpHQIWRJvnyh4qC9HHMzFI9Bek4gu65ZxgQOaGT40tXaJ/kLBsPAXM4NIYF7g64+67gfHg==)
     secret-access-key: ENC(osZssrZ+Z1Mraw1D8Rd0tXOk0VfMj/8uaGeRrH7/pF+PMJQQga6EBCp14HbGE/zwsSKaZ4xyI5tBy6hwSCJFqKPzzgTN4/Y/AQX3bFp6k90=)
     s3:
@@ -57,8 +58,6 @@ cloud:
       endpoint: ENC(9yj+jkWlB807kp6umhJIA+osCj4ha/WQcuh8+TTipY3XJNpPs+LswGr4pPPQ5bLQobDzat8PSNZClqvALLpue3PCBxqpUq7Ot3zN02siH+PuFEAqV/izRYpku0bUgK65)
     cloudfront:
       endpoint: ENC(LMIPHd+0QQ480lNvi9VTyTjVs/+ok8dpUnZfcNTqrLrlmjAEFV61fh/JmgQmjTBCWW+vlKqWmp3tqnbjjqsxrTI+wl2IGB6O+K/ewjU6TMg=)
-    region:
-      static: ENC(VU25sKaZUPFns2J8GhgAyrioMpwOaWyMa4fBWSzX8LH3zInZc2upgBttgy7EaJWV)
     stack:
       auto: false
 image:
