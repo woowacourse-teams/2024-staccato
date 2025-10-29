@@ -11,28 +11,27 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-kapt")
-    alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.googleServices)
-    alias(libs.plugins.firebaseCrashlytics)
-    alias(libs.plugins.mapsplatformSecretsGradlePlugin)
-    alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.androidJUnit5)
+    alias(libs.plugins.firebaseCrashlytics)
+    alias(libs.plugins.googleServices)
+    alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.kotlinCompose)
+    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.mapsplatformSecretsGradlePlugin)
 }
 
 android {
     namespace = "com.on.staccato"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.on.staccato"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 15
-        versionName = "2.1.2"
+        targetSdk = 35
+        versionCode = 16
+        versionName = "2.1.3"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] =
-            "de.mannodermaus.junit5.AndroidJUnit5Builder"
+        testInstrumentationRunner = "com.on.staccato.HiltTestRunner"
 
         buildConfigField("String", "TOKEN", "${localProperties["token"]}")
     }
@@ -69,6 +68,16 @@ android {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-DEV"
         }
+
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            buildConfigField("String", "BASE_URL", "${localProperties["dev_base_url"]}")
+            manifestPlaceholders["appName"] = "@string/app_name_benchmark"
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
+        }
+
         release {
             buildConfigField("String", "BASE_URL", "${localProperties["base_url"]}")
             manifestPlaceholders["appName"] = "@string/app_name"
@@ -86,11 +95,11 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     dataBinding {
@@ -99,10 +108,6 @@ android {
 
     kapt {
         correctErrorTypes = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
     }
 }
 
@@ -115,26 +120,25 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     // JUnit5
-    testImplementation(libs.junit5)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testRuntimeOnly(libs.junit.vintage.engine)
 
     // AssertJ
     testImplementation(libs.assertj.core)
 
-    // Android Test Runner
+    // Android JUnit4
+    androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
 
-    // Android JUnit4
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.junitparams)
+    // Android Hilt Test
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.android.compiler)
 
-    // Android JUnit5
-    androidTestImplementation(libs.junit5.android.test.core)
-    androidTestRuntimeOnly(libs.junit5.android.test.runner)
-
-    // Glide
-    implementation(libs.glide)
+    // Espresso
+    androidTestImplementation(libs.androidx.test.espresso.core)
 
     // Coil
     implementation(libs.coil)
@@ -142,7 +146,7 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization.converter)
-    implementation(libs.converter.scalars)
+    implementation(libs.retrofit.converter.scalars)
 
     // Kotlinx-Serialization
     implementation(libs.kotlinx.serialization.json)
@@ -152,11 +156,11 @@ dependencies {
     testImplementation(libs.okhttp.mockwebserver)
 
     // Lifecycle
-    implementation(libs.lifecycle.viewmodel)
-    implementation(libs.lifecycle.livedata)
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.livedata)
 
     // Splash Screen
-    implementation(libs.splashscreen)
+    implementation(libs.androidx.splashscreen)
 
     // Firebase
     implementation(platform(libs.firebase.bom))
@@ -165,7 +169,7 @@ dependencies {
     implementation(libs.firebase.messaging.ktx)
 
     // Room
-    implementation(libs.room)
+    implementation(libs.androidx.room)
 
     // RecyclerView
     implementation(libs.androidx.recyclerview)
@@ -233,7 +237,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Compose ViewModel
-    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Compose ConstraintLayout
     implementation(libs.androidx.constraintlayout.compose)

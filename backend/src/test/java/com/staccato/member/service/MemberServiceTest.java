@@ -43,7 +43,7 @@ class MemberServiceTest extends ServiceSliceTest {
     @Test
     void changeProfileImage() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
         String imageUrl = "image.jpg";
 
         // when
@@ -61,7 +61,7 @@ class MemberServiceTest extends ServiceSliceTest {
     @Test
     void cannotChangeUnknownProfileImage() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
         memberRepository.delete(member);
         String imageUrl = "image.jpg";
 
@@ -75,20 +75,20 @@ class MemberServiceTest extends ServiceSliceTest {
     @Test
     void readMembersByNickname() {
         // given
-        Member member = MemberFixtures.defaultMember()
+        Member member = MemberFixtures.ofDefault()
                 .withNickname("사용자")
                 .buildAndSave(memberRepository);
-        Member member1 = MemberFixtures.defaultMember()
+        Member member1 = MemberFixtures.ofDefault()
                 .withNickname("스타카토")
                 .buildAndSave(memberRepository);
-        Member member2 = MemberFixtures.defaultMember()
+        Member member2 = MemberFixtures.ofDefault()
                 .withNickname("스타")
                 .buildAndSave(memberRepository);
-        Member member3 = MemberFixtures.defaultMember()
+        Member member3 = MemberFixtures.ofDefault()
                 .withNickname("타스")
                 .buildAndSave(memberRepository);
         String keyword = "스타";
-        MemberReadRequest memberReadRequest = MemberReadRequestFixtures.defaultMemberReadRequest()
+        MemberReadRequest memberReadRequest = MemberReadRequestFixtures.ofDefault()
                 .withNickname(keyword)
                 .withExcludeCategoryId(0L)
                 .build();
@@ -115,7 +115,7 @@ class MemberServiceTest extends ServiceSliceTest {
     @Test
     void readMemberWithoutOneself() {
         // given
-        Member me = MemberFixtures.defaultMember().withNickname("me").buildAndSave(memberRepository);
+        Member me = MemberFixtures.ofDefault().withNickname("me").buildAndSave(memberRepository);
         MemberReadRequest memberReadRequest = new MemberReadRequest("me", null);
 
         // when
@@ -131,13 +131,13 @@ class MemberServiceTest extends ServiceSliceTest {
     @ValueSource(strings = {" "})
     void readMembersByBlankNickname(String keyword) {
         // given
-        Member member = MemberFixtures.defaultMember()
+        Member member = MemberFixtures.ofDefault()
                 .withNickname("스타")
                 .buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        MemberReadRequest memberReadRequest = MemberReadRequestFixtures.defaultMemberReadRequest()
+        MemberReadRequest memberReadRequest = MemberReadRequestFixtures.ofDefault()
                 .withNickname(keyword)
                 .withExcludeCategoryId(category.getId())
                 .build();
@@ -153,13 +153,13 @@ class MemberServiceTest extends ServiceSliceTest {
     @Test
     void readMembersWithRequestedStatus() {
         // given
-        Member me = MemberFixtures.defaultMember().withNickname("나").buildAndSave(memberRepository);
-        Member invited = MemberFixtures.defaultMember().withNickname("스타").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory().withHost(me).buildAndSave(categoryRepository);
+        Member me = MemberFixtures.ofDefault().withNickname("나").buildAndSave(memberRepository);
+        Member invited = MemberFixtures.ofDefault().withNickname("스타").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault().withHost(me).buildAndSave(categoryRepository);
 
         categoryInvitationRepository.save(CategoryInvitation.invite(category, me, invited));
 
-        MemberReadRequest request = MemberReadRequestFixtures.defaultMemberReadRequest()
+        MemberReadRequest request = MemberReadRequestFixtures.ofDefault()
                 .withNickname("스타")
                 .withExcludeCategoryId(category.getId())
                 .build();
@@ -179,14 +179,14 @@ class MemberServiceTest extends ServiceSliceTest {
     @Test
     void readMembersWithCategoryIdAndRequestedStatus() {
         // given
-        Member me = MemberFixtures.defaultMember().withNickname("나").buildAndSave(memberRepository);
-        Member invited = MemberFixtures.defaultMember().withNickname("스타").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory().withHost(me).buildAndSave(categoryRepository);
+        Member me = MemberFixtures.ofDefault().withNickname("나").buildAndSave(memberRepository);
+        Member invited = MemberFixtures.ofDefault().withNickname("스타").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault().withHost(me).buildAndSave(categoryRepository);
 
         categoryInvitationRepository.save(CategoryInvitation.invite(category, me, invited));
 
         long excludeCategoryId = category.getId() + 1;
-        MemberReadRequest request = MemberReadRequestFixtures.defaultMemberReadRequest()
+        MemberReadRequest request = MemberReadRequestFixtures.ofDefault()
                 .withNickname("스타")
                 .withExcludeCategoryId(excludeCategoryId)
                 .build();
@@ -206,12 +206,12 @@ class MemberServiceTest extends ServiceSliceTest {
     @Test
     void readMembersWithJoinedStatus() {
         // given
-        Member me = MemberFixtures.defaultMember().withNickname("나").buildAndSave(memberRepository);
-        Member joined = MemberFixtures.defaultMember().withNickname("스타카토").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory().withHost(me).withGuests(List.of(joined))
+        Member me = MemberFixtures.ofDefault().withNickname("나").buildAndSave(memberRepository);
+        Member joined = MemberFixtures.ofDefault().withNickname("스타카토").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault().withHost(me).withGuests(List.of(joined))
                 .buildAndSave(categoryRepository);
 
-        MemberReadRequest request = MemberReadRequestFixtures.defaultMemberReadRequest()
+        MemberReadRequest request = MemberReadRequestFixtures.ofDefault()
                 .withNickname("스타")
                 .withExcludeCategoryId(category.getId())
                 .build();
@@ -231,13 +231,13 @@ class MemberServiceTest extends ServiceSliceTest {
     @Test
     void readMembersWithCategoryIdAndNoneStatus() {
         // given
-        Member me = MemberFixtures.defaultMember().withNickname("나").buildAndSave(memberRepository);
-        Member joined = MemberFixtures.defaultMember().withNickname("스타카토").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory().withHost(me).withGuests(List.of(joined))
+        Member me = MemberFixtures.ofDefault().withNickname("나").buildAndSave(memberRepository);
+        Member joined = MemberFixtures.ofDefault().withNickname("스타카토").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault().withHost(me).withGuests(List.of(joined))
                 .buildAndSave(categoryRepository);
 
         long excludeCategoryId = category.getId() + 1;
-        MemberReadRequest request = MemberReadRequestFixtures.defaultMemberReadRequest()
+        MemberReadRequest request = MemberReadRequestFixtures.ofDefault()
                 .withNickname("스타")
                 .withExcludeCategoryId(excludeCategoryId)
                 .build();
@@ -257,10 +257,10 @@ class MemberServiceTest extends ServiceSliceTest {
     @Test
     void readMembersWithoutExcludeCategoryId() {
         // given
-        Member me = MemberFixtures.defaultMember().withNickname("나").buildAndSave(memberRepository);
-        Member none = MemberFixtures.defaultMember().withNickname("스타").buildAndSave(memberRepository);
+        Member me = MemberFixtures.ofDefault().withNickname("나").buildAndSave(memberRepository);
+        Member none = MemberFixtures.ofDefault().withNickname("스타").buildAndSave(memberRepository);
 
-        MemberReadRequest request = MemberReadRequestFixtures.defaultMemberReadRequest()
+        MemberReadRequest request = MemberReadRequestFixtures.ofDefault()
                 .withNickname("스타")
                 .withExcludeCategoryId(0L)
                 .build();

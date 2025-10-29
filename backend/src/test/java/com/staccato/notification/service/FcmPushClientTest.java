@@ -1,12 +1,19 @@
 package com.staccato.notification.service;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -18,20 +25,15 @@ import com.staccato.member.domain.Member;
 import com.staccato.notification.service.dto.message.PushMessage;
 import com.staccato.notification.service.dto.message.ReceiveInvitationMessage;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
-class FcmServiceTest {
+public class FcmPushClientTest {
 
     @Mock
     private FirebaseMessaging firebaseMessaging;
     @Mock
     private ApiFuture<BatchResponse> future;
     @InjectMocks
-    private FcmService fcmService;
+    private FcmPushClient fcmPushClient;
 
     @DisplayName("정상적인 메시지를 전송하면 FCM을 호출한다.")
     @Test
@@ -41,7 +43,7 @@ class FcmServiceTest {
         when(firebaseMessaging.sendEachForMulticastAsync(any(MulticastMessage.class))).thenReturn(future);
 
         // when
-        fcmService.sendPush(tokens, dummyPushMessage());
+        fcmPushClient.sendPush(tokens, dummyPushMessage());
 
         // then
         verify(firebaseMessaging).sendEachForMulticastAsync(any(MulticastMessage.class));
@@ -51,15 +53,15 @@ class FcmServiceTest {
     @Test
     void failSendPush() {
         // given
-        fcmService.sendPush(List.of(), dummyPushMessage());
+        fcmPushClient.sendPush(List.of(), dummyPushMessage());
 
         // when & then
         verifyNoInteractions(firebaseMessaging);
     }
 
     private PushMessage dummyPushMessage() {
-        Member inviter = MemberFixtures.defaultMember().build();
-        Category category = CategoryFixtures.defaultCategory().build();
+        Member inviter = MemberFixtures.ofDefault().build();
+        Category category = CategoryFixtures.ofDefault().build();
 
         return new ReceiveInvitationMessage(inviter, category);
     }

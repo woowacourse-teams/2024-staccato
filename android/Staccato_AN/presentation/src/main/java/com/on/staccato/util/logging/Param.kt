@@ -1,5 +1,7 @@
 package com.on.staccato.util.logging
 
+import android.os.Bundle
+
 data class Param<T : Any>(val key: String, val value: T) {
     companion object {
         const val KEY_SDK_VERSION = "Android_SDK_version"
@@ -21,5 +23,19 @@ data class Param<T : Any>(val key: String, val value: T) {
 
         const val KEY_EXCEPTION = "exception"
         const val KEY_EXCEPTION_MESSAGE = "exception_message"
+    }
+}
+
+fun <T : Any> Param<T>.putInto(bundle: Bundle) {
+    when (val v = value) {
+        is String -> bundle.putString(key, v)
+        is Int -> bundle.putInt(key, v)
+        is Long -> bundle.putLong(key, v)
+        is Double -> bundle.putDouble(key, v)
+        is Boolean -> bundle.putBoolean(key, v)
+        is Throwable -> {
+            bundle.putString("${key}_cause", v.cause?.toString())
+            bundle.putString("${key}_message", v.message)
+        }
     }
 }

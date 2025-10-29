@@ -61,13 +61,13 @@ public class CategorySortTest extends ServiceSliceTest {
     @Test
     void readAllCategoriesByUpdatedAtDesc() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
         List<Category> categories = new ArrayList<>();
-        categories.add(CategoryFixtures.defaultCategory()
+        categories.add(CategoryFixtures.ofDefault()
                 .withTitle("first")
                 .withHost(member)
                 .buildAndSave(categoryRepository));
-        categories.add(CategoryFixtures.defaultCategory()
+        categories.add(CategoryFixtures.ofDefault()
                 .withTitle("second")
                 .withHost(member)
                 .buildAndSave(categoryRepository));
@@ -87,23 +87,21 @@ public class CategorySortTest extends ServiceSliceTest {
     void readAllCategoriesByNewest() {
         // given
         List<Category> categories = new ArrayList<>();
-        categories.add(CategoryFixtures.defaultCategory()
+        categories.add(CategoryFixtures.ofDefault()
                 .withTitle("first")
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository));
-        categories.add(CategoryFixtures.defaultCategory()
+        categories.add(CategoryFixtures.ofDefault()
                 .withTitle("second")
                 .withTerm(LocalDate.of(2024, 6, 1),
                         LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository));
-        categories.add(CategoryFixtures.defaultCategory()
+        categories.add(CategoryFixtures.ofDefault()
                 .withTitle("third")
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
-        categories.add(CategoryFixtures.defaultCategory()
+        categories.add(CategoryFixtures.ofDefault()
                 .withTitle("fourth")
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
 
         // when
@@ -123,23 +121,21 @@ public class CategorySortTest extends ServiceSliceTest {
     void readAllCategoriesByOldest() {
         // given
         List<Category> categories = new ArrayList<>();
-        categories.add(CategoryFixtures.defaultCategory()
+        categories.add(CategoryFixtures.ofDefault()
                 .withTitle("first")
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository));
-        categories.add(CategoryFixtures.defaultCategory()
+        categories.add(CategoryFixtures.ofDefault()
                 .withTitle("second")
                 .withTerm(LocalDate.of(2024, 6, 1),
                         LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository));
-        categories.add(CategoryFixtures.defaultCategory()
+        categories.add(CategoryFixtures.ofDefault()
                 .withTitle("third")
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
-        categories.add(CategoryFixtures.defaultCategory()
+        categories.add(CategoryFixtures.ofDefault()
                 .withTitle("fourth")
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
 
         // when

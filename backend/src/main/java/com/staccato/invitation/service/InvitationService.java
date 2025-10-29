@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
+import com.staccato.config.aspect.annotation.OptimisticLockHandler;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
@@ -85,6 +86,7 @@ public class InvitationService {
     }
 
     @Transactional
+    @OptimisticLockHandler("이미 처리 완료된 초대입니다.")
     public void cancel(Member inviter, long invitationId) {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
         validateInviter(invitation, inviter);
@@ -98,6 +100,7 @@ public class InvitationService {
     }
 
     @Transactional
+    @OptimisticLockHandler("이미 처리 완료된 초대입니다.")
     public void accept(Member invitee, long invitationId) {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
         invitation.validateInvitee(invitee);
@@ -115,6 +118,7 @@ public class InvitationService {
     }
 
     @Transactional
+    @OptimisticLockHandler("이미 처리 완료된 초대입니다.")
     public void reject(Member invitee, long invitationId) {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
         invitation.validateInvitee(invitee);

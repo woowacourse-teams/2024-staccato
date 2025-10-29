@@ -7,14 +7,13 @@ import com.staccato.category.service.dto.request.CategoryCreateRequest;
 
 public class CategoryCreateRequestFixtures {
 
-    public static CategoryCreateRequestBuilder defaultCategoryCreateRequest() {
+    public static CategoryCreateRequestBuilder ofDefault() {
         return new CategoryCreateRequestBuilder()
                 .withCategoryThumbnailUrl("https://example.com/categoryThumbnailUrl.jpg")
                 .withCategoryTitle("categoryTitle")
                 .withDescription("categoryDescription")
                 .withColor(Color.PINK.getName())
-                .withTerm(LocalDate.of(2024, 1, 1),
-                        LocalDate.of(2024, 12, 31))
+                .withTerm(null, null)
                 .withIsShared(false);
     }
 

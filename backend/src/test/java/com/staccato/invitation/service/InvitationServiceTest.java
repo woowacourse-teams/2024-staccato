@@ -1,24 +1,23 @@
 package com.staccato.invitation.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
+import com.staccato.exception.ConflictException;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
@@ -34,6 +33,12 @@ import com.staccato.invitation.service.dto.response.CategoryInvitationSentRespon
 import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
+import com.staccato.util.TransactionExecutor;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class InvitationServiceTest extends ServiceSliceTest {
     @Autowired
@@ -46,6 +51,8 @@ class InvitationServiceTest extends ServiceSliceTest {
     private CategoryInvitationRepository categoryInvitationRepository;
     @Autowired
     private CategoryMemberRepository categoryMemberRepository;
+    @Autowired
+    private TransactionExecutor transactionExecutor;
 
     private Member host;
     private Member guest;
@@ -53,9 +60,9 @@ class InvitationServiceTest extends ServiceSliceTest {
 
     @BeforeEach
     void init() {
-        host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-        category = CategoryFixtures.defaultCategory()
+        host = MemberFixtures.ofDefault().withNickname("host").buildAndSave(memberRepository);
+        guest = MemberFixtures.ofDefault().withNickname("guest").buildAndSave(memberRepository);
+        category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .buildAndSave(categoryRepository);
     }
@@ -64,7 +71,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void invite() {
         // given
-        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.ofDefault().withNickname("guest2").buildAndSave(memberRepository);
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId(), guest2.getId()));
 
         // when
@@ -93,7 +100,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void failToInviteIfNotHost() {
         // given
-        Member anotherUser = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
+        Member anotherUser = MemberFixtures.ofDefault().withNickname("otherMem").buildAndSave(memberRepository);
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
 
         // when & then
@@ -125,7 +132,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void failIfAlreadyCategoryMember() {
         // given
-        category = CategoryFixtures.defaultCategory()
+        category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
@@ -160,10 +167,10 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void inviteMixedSuccessAndFailure() {
         // given
-        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
-        Member guest3 = MemberFixtures.defaultMember().withNickname("guest3").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.ofDefault().withNickname("guest2").buildAndSave(memberRepository);
+        Member guest3 = MemberFixtures.ofDefault().withNickname("guest3").buildAndSave(memberRepository);
 
-        category = CategoryFixtures.defaultCategory()
+        category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
@@ -185,7 +192,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void readAllSentInvitations() {
         // given
-        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.ofDefault().withNickname("guest2").buildAndSave(memberRepository);
         CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
         CategoryInvitation invitation2 = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest2));
 
@@ -298,7 +305,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     void acceptDoesNotThrowWhenMemberAlreadyInCategory() {
         // given
         CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
-        CategoryMemberFixtures.defaultCategoryMember()
+        CategoryMemberFixtures.ofDefault()
                 .withCategory(category)
                 .withMember(guest)
                 .buildAndSave(categoryMemberRepository);
@@ -361,7 +368,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void readAllReceivedInvitations() {
         // given
-        Member host2 = MemberFixtures.defaultMember().withNickname("host2").buildAndSave(memberRepository);
+        Member host2 = MemberFixtures.ofDefault().withNickname("host2").buildAndSave(memberRepository);
         CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
         CategoryInvitation invitation2 = categoryInvitationRepository.save(CategoryInvitation.invite(category, host2, guest));
 
@@ -376,5 +383,58 @@ class InvitationServiceTest extends ServiceSliceTest {
                         new CategoryInvitationReceivedResponse(invitation)
                 )
         );
+    }
+
+    @Nested
+    @Disabled
+    @DisplayName("초대 동시성 테스트")
+    class InvitationConcurrency {
+        @DisplayName("초대 수락과 취소를 동시에 시도하면 예외가 발생한다.")
+        @Test
+        void failOnConcurrentAcceptAndCancel() {
+            // given
+            CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+            Long invitationId = invitation.getId();
+
+            //when
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+            Future<?> future = executorService.submit(() -> invitationService.accept(guest, invitationId));
+            Future<?> future2 = executorService.submit(() -> invitationService.cancel(host, invitationId));
+
+            // then
+            assertAll(
+                    () -> assertThatThrownBy(() -> {
+                        future.get();
+                        future2.get();
+                    }).hasCauseInstanceOf(ConflictException.class)
+                            .hasMessageContaining("이미 처리 완료된 초대입니다."),
+                    () -> assertThat(categoryInvitationRepository.findById(invitationId).get().getStatus())
+                            .isIn(InvitationStatus.CANCELED, InvitationStatus.ACCEPTED)
+            );
+        }
+
+        @DisplayName("초대 취소과 거절을 동시에 시도하면 예외가 발생한다.")
+        @Test
+        void failOnConcurrentCancelAndReject() {
+            // given
+            CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+            Long invitationId = invitation.getId();
+
+            //when
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+            Future<?> future = executorService.submit(() -> invitationService.cancel(host, invitationId));
+            Future<?> future2 = executorService.submit(() -> invitationService.reject(guest, invitationId));
+
+            // then
+            assertAll(
+                    () -> assertThatThrownBy(() -> {
+                        future.get();
+                        future2.get();
+                    }).hasCauseInstanceOf(ConflictException.class)
+                            .hasMessageContaining("이미 처리 완료된 초대입니다."),
+                    () -> assertThat(categoryInvitationRepository.findById(invitationId).get().getStatus())
+                            .isIn(InvitationStatus.REJECTED, InvitationStatus.CANCELED)
+            );
+        }
     }
 }

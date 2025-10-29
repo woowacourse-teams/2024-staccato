@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -9,28 +7,12 @@ plugins {
 
 android {
     namespace = "com.on.staccato.data"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 26
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] =
-            "de.mannodermaus.junit5.AndroidJUnit5Builder"
         consumerProguardFiles("consumer-rules.pro")
-
-        val secretPropsFile = rootProject.file("secret.properties")
-        val localDefaultsFile = rootProject.file("local.defaults.properties")
-        val props =
-            Properties().apply {
-                if (secretPropsFile.exists()) {
-                    load(secretPropsFile.inputStream())
-                } else if (localDefaultsFile.exists()) {
-                    load(localDefaultsFile.inputStream())
-                }
-            }
-        val mapsApiKey = props.getProperty("MAPS_API_KEY") ?: ""
-        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -43,26 +25,24 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
 dependencies {
+    implementation(platform(libs.kotlin.bom))
 
+    // Android
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization.converter)
-    implementation(libs.converter.scalars)
+    implementation(libs.retrofit.converter.scalars)
 
     // Kotlinx-Serialization
     implementation(libs.kotlinx.serialization.json)
@@ -71,15 +51,16 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
     testImplementation(libs.okhttp.mockwebserver)
 
-    // Google Place
-    implementation(libs.places)
-    implementation(platform(libs.kotlin.bom))
+    // Google Play Service Location
+    implementation(libs.play.services.location)
 
     // Firebase
     implementation(libs.firebase.messaging.ktx)
 
     // JUnit5
-    testImplementation(libs.junit5)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testRuntimeOnly(libs.junit.vintage.engine)
 
     // Coroutines Test
@@ -88,7 +69,7 @@ dependencies {
     // AssertJ
     testImplementation(libs.assertj.core)
 
-    // Mockk
+    // MockK
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.agent)
 

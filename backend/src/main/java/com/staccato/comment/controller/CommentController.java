@@ -1,8 +1,10 @@
 package com.staccato.comment.controller;
 
 import java.net.URI;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,14 +16,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.staccato.comment.controller.docs.CommentControllerDocs;
 import com.staccato.comment.service.CommentService;
 import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
+import com.staccato.comment.service.dto.response.CommentResponsesV2;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -47,8 +52,8 @@ public class CommentController implements CommentControllerDocs {
             @LoginMember Member member,
             @RequestParam @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId
     ) {
-        CommentResponses commentResponses = commentService.readAllCommentsByStaccatoId(member, staccatoId);
-        return ResponseEntity.ok().body(commentResponses);
+        CommentResponsesV2 commentResponses = commentService.readAllCommentsByStaccatoId(member, staccatoId);
+        return ResponseEntity.ok().body(commentResponses.toCommentResponses());
     }
 
     @PutMapping("/{commentId}")

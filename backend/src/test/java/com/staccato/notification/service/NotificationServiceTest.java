@@ -56,7 +56,7 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Autowired
     private CategoryInvitationRepository categoryInvitationRepository;
     @MockBean
-    private FcmService fcmService;
+    private PushClient pushClient;
 
     private Member host;
     private Member guest;
@@ -67,28 +67,25 @@ class NotificationServiceTest extends ServiceSliceTest {
 
     @BeforeEach
     void setUp() {
-        host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-        other = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
-        category = CategoryFixtures.defaultCategory()
+        host = MemberFixtures.ofDefault().withNickname("host").buildAndSave(memberRepository);
+        guest = MemberFixtures.ofDefault().withNickname("guest").buildAndSave(memberRepository);
+        other = MemberFixtures.ofDefault().withNickname("other").buildAndSave(memberRepository);
+        category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
-        staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
+        staccato = StaccatoFixtures.ofDefault(category)
                 .buildAndSave(staccatoRepository);
-        comment = CommentFixtures.defaultComment()
-                .withStaccato(staccato)
-                .withMember(host)
+        comment = CommentFixtures.ofDefault(staccato, host)
                 .buildAndSave(commentRepository);
 
-        NotificationTokenFixtures.defaultNotificationToken(host)
+        NotificationTokenFixtures.ofDefault(host)
                 .withToken("hostToken")
                 .buildAndSave(notificationTokenRepository);
-        NotificationTokenFixtures.defaultNotificationToken(guest)
+        NotificationTokenFixtures.ofDefault(guest)
                 .withToken("guestToken")
                 .buildAndSave(notificationTokenRepository);
-        NotificationTokenFixtures.defaultNotificationToken(other)
+        NotificationTokenFixtures.ofDefault(other)
                 .withToken("otherToken")
                 .buildAndSave(notificationTokenRepository);
     }
@@ -126,7 +123,7 @@ class NotificationServiceTest extends ServiceSliceTest {
         List<String> expectedTokens = List.of("otherToken");
         PushMessage expectedMessage = new ReceiveInvitationMessage(host, category);
 
-        verify(fcmService).sendPush(expectedTokens, expectedMessage);
+        verify(pushClient).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("초대 수락 알림을 전송한다.")
@@ -139,7 +136,7 @@ class NotificationServiceTest extends ServiceSliceTest {
         List<String> expectedTokens = List.of("hostToken", "guestToken");
         PushMessage expectedMessage = new AcceptInvitationMessage(other, category);
 
-        verify(fcmService).sendPush(expectedTokens, expectedMessage);
+        verify(pushClient).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("새로운 스타카토 알림을 전송한다.")
@@ -152,7 +149,7 @@ class NotificationServiceTest extends ServiceSliceTest {
         List<String> expectedTokens = List.of("guestToken");
         PushMessage expectedMessage = new StaccatoCreatedMessage(host, staccato, category);
 
-        verify(fcmService).sendPush(expectedTokens, expectedMessage);
+        verify(pushClient).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("새로운 코멘트 알림을 전송한다.")
@@ -165,24 +162,26 @@ class NotificationServiceTest extends ServiceSliceTest {
         List<String> expectedTokens = List.of("guestToken");
         PushMessage expectedMessage = new CommentCreatedMessage(host, staccato, comment);
 
-        verify(fcmService).sendPush(expectedTokens, expectedMessage);
+        verify(pushClient).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("토큰이 존재하지 않으면 새로 저장한다.")
     @Test
     void registerNewToken() {
         // given
-        Member member = MemberFixtures.defaultMember().withNickname("newbie").buildAndSave(memberRepository);
-        NotificationToken notificationToken = NotificationTokenFixtures.defaultNotificationToken(member).build();
+        Member member = MemberFixtures.ofDefault().withNickname("newbie").buildAndSave(memberRepository);
+        NotificationToken notificationToken = NotificationTokenFixtures.ofDefault(member).build();
         NotificationTokenRequest notificationTokenRequest = new NotificationTokenRequest(
                 notificationToken.getToken(),
                 notificationToken.getDeviceType().getName(),
                 notificationToken.getDeviceId());
 
         // when
-        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
+        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
         notificationService.register(member, notificationTokenRequest);
-        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
+        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
 
         // then
         assertAll(
@@ -192,25 +191,84 @@ class NotificationServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("이미 토큰이 존재하면 기존 토큰을 갱신한다.")
+    @DisplayName("(MemberId, DeviceType, DeviceId)가 동일한 토큰이 존재하면 기존 토큰 값을 갱신한다.")
     @Test
-    void registerAndUpdateToken() {
+    void updateTokenValueWhenSameTokenExists() {
         // given
-        Member member = MemberFixtures.defaultMember().withNickname("reuser").buildAndSave(memberRepository);
-        NotificationToken oldToken = NotificationTokenFixtures.defaultNotificationToken(member)
+        Member member = MemberFixtures.ofDefault().withNickname("member").buildAndSave(memberRepository);
+        NotificationToken oldToken = NotificationTokenFixtures.ofDefault(member)
                 .withToken("old-token").buildAndSave(notificationTokenRepository);
         NotificationTokenRequest notificationTokenRequest = new NotificationTokenRequest("updated-token", oldToken.getDeviceType()
                 .getName(), oldToken.getDeviceId());
 
         // when
-        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
+        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
         notificationService.register(member, notificationTokenRequest);
-        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
+        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(
+                member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
 
         // then
         assertAll(
                 () -> assertThat(beforeRegister.get().getToken()).isEqualTo(oldToken.getToken()),
                 () -> assertThat(afterRegister.get().getToken()).isEqualTo(notificationTokenRequest.token())
+        );
+    }
+
+    @DisplayName("토큰 값이 동일한 토큰이 정확히 한 개 존재하면 기존 토큰의 DeviceId 값을 갱신한다.")
+    @Test
+    void updateDeviceIdWhenSameTokenValueExistsOnce() {
+        // given
+        Member member = MemberFixtures.ofDefault().withNickname("member").buildAndSave(memberRepository);
+        String tokenValue = "token-value";
+        NotificationTokenFixtures.ofDefault(member)
+                .withToken(tokenValue)
+                .withDeviceId("old-device-id")
+                .buildAndSave(notificationTokenRepository);
+        NotificationTokenRequest notificationTokenRequest = new NotificationTokenRequest(
+                tokenValue, "android", "new-device-id");
+
+        // when
+        List<NotificationToken> beforeRegister = notificationTokenRepository.findAllByToken(tokenValue);
+        notificationService.register(member, notificationTokenRequest);
+        List<NotificationToken> afterRegister = notificationTokenRepository.findAllByToken(tokenValue);
+
+        assertAll(
+                () -> assertThat(beforeRegister).hasSize(1),
+                () -> assertThat(afterRegister).hasSize(1),
+                () -> assertThat(afterRegister.get(0).getId()).isEqualTo(beforeRegister.get(0).getId()),
+                () -> assertThat(afterRegister.get(0).getDeviceId()).isEqualTo("new-device-id")
+        );
+    }
+
+    @DisplayName("토큰 값이 동일한 토큰이 두 개 이상 존재하면 모든 토큰을 삭제하고 새로운 토큰을 생성한다.")
+    @Test
+    void deleteAllAndSaveOneWhenSameTokenValueExistsMoreThanTwice() {
+        // given
+        Member member = MemberFixtures.ofDefault().withNickname("member").buildAndSave(memberRepository);
+        String tokenValue = "token-value";
+        NotificationTokenFixtures.ofDefault(member)
+                .withToken(tokenValue)
+                .withDeviceId("old-device-id1")
+                .buildAndSave(notificationTokenRepository);
+        NotificationTokenFixtures.ofDefault(member)
+                .withToken(tokenValue)
+                .withDeviceId("old-device-id2")
+                .buildAndSave(notificationTokenRepository);
+        NotificationTokenRequest notificationTokenRequest = new NotificationTokenRequest(
+                tokenValue, "android", "new-device-id");
+
+        // when
+        List<NotificationToken> beforeRegister = notificationTokenRepository.findAllByToken(tokenValue);
+        notificationService.register(member, notificationTokenRequest);
+        List<NotificationToken> afterRegister = notificationTokenRepository.findAllByToken(tokenValue);
+
+        assertAll(
+                () -> assertThat(beforeRegister).hasSize(2),
+                () -> assertThat(afterRegister).hasSize(1),
+                () -> assertThat(notificationTokenRepository.findById(beforeRegister.get(0).getId())).isEmpty(),
+                () -> assertThat(notificationTokenRepository.findById(beforeRegister.get(1).getId())).isEmpty(),
+                () -> assertThat(afterRegister.get(0).getDeviceId()).isEqualTo("new-device-id")
         );
     }
 }

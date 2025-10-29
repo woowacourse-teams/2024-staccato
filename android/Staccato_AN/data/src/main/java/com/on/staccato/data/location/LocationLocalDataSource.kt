@@ -14,10 +14,9 @@ class LocationLocalDataSource
         private val fusedLocationProviderClient: FusedLocationProviderClient,
     ) : LocationDataSource {
         @SuppressLint("MissingPermission")
-        override fun getCurrentLocation(): Task<Location> {
-            return fusedLocationProviderClient.getCurrentLocation(
+        override fun getCurrentLocation(): Task<Location> =
+            fusedLocationProviderClient.getCurrentLocation(
                 PRIORITY_HIGH_ACCURACY,
                 CancellationTokenSource().token,
             )
-        }
     }

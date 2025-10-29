@@ -22,11 +22,11 @@ public class CategoryDetailResponseV3Test {
     @Test
     void sortMembersByHostThenSelfThenCreatedAt() {
         // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").build();
-        Member guestSelf = MemberFixtures.defaultMember().withNickname("guestSelf").build();
-        Member guestOld = MemberFixtures.defaultMember().withNickname("guestOld").build();
-        Member guestNew = MemberFixtures.defaultMember().withNickname("guestNew").build();
-        Category category = CategoryFixtures.defaultCategory()
+        Member host = MemberFixtures.ofDefault().withNickname("host").build();
+        Member guestSelf = MemberFixtures.ofDefault().withNickname("guestSelf").build();
+        Member guestOld = MemberFixtures.ofDefault().withNickname("guestOld").build();
+        Member guestNew = MemberFixtures.ofDefault().withNickname("guestNew").build();
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guestOld, guestSelf, guestNew))
                 .build();

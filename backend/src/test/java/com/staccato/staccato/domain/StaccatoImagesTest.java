@@ -78,13 +78,12 @@ class StaccatoImagesTest {
     @ParameterizedTest
     void update(List<String> existingImageNames, List<String> updatedImageNames) {
         // given
-        Category category = CategoryFixtures.defaultCategory().build();
+        Category category = CategoryFixtures.ofDefault().build();
         StaccatoImages existingImages = new StaccatoImages(existingImageNames);
         StaccatoImages updatedImages = new StaccatoImages(updatedImageNames);
 
         // when
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category).build();
+        Staccato staccato = StaccatoFixtures.ofDefault(category).build();
         existingImages.update(updatedImages, staccato);
         List<String> images = existingImages.getImages().stream().map(StaccatoImage::getImageUrl).toList();
 
@@ -111,14 +110,13 @@ class StaccatoImagesTest {
         @DisplayName("이미지가 변경되지 않으면 바뀌지 않는다.")
         void notChangeUpdatedAtWhenImagesAreSame() {
             // given
-            Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-            Category category = CategoryFixtures.defaultCategory()
+            Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+            Category category = CategoryFixtures.ofDefault()
                     .withHost(member)
                 .buildAndSave(categoryRepository);
             List<String> imageUrls = List.of("same1.jpg", "same2.jpg");
 
-            Staccato staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category)
+            Staccato staccato = StaccatoFixtures.ofDefault(category)
                     .withStaccatoImages(imageUrls).buildAndSave(staccatoRepository);
             entityManager.flush();
             entityManager.clear();
@@ -139,14 +137,13 @@ class StaccatoImagesTest {
         @DisplayName("이미지가 변경되면 갱신된다.")
         void changeUpdatedAtWhenImagesAreDifferent() {
             // given
-            Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-            Category category = CategoryFixtures.defaultCategory()
+            Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+            Category category = CategoryFixtures.ofDefault()
                     .withHost(member)
                 .buildAndSave(categoryRepository);
             List<String> imageUrls = List.of("img1.jpg", "img2.jpg");
 
-            Staccato staccato = StaccatoFixtures.defaultStaccato()
-                    .withCategory(category)
+            Staccato staccato = StaccatoFixtures.ofDefault(category)
                     .withStaccatoImages(imageUrls).buildAndSave(staccatoRepository);
             entityManager.flush();
             entityManager.clear();

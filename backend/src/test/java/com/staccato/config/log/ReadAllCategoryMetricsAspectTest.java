@@ -27,7 +27,7 @@ public class ReadAllCategoryMetricsAspectTest extends ServiceSliceTest {
     @Test
     void testMetricsAfterServiceExecution() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
         CategoryReadRequest categoryReadRequest = new CategoryReadRequest("with_term", "oldest");
 
         // when

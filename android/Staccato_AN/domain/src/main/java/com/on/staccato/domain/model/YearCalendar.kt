@@ -119,9 +119,7 @@ data class YearCalendar private constructor(private val yearToMonthCalender: Map
         private fun createYearsBetween(
             startYear: Int,
             endYear: Int,
-        ): List<Int> {
-            return (startYear..endYear).toList()
-        }
+        ): List<Int> = (startYear..endYear).toList()
 
         private fun createHundredOfYearsAroundCurrent(targetDate: LocalDate): List<Int> {
             val hundredYearsAgo = targetDate.minusYears(HUNDRED_RANGE)

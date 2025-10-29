@@ -38,7 +38,7 @@ public interface CommentControllerDocs {
         @Parameter(hidden = true) Member member,
         @Parameter(description = "댓글 생성 시 요구 형식") @Valid CommentRequest commentRequest);
 
-    @Operation(summary = "댓글 조회", description = "스타카토에 속한 모든 댓글을 생성 순으로 조회합니다.")
+    @Operation(summary = "댓글 조회", deprecated = true, description = "스타카토에 속한 모든 댓글을 생성 순으로 조회합니다.")
     @ApiResponses(value = {
         @ApiResponse(description = "댓글 조회 성공", responseCode = "200"),
         @ApiResponse(description = "스타카토 식별자가 양수가 아닐 때 발생", responseCode = "400"),

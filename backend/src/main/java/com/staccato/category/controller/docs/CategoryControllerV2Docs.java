@@ -52,13 +52,13 @@ public interface CategoryControllerV2Docs {
             @Parameter(description = "정렬 기준은 생략하거나 유효하지 않은 값에 대해서는 최근 수정 순(UPDATED)이 기본 정렬로 적용됩니다. 필터링 조건은 생략하거나 유효하지 않은 값이 들어오면 적용되지 않습니다.") CategoryReadRequest categoryReadRequest
     );
 
-    @Operation(summary = "카테고리 조회", deprecated = true, description = "사용자의 카테고리을 조회합니다.")
+    @Operation(summary = "카테고리 조회", deprecated = true, description = "사용자의 카테고리를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
-                    (1) 존재하지 않는 카테고리을 조회하려고 했을 때
+                    (1) 존재하지 않는 카테고리를 조회하려고 했을 때
                                         
                     (2) Path Variable 형식이 잘못되었을 때
                     """,

@@ -2,10 +2,9 @@ package com.staccato.category.controller;
 
 import java.net.URI;
 import java.time.LocalDate;
-
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.staccato.category.controller.docs.CategoryControllerDocs;
 import com.staccato.category.service.CategoryService;
+import com.staccato.category.service.StaccatoCursor;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
@@ -32,10 +31,10 @@ import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
+import com.staccato.category.service.dto.response.CategoryStaccatoResponses;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
-
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -79,19 +78,34 @@ public class CategoryController implements CategoryControllerDocs {
     public ResponseEntity<CategoryDetailResponse> readCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
-        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryWithStaccatosById(categoryId, member);
         return ResponseEntity.ok(categoryDetailResponse.toCategoryDetailResponse());
     }
 
-    @GetMapping("/{categoryId}/staccatos")
-    public ResponseEntity<CategoryStaccatoLocationResponses> readAllStaccatoByCategory(
+    @GetMapping("/{categoryId}/staccatos/locations")
+    public ResponseEntity<CategoryStaccatoLocationResponses> readStaccatoLocationsByCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Validated @ModelAttribute CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest
     ) {
-        CategoryStaccatoLocationResponses categoryStaccatoLocationResponses = categoryService.readAllStaccatoByCategory(
+        CategoryStaccatoLocationResponses categoryStaccatoLocationResponses = categoryService.readStaccatoLocationsByCategory(
                 member, categoryId, categoryStaccatoLocationRangeRequest);
         return ResponseEntity.ok().body(categoryStaccatoLocationResponses);
+    }
+
+    @GetMapping("/{categoryId}/staccatos")
+    public ResponseEntity<CategoryStaccatoResponses> readStaccatosByCategory(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @RequestParam(required = false) String cursor,
+            @RequestParam(defaultValue = "10")
+            @Min(value = 1, message = "limit는 1 이상, 100 이하여야 합니다.")
+            @Max(value = 100, message = "limit는 1 이상, 100 이하여야 합니다.")
+            int limit
+    ) {
+        CategoryStaccatoResponses categoryStaccatoResponses = categoryService.readStaccatosByCategory(
+                member, categoryId, cursor, limit);
+        return ResponseEntity.ok().body(categoryStaccatoResponses);
     }
 
     @PutMapping("/{categoryId}")

@@ -30,15 +30,15 @@ class CategoryRepositoryTest extends RepositoryTest {
 
     @BeforeEach
     void setUp() {
-        host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        host = MemberFixtures.ofDefault().withNickname("host").buildAndSave(memberRepository);
+        guest = MemberFixtures.ofDefault().withNickname("guest").buildAndSave(memberRepository);
     }
 
     @DisplayName("카테고리 id로 조회 시, categoryMembers와 member까지 함께 조회된다")
     @Test
     void findWithCategoryMembersByIdWithCategoryMembersAndMembers() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
@@ -62,23 +62,23 @@ class CategoryRepositoryTest extends RepositoryTest {
     @Test
     void findByMemberIdAndDateWithPrivateFlagWhenSpecificDateIsGiven() {
         // given
-        Category privateCategoryIn2024 = CategoryFixtures.defaultCategory()
+        Category privateCategoryIn2024 = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository);
-        Category publicCategoryIn2024 = CategoryFixtures.defaultCategory()
+        Category publicCategoryIn2024 = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository);
-        Category privateCategoryIn2025 = CategoryFixtures.defaultCategory()
+        Category privateCategoryIn2025 = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withTerm(LocalDate.of(2025, 1, 1),
                         LocalDate.of(2025, 12, 31))
                 .buildAndSave(categoryRepository);
-        Category publicCategoryIn2025 = CategoryFixtures.defaultCategory()
+        Category publicCategoryIn2025 = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .withTerm(LocalDate.of(2025, 1, 1),
@@ -100,14 +100,12 @@ class CategoryRepositoryTest extends RepositoryTest {
     @Test
     void findAllByMemberIdAndDateAndSharingFilterIsNull() {
         // given
-        Category privateCategory = CategoryFixtures.defaultCategory()
+        Category privateCategory = CategoryFixtures.ofDefault()
                 .withHost(host)
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository);
-        Category publicCategory = CategoryFixtures.defaultCategory()
+        Category publicCategory = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository);
 
         // when
@@ -122,14 +120,12 @@ class CategoryRepositoryTest extends RepositoryTest {
     @Test
     void findAllByMemberIdAndDateAndSharingFilterIsFalse() {
         // given
-        Category privateCategory = CategoryFixtures.defaultCategory()
+        Category privateCategory = CategoryFixtures.ofDefault()
                 .withHost(host)
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository);
-        Category publicCategory = CategoryFixtures.defaultCategory()
+        Category publicCategory = CategoryFixtures.ofDefault()
                 .withHost(host)
                 .withGuests(List.of(guest))
-                .withTerm(null, null)
                 .buildAndSave(categoryRepository);
 
         // when

@@ -13,14 +13,13 @@ import com.staccato.member.domain.Member;
 
 public class CategoryFixtures {
 
-    public static CategoryBuilder defaultCategory() {
+    public static CategoryBuilder ofDefault() {
         return new CategoryBuilder()
                 .withThumbnailUrl("https://example.com/categoryThumbnail.jpg")
                 .withTitle("categoryTitle")
                 .withDescription("categoryDescription")
                 .withColor(Color.PINK)
-                .withTerm(LocalDate.of(2024, 1, 1),
-                        LocalDate.of(2024, 12, 31))
+                .withTerm(null, null)
                 .withIsShared(false);
     }
 

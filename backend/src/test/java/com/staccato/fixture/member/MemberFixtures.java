@@ -8,7 +8,7 @@ import com.staccato.member.repository.MemberRepository;
 
 public class MemberFixtures {
 
-    public static MemberBuilder defaultMember() {
+    public static MemberBuilder ofDefault() {
         return new MemberBuilder()
                 .withNickname("nickname")
                 .withImageUrl("https://example.com/memberImage.png")

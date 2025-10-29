@@ -5,19 +5,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
-import com.on.staccato.presentation.timeline.component.Timeline
+import com.on.staccato.presentation.timeline.component.Categories
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
 
 @Composable
-fun TimelineScreen(
+fun CategoriesScreen(
     timelineViewModel: TimelineViewModel = hiltViewModel(),
     sharedViewModel: SharedViewModel,
     onCategoryClicked: (Long) -> Unit,
 ) {
-    val timeline by timelineViewModel.timeline.collectAsState()
+    val categories by timelineViewModel.timeline.collectAsState()
 
-    Timeline(
-        timeline = timeline,
+    Categories(
+        categories = categories,
         onCategoryClicked = onCategoryClicked,
         onTopChanged = { sharedViewModel.updateIsAtTop(it) },
     )

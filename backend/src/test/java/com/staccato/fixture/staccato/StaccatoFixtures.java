@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+
 import com.staccato.category.domain.Category;
 import com.staccato.member.domain.Member;
+import com.staccato.staccato.domain.Feeling;
 import com.staccato.staccato.domain.Spot;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.domain.StaccatoImages;
@@ -13,10 +15,12 @@ import com.staccato.staccato.repository.StaccatoRepository;
 
 public class StaccatoFixtures {
 
-    public static StaccatoBuilder defaultStaccato() {
+    public static StaccatoBuilder ofDefault(Category category) {
         return new StaccatoBuilder()
+                .withCategory(category)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .withTitle("staccatoTitle")
+                .withFeeling(Feeling.NOTHING)
                 .withSpot(BigDecimal.ZERO.setScale(14), BigDecimal.ZERO.setScale(14))
                 .withCreatedBy(1L)
                 .withModifiedBy(1L);
@@ -31,6 +35,7 @@ public class StaccatoFixtures {
         StaccatoImages staccatoImages = new StaccatoImages(List.of());
         Long createdBy;
         Long modifiedBy;
+        Feeling feeling;
 
         public StaccatoBuilder withVisitedAt(LocalDateTime visitedAt) {
             this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
@@ -73,19 +78,18 @@ public class StaccatoFixtures {
             return this;
         }
 
+        public StaccatoBuilder withFeeling(Feeling feeling) {
+            this.feeling = feeling;
+            return this;
+        }
+
         public Staccato build() {
             return new Staccato(visitedAt, title, spot.getPlaceName(), spot.getAddress(), spot.getLatitude(),
-                    spot.getLongitude(), staccatoImages, category, createdBy, modifiedBy);
+                    spot.getLongitude(), staccatoImages, category, feeling, createdBy, modifiedBy);
         }
 
         public Staccato buildAndSave(StaccatoRepository repository) {
             Staccato staccato = build();
-            return repository.save(staccato);
-        }
-
-        public Staccato buildAndSaveWithStaccatoImages(List<String> staccatoImages, StaccatoRepository repository) {
-            Staccato staccato = build();
-            this.staccatoImages.addAll(new StaccatoImages(staccatoImages), staccato);
             return repository.save(staccato);
         }
     }

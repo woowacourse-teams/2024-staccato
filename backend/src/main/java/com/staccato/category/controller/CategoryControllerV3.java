@@ -46,7 +46,7 @@ public class CategoryControllerV3 implements CategoryControllerV3Docs {
     public ResponseEntity<CategoryDetailResponseV3> readCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
-        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryWithStaccatosById(categoryId, member);
         return ResponseEntity.ok(categoryDetailResponse);
     }
 

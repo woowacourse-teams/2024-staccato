@@ -44,9 +44,8 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
     @DisplayName("기록 상의 날짜를 현재를 기준으로 과거 혹은 미래 인지 매트릭을 통해 표현 할 수 있습니다.")
     @TestFactory
     List<DynamicTest> createStaccatoMetricsAspect() {
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(null, null)
+        Member member = MemberFixtures.ofDefault().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.ofDefault()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
         LocalDateTime now = LocalDateTime.now();
@@ -54,11 +53,11 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
         return List.of(
                 dynamicTest("기록 상의 날짜가 과거인 기록과 미래인 기록을 매트릭에 등록합니다.", () -> {
                     // given
-                    StaccatoRequest pastRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    StaccatoRequest pastRequest = StaccatoRequestFixtures.ofDefault()
                             .withVisitedAt(now.minusDays(2))
                             .withCategoryId(category.getId())
                             .build();
-                    StaccatoRequest futureRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    StaccatoRequest futureRequest = StaccatoRequestFixtures.ofDefault()
                             .withVisitedAt(now.plusDays(2))
                             .withCategoryId(category.getId())
                             .build();
@@ -75,7 +74,7 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
                 }),
                 dynamicTest("기록 상의 날짜가 과거인 기록 작성 요청 → 누적: past:2.0, future:1.0", () -> {
                     // given
-                    StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    StaccatoRequest staccatoRequest = StaccatoRequestFixtures.ofDefault()
                             .withVisitedAt(now.minusDays(3))
                             .withCategoryId(category.getId())
                             .build();

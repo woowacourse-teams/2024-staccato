@@ -10,8 +10,8 @@ enum class Feeling(val value: String) {
     ;
 
     companion object {
-        fun fromValue(value: String): Feeling {
-            return when (value) {
+        fun fromValue(value: String): Feeling =
+            when (value) {
                 HAPPY.value -> HAPPY
                 ANGRY.value -> ANGRY
                 SAD.value -> SAD
@@ -19,6 +19,5 @@ enum class Feeling(val value: String) {
                 EXCITED.value -> EXCITED
                 else -> NOTHING
             }
-        }
     }
 }

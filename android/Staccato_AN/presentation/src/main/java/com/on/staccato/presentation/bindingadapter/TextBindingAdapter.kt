@@ -16,9 +16,9 @@ import com.on.staccato.presentation.common.format.toYearMonthDay
 import com.on.staccato.presentation.common.input.InputState
 import com.on.staccato.presentation.mapper.toInputState
 import com.on.staccato.presentation.photo.PhotoUploadState
+import com.on.staccato.presentation.timeline.model.CategoryUiModel
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
-import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.util.dpToPx
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -217,7 +217,7 @@ fun TextView.setCategoryFilter(filterType: FilterType?) {
     value = ["visibilityByTimeline", "visibilityByFilterType", "isTimelineLoading"],
 )
 fun TextView.setTimelineEmptyText(
-    timeLine: List<TimelineUiModel>? = null,
+    timeLine: List<CategoryUiModel>? = null,
     filterType: FilterType?,
     isTimelineLoading: Boolean?,
 ) {
@@ -230,7 +230,7 @@ fun TextView.setTimelineEmptyText(
     value = ["visibilityAndTextByTimeline", "visibilityAndTextByFilterType", "isTimelineLoading"],
 )
 fun TextView.setMakeCategoryText(
-    timeLine: List<TimelineUiModel>? = null,
+    timeLine: List<CategoryUiModel>? = null,
     filterType: FilterType?,
     isTimelineLoading: Boolean?,
 ) {

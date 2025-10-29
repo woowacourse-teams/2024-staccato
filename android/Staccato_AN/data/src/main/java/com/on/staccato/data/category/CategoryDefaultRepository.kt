@@ -28,7 +28,8 @@ class CategoryDefaultRepository
             sort: String?,
             filter: String?,
         ): ApiResult<Timeline> =
-            categoryDataSource.getCategories(sort, filter)
+            categoryDataSource
+                .getCategories(sort, filter)
                 .handle { it.toDomain() }
 
         override suspend fun getCategoryCandidates(): ApiResult<CategoryCandidates> =
