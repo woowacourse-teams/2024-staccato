@@ -30,8 +30,7 @@ fun InvitationSelectionMenu(
                 .background(
                     color = Gray1,
                     shape = RoundedCornerShape(7.dp),
-                )
-                .padding(5.dp),
+                ).padding(5.dp),
         containerColor = Gray1,
         contentColor = StaccatoBlue,
         indicator = {},

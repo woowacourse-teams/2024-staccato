@@ -18,7 +18,8 @@ class InvitationDefaultRepository
             categoryId: Long,
             inviteeIds: List<Long>,
         ): ApiResult<List<Long>> =
-            invitationApiService.postInvitation(InvitationRequest(categoryId, inviteeIds))
+            invitationApiService
+                .postInvitation(InvitationRequest(categoryId, inviteeIds))
                 .handle { it.invitationIds }
 
         override suspend fun getReceivedInvitations(): ApiResult<List<ReceivedInvitation>> =

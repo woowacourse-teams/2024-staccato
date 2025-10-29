@@ -42,7 +42,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Staccato_AN"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        tools:targetApi="35">
         <profileable
             android:shell="true"
             tools:targetApi="29" />

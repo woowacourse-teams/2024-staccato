@@ -1,4 +1,4 @@
-package com.staccato.image.infrastructure;
+package com.staccato.image.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,20 +8,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.stereotype.Service;
 
 import com.staccato.image.service.dto.DeletionResult;
 
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Delete;
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectsResponse;
-import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
@@ -29,31 +26,24 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
-@Component
-public class S3ObjectClient implements CloudStorageClient {
-    private static final Logger log = LoggerFactory.getLogger(S3ObjectClient.class);
+@Service
+@ConditionalOnExpression("'${cloud.storage.mode}'=='aws' or '${cloud.storage.mode}'=='localstack'")
+public class AwsS3Client implements CloudStorageClient {
+    private static final Logger log = LoggerFactory.getLogger(AwsS3Client.class);
     private static final int S3_DELETE_BATCH_LIMIT = 1000;
 
     private final S3Client s3Client;
     private final String bucketName;
-    private final String endPoint;
-    private final String cloudFrontEndPoint;
+    private final S3UrlResolver s3UrlResolver;
 
-    public S3ObjectClient(
-            @Value("${cloud.aws.s3.bucket}") String bucketName,
-            @Value("${cloud.aws.s3.endpoint}") String endPoint,
-            @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint,
-            @Value("${cloud.aws.access-key}") String accessKey,
-            @Value("${cloud.aws.secret-access-key}") String secretAccessKey
+    public AwsS3Client(
+            S3Client s3Client,
+            S3UrlResolver s3UrlResolver,
+            @Value("${cloud.aws.s3.bucket}") String bucketName
     ) {
-        AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretAccessKey);
-        this.s3Client = S3Client.builder()
-                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
-                .region(Region.AP_NORTHEAST_2)
-                .build();
+        this.s3Client = s3Client;
+        this.s3UrlResolver = s3UrlResolver;
         this.bucketName = bucketName;
-        this.endPoint = endPoint;
-        this.cloudFrontEndPoint = cloudFrontEndPoint;
     }
 
     @Override
@@ -69,19 +59,12 @@ public class S3ObjectClient implements CloudStorageClient {
 
     @Override
     public String getUrl(String keyName) {
-        GetUrlRequest request = GetUrlRequest.builder()
-                .bucket(bucketName)
-                .key(keyName)
-                .build();
-
-        String url = s3Client.utilities().getUrl(request).toString();
-
-        return url.replace(endPoint, cloudFrontEndPoint);
+        return s3UrlResolver.toPublicUrl(keyName);
     }
 
     @Override
     public String extractKeyFromUrl(String url) {
-        return url.replace(cloudFrontEndPoint + "/", "");
+        return s3UrlResolver.extractKey(url);
     }
 
     @Override

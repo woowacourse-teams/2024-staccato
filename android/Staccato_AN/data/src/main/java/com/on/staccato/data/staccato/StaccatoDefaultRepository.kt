@@ -18,8 +18,7 @@ class StaccatoDefaultRepository
     @Inject
     constructor(
         private val remoteDataSource: StaccatoRemoteDataSource,
-    ) :
-    StaccatoRepository {
+    ) : StaccatoRepository {
         override suspend fun getStaccatoMarkers(): ApiResult<List<StaccatoMarker>> =
             remoteDataSource.fetchStaccatoMarkers().handle {
                 it.staccatoMarkerResponses.map { dto -> dto.toDomain() }

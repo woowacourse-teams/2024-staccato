@@ -1,4 +1,4 @@
-package com.staccato.image.infrastructure;
+package com.staccato.image.service;
 
 import java.util.Set;
 

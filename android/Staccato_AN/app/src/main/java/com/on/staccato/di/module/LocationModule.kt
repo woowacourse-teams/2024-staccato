@@ -23,7 +23,8 @@ object LocationModule {
     @Singleton
     @Provides
     fun provideLocationRequest(): LocationRequest =
-        LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS)
+        LocationRequest
+            .Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS)
             .setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
             .setWaitForAccurateLocation(true)
             .build()
@@ -31,7 +32,8 @@ object LocationModule {
     @Singleton
     @Provides
     fun provideLocationSettingsRequest(locationRequest: LocationRequest): LocationSettingsRequest =
-        LocationSettingsRequest.Builder()
+        LocationSettingsRequest
+            .Builder()
             .addLocationRequest(locationRequest)
             .build()
 

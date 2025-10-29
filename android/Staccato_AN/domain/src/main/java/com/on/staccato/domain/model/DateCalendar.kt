@@ -46,13 +46,12 @@ data class DateCalendar private constructor(val availableDates: List<Int>) {
             lastDateOfMonth: Int,
             periodStart: LocalDate?,
             periodEnd: LocalDate?,
-        ): List<Int> {
-            return if (periodStart != null && periodEnd != null) {
+        ): List<Int> =
+            if (periodStart != null && periodEnd != null) {
                 calculateDateRangeIn(year, month, lastDateOfMonth, periodStart, periodEnd)
             } else {
                 createDatesBetween(FIRST_DATE, lastDateOfMonth)
             }
-        }
 
         private fun calculateDateRangeIn(
             year: Int,
