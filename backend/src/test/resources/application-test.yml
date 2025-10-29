@@ -31,14 +31,17 @@ security:
     token:
       secret-key: mock
 cloud:
+  storage:
+    mode: localstack
   aws:
-    access-key: mock
-    secret-access-key: mock
+    region: ap-northeast-2
+    access-key: test
+    secret-access-key: test
     s3:
-      bucket: mock
-      endpoint: mock
+      bucket: staccato-test-bucket
+      endpoint: http://localhost:4566
     cloudfront:
-      endpoint: mock
+      endpoint: http://cdn.localstack.test
 image:
   folder:
     name: mock/

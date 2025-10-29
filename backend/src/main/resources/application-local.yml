@@ -43,18 +43,17 @@ security:
     token:
       secret-key: ENC(w6iIOc1EMsu5lNXZZF7wz+wo/KziZPWM3jzsF6yeWnjnrfIaUifO6TD+i6jIeQMIB7EyY5Bj2rD2l4VZgDxuR38F1tIxp+RwofkPiaht+E+0WIR8GB94ur9whNL4oUQp)
 cloud:
+  storage:
+    mode: fake
   aws:
-    access-key: accessKey
-    secret-access-key: secretAccessKey
+    region: ap-northeast-2
+    access-key: dummy-access
+    secret-access-key: dummy-secret
     s3:
-      bucket: bucket
-      endpoint: endpoint
+      bucket: dummy-bucket
+      endpoint: http://dummy-endpoint
     cloudfront:
-      endpoint: endpoint
-    region:
-      static: static
-    stack:
-      auto: false
+      endpoint: http://dummy-cloudfront
 image:
   folder:
     name: local/

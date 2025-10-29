@@ -18,7 +18,6 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.StaccatoException;
 import com.staccato.image.domain.ImageExtension;
-import com.staccato.image.infrastructure.CloudStorageClient;
 import com.staccato.image.service.dto.DeletionResult;
 import com.staccato.image.service.dto.ImageUrlResponse;
 import com.staccato.staccato.repository.StaccatoImageRepository;
@@ -34,7 +33,7 @@ public class ImageService {
 
     @Value("${image.folder.name}")
     private String imageFolderName;
-    private final CloudStorageClient s3ObjectClient;
+    private final CloudStorageClient cloudStorageClient;
     private final StaccatoImageRepository staccatoImageRepository;
     private final CategoryRepository categoryRepository;
 
@@ -45,8 +44,8 @@ public class ImageService {
         byte[] imageBytes = getImageBytes(image);
 
         try {
-            s3ObjectClient.putS3Object(key, contentType, imageBytes);
-            String imageUrl = s3ObjectClient.getUrl(key);
+            cloudStorageClient.putS3Object(key, contentType, imageBytes);
+            String imageUrl = cloudStorageClient.getUrl(key);
             log.info("Image uploaded successfully: {}", imageUrl);
             return new ImageUrlResponse(imageUrl);
         } catch (Exception e) {
@@ -75,7 +74,7 @@ public class ImageService {
     public DeletionResult deleteUnusedImages() {
         Set<String> allImageUrls = extractAllImageUrls();
         try {
-            return s3ObjectClient.deleteUnusedObjects(allImageUrls);
+            return cloudStorageClient.deleteUnusedObjects(allImageUrls);
         } catch (Exception e) {
             throw new RuntimeException("사용하지 않는 이미지 삭제 중 오류 발생", e);
         }
@@ -86,7 +85,7 @@ public class ImageService {
              Stream<String> staccatoUrls = staccatoImageRepository.findAllImageUrls()) {
             List<String> allUrls = Stream.concat(categoryUrls, staccatoUrls).toList();
             return allUrls.stream()
-                    .map(s3ObjectClient::extractKeyFromUrl)
+                    .map(cloudStorageClient::extractKeyFromUrl)
                     .collect(Collectors.toSet());
         } catch (Exception e) {
             throw new RuntimeException("사용 이미지 키 추출 중 오류 발생", e);

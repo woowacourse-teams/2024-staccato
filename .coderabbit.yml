@@ -1,0 +1,198 @@
+# CodeRabbit Configuration Template
+# Complete reference: https://docs.coderabbit.ai/reference/configuration
+# Copy this file to .coderabbit.yaml in your repository root
+
+# =============================================================================
+# GLOBAL SETTINGS
+# These settings apply to your entire CodeRabbit configuration
+# =============================================================================
+
+# Set the language for reviews by using the corresponding ISO language code.
+# Default: "en-US"
+language: "ko-KR"
+# Set the tone of reviews and chat. Example: 'You must use talk like Mr. T. I pity the fool who doesn't!'
+# Default: ""
+tone_instructions: >
+  당신은 실력 있는 시니어 개발자 동료입니다.
+  주니어 개발자인 제가 더 나은 코드를 작성하도록 돕는 것이 목표입니다.
+  피드백은 명확하고 구체적이어야 하며, 문제의 원인과 개선 방법을 최신 기술 트렌드와 클린코드 원칙에 기반하여 제시해주세요.
+  리뷰는 교육적이어야 합니다.
+  관련 개념이나 공식 문서를 함께 추천해 주세요.
+  비판보다는 긍정적인 방향으로 개선점을 제안해 주세요.
+# Enable early-access features.
+# Default: false
+early_access: false
+# Enable free tier features for users not on a paid plan.
+# Default: true
+enable_free_tier: true
+
+# =============================================================================
+# REVIEWS
+# Settings related to reviews.
+# =============================================================================
+
+# Settings related to reviews.
+# Default: {}
+reviews:
+  # Set the profile for reviews. Assertive profile yields more feedback, that may be considered nitpicky.
+  # Options: chill, assertive
+  # Default: "chill"
+  profile: "assertive"
+  # Generate a high level summary of the changes in the PR/MR description.
+  # Default: true
+  high_level_summary: true
+  # Generate walkthrough in a markdown collapsible section.
+  # Default: false
+  collapse_walkthrough: true
+  # Generate a summary of the changed files in the walkthrough.
+  # Default: true
+  changed_files_summary: true
+  # Generate sequence diagrams in the walkthrough.
+  # Default: true
+  sequence_diagrams: true
+  # Estimate the code review effort in the walkthrough.
+  # Default: true
+  estimate_code_review_effort: false
+  # Generate a poem in the walkthrough comment.
+  # Default: true
+  poem: false
+
+  # Configuration for auto review
+  # Default: {}
+  auto_review:
+    # Automatic Review - Automatic code review
+    # Default: true
+    enabled: true
+    # Automatic Incremental Review - Automatic incremental code review on each push
+    # Default: true
+    auto_incremental_review: true
+    # Base branches (other than the default branch) to review. Accepts regex patterns. Use '.*' to match all branches.
+    # Default: []
+    base_branches: ['develop']
+
+  tools:
+    # ===============================
+    # Security tools
+    # ===============================
+    # GitHub Checks integration configuration.
+    # Default: {}
+    github-checks:
+      # Time in milliseconds to wait for all GitHub Checks to conclude. Default 90 seconds, max 15 minutes (900000ms).
+      # Default: 90000
+      # 5 minutes: 300000
+      timeout_ms: 300000
+    # Detects hardcoded secrets like API keys, passwords, and tokens.
+    # Helps prevent sensitive information leaks in commits.
+    gitleaks:
+      enabled: true
+    # Performs static analysis to detect security vulnerabilities and bad coding patterns.
+    # Supports multiple languages and common security rules (SQLi, XSS, etc.).
+    semgrep:
+      enabled: true
+    # Scans Infrastructure-as-Code (IaC) files such as Terraform, CloudFormation, or Kubernetes manifests
+    # to ensure they follow security best practices.
+    checkov:
+      enabled: true
+
+    # ===============================
+    # Infrastructure and configuration linters
+    # ===============================
+    # Linter for Dockerfiles. Checks for syntax errors and bad practices.
+    # Example: discourages using 'latest' tags or 'apt-get upgrade'.
+    hadolint:
+      enabled: true
+    # Validates YAML syntax and formatting.
+    # Useful for ensuring consistent indentation, spacing, and structure.
+    yamllint:
+      enabled: true
+    # Linter for GitHub Actions workflows (.github/workflows/*.yml).
+    # Ensures syntax correctness and valid field usage.
+    actionlint:
+      enabled: true
+
+  # Configuration for pre merge checks
+  # Default: {}
+  pre_merge_checks:
+    # Docstring Coverage - Checks if the code has sufficient docstrings.
+    # Default: {}
+    docstrings:
+      # Mode - Determines how strictly the docstring coverage check is enforced. Warning will only generate a warning and does not require the user to resolve the check. Error requires the user to resolve issues before merging the pull request. If set to error and the request changes workflow is enabled, the pull request will be blocked until the issues are resolved.
+      # Options: off, warning, error
+      # Default: "warning"
+      mode: "off"
+
+    # Title Check - Checks if the pull request title is appropriate and follows best practices.
+    # Default: {}
+    title:
+      # Mode - Determines how strictly the title check is enforced. Warning will only generate a warning and does not require the user to resolve the check. Error requires the user to resolve issues before merging the pull request. If set to error and the request changes workflow is enabled, the pull request will be blocked until the issues are resolved.
+      # Options: off, warning, error
+      # Default: "warning"
+      mode: "off"
+
+    # Description Check - Checks if the pull request description is appropriate and follows best practices.
+    # Default: {}
+    description:
+      # Mode - Determines how strictly the description check is enforced. Warning will only generate a warning and does not require the user to resolve the check. Error requires the user to resolve issues before merging the pull request. If set to error and the request changes workflow is enabled, the pull request will be blocked until the issues are resolved.
+      # Options: off, warning, error
+      # Default: "warning"
+      mode: "off"
+
+    # Linked Issue Assessment - Checks if the pull request addresses the linked issues. Generate an assessment of how well the changes address the linked issues.
+    # Default: {}
+    issue_assessment:
+      # Mode - Determines how strictly the issue assessment check is enforced. Warning will only generate a warning and does not require the user to resolve the check. Error requires the user to resolve issues before merging the pull request. If set to error and the request changes workflow is enabled, the pull request will be blocked until the issues are resolved.
+      # Options: off, warning, error
+      # Default: "warning"
+      mode: "off"
+
+  # Configuration for finishing touches
+  # Default: {}
+  finishing_touches:
+    # Docstrings - Options for generating Docstrings for your PRs/MRs.
+    # Default: {}
+    docstrings:
+      # Docstrings - Allow CodeRabbit to generate docstrings for PRs/MRs.
+      # Default: true
+      enabled: false
+
+    # Unit Tests - Options for generating unit tests for your PRs/MRs.
+    # Default: {}
+    unit_tests:
+      # Unit Tests - Allow CodeRabbit to generate unit tests for PRs/MRs.
+      # Default: true
+      enabled: true
+
+# =============================================================================
+# CHAT
+# Configuration for chat
+# =============================================================================
+
+# Configuration for chat
+# Default: {}
+chat:
+  # Enable the bot to reply automatically without requiring the user to tag it.
+  # Default: true
+  auto_reply: true
+
+# =============================================================================
+# KNOWLEDGE BASE
+# Configuration for knowledge base
+# =============================================================================
+
+# Configuration for knowledge base
+# Default: {}
+knowledge_base:
+  # Configuration for learnings
+  # Default: {}
+  learnings:
+    # Learnings - Specify the scope of learnings to use for the knowledge base. 'local' uses the repository's learnings, 'global' uses the organization's learnings, and 'auto' uses repository's learnings for public repositories and organization's learnings for private repositories.
+    # Options: local, global, auto
+    # Default: "auto"
+    scope: "local"
+  # Configuration for issues
+  # Default: {}
+  issues:
+    # Issues - Specify the scope of git platform (GitHub/GitLab) issues to use for the knowledge base. 'local' uses the repository's issues, 'global' uses the organization's issues, and 'auto' uses repository's issues for public repositories and organization's issues for private repositories.
+    # Options: local, global, auto
+    # Default: "auto"
+    scope: "local"
