@@ -57,7 +57,8 @@ object NetworkModule {
         loggingInterceptor: HttpLoggingInterceptor,
         headerInterceptor: HeaderInterceptor,
     ): OkHttpClient =
-        OkHttpClient.Builder()
+        OkHttpClient
+            .Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(headerInterceptor)
             .build()
@@ -83,12 +84,12 @@ object NetworkModule {
         json: Json,
         callAdapterFactory: ApiResultCallAdapterFactory,
     ): Retrofit =
-        Retrofit.Builder()
+        Retrofit
+            .Builder()
             .baseUrl(baseUrl)
             .client(client)
             .addConverterFactory(
                 json.asConverterFactory(CONTENT_TYPE.toMediaType()),
-            )
-            .addCallAdapterFactory(callAdapterFactory)
+            ).addCallAdapterFactory(callAdapterFactory)
             .build()
 }

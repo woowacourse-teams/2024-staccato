@@ -16,7 +16,8 @@ class MemberDefaultRepository
         private val memberApiService: MemberApiService,
     ) : MemberRepository {
         override suspend fun fetchTokenWithRecoveryCode(recoveryCode: String): ApiResult<Unit> =
-            memberApiService.postRecoveryCode(recoveryCode)
+            memberApiService
+                .postRecoveryCode(recoveryCode)
                 .handle { memberLocalDataSource.updateToken(it.token) }
 
         override suspend fun getMemberId(): Result<Long> =
@@ -32,7 +33,8 @@ class MemberDefaultRepository
         override suspend fun searchMembersBy(nickname: String): Flow<ApiResult<Members>> =
             flow {
                 emit(
-                    memberApiService.getMembersBy(nickname)
+                    memberApiService
+                        .getMembersBy(nickname)
                         .handle { Members(it.members.map { it.toDomain() }) },
                 )
             }

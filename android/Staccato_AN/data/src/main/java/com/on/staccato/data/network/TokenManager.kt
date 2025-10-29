@@ -12,13 +12,12 @@ class TokenManager
     ) {
         private var cachedToken: String? = null
 
-        suspend fun getToken(): String? {
-            return if (cachedToken.isNullOrEmpty()) {
+        suspend fun getToken(): String? =
+            if (cachedToken.isNullOrEmpty()) {
                 fetchAndCacheToken()
             } else {
                 cachedToken
             }
-        }
 
         private suspend fun fetchAndCacheToken(): String? {
             val token =

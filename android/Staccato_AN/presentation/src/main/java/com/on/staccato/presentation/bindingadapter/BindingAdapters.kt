@@ -90,13 +90,12 @@ private fun getVisibilityForAllCategories(
     timeLine: List<CategoryUiModel>?,
     isEmptyView: Boolean?,
     isTimelineLoading: Boolean?,
-): Int {
-    return if (timeLine.isNullOrEmpty()) {
+): Int =
+    if (timeLine.isNullOrEmpty()) {
         getVisibilityForEmptyTimeline(isEmptyView, isTimelineLoading)
     } else {
         getVisibilityForExistingTimeline(isEmptyView)
     }
-}
 
 private fun isEmptyTimeline(
     timeLine: List<CategoryUiModel>?,

@@ -24,8 +24,8 @@ fun TimelineResponse.toCategoryCandidates(): CategoryCandidates {
     return CategoryCandidates(categories)
 }
 
-fun TimelineCategoryDto.toDomain(): TimeLineCategory {
-    return TimeLineCategory(
+fun TimelineCategoryDto.toDomain(): TimeLineCategory =
+    TimeLineCategory(
         categoryId = categoryId,
         categoryThumbnailUrl = categoryThumbnailUrl,
         categoryTitle = categoryTitle,
@@ -37,13 +37,11 @@ fun TimelineCategoryDto.toDomain(): TimeLineCategory {
         members = members.map { it.toDomain() },
         staccatoCount = staccatoCount,
     )
-}
 
-fun TimelineCategoryDto.toCategoryCandidate(): CategoryCandidate {
-    return CategoryCandidate(
+fun TimelineCategoryDto.toCategoryCandidate(): CategoryCandidate =
+    CategoryCandidate(
         categoryId = categoryId,
         categoryTitle = categoryTitle,
         startAt = startAt?.let { LocalDate.parse(it) },
         endAt = endAt?.let { LocalDate.parse(it) },
     )
-}
