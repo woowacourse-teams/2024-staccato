@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM eclipse-temurin:17-jdk
 EXPOSE 8080
 ARG JAR_FILE=./build/libs/*-SNAPSHOT.jar
 ARG JASYPT_ENCRYPTOR_PASSWORD
