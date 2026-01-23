@@ -51,13 +51,13 @@ cloud:
     mode: aws
   aws:
     region: ENC(VU25sKaZUPFns2J8GhgAyrioMpwOaWyMa4fBWSzX8LH3zInZc2upgBttgy7EaJWV)
-    access-key: ENC(esOew5zDP7xeUY4rqpHQIWRJvnyh4qC9HHMzFI9Bek4gu65ZxgQOaGT40tXaJ/kLBsPAXM4NIYF7g64+67gfHg==)
-    secret-access-key: ENC(osZssrZ+Z1Mraw1D8Rd0tXOk0VfMj/8uaGeRrH7/pF+PMJQQga6EBCp14HbGE/zwsSKaZ4xyI5tBy6hwSCJFqKPzzgTN4/Y/AQX3bFp6k90=)
+    access-key: ENC(DDXR20vPDEmGxLzz60LAnbxTUj9dI4jCC4o97rZk0XDFTIZomabK7MqE3dJAw3JLf+4XL1pWxOOGXWdppeLV8Q==)
+    secret-access-key: ENC(C5+4LXKTg/CWOBytDqpGxPcca5dmRwrO+TNkR3p2zhG8lcXHOgW+F2HU5Vbb+poElHxEKLNj+2WyM/8i+2+xuNmOViqvzYOfYB9pWOCquvo=)
     s3:
-      bucket: ENC(3G8rZ+nSA+6jQBkeskKXlBcpdJEjr+6CnsK8auvOzMMF9ytS6lqGuJbW+G7emzL2)
-      endpoint: ENC(9yj+jkWlB807kp6umhJIA+osCj4ha/WQcuh8+TTipY3XJNpPs+LswGr4pPPQ5bLQobDzat8PSNZClqvALLpue3PCBxqpUq7Ot3zN02siH+PuFEAqV/izRYpku0bUgK65)
+      bucket: ENC(MnK9Sl5yNhpwAsKstkveZsL/iID3qzzZWWLCy1yL+3HuKY1mqMQWUQS5zLgGllbnadCkrYdV9gVBkV+QQ8Gdqw==)
+      endpoint: ENC(0RN/nJxbnj00Xm6p7CWx9ZiJFnWSh5cqUm6fpXn6WSPM5TYKT8muJVLfFAT5L8K1v8/yrdF3Vlv/1BO6UxvmQ6eTIZfQmJMyyS425PJqAXIB0rKR9QRqPr12YqmJzfOG)
     cloudfront:
-      endpoint: ENC(LMIPHd+0QQ480lNvi9VTyTjVs/+ok8dpUnZfcNTqrLrlmjAEFV61fh/JmgQmjTBCWW+vlKqWmp3tqnbjjqsxrTI+wl2IGB6O+K/ewjU6TMg=)
+      endpoint: ENC(rRtsw6K06QoebbN3wzzAhl+PtokIH3x9qHG7ArZNpsvj088sHa8STLaWuSNPnjfc/3EOziqXr5gZLuHeiksiVdzSnqMriMdKsR9q1JlvNAI=)
     stack:
       auto: false
 image:
