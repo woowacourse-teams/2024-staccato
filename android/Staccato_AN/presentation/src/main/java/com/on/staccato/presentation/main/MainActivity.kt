@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -12,7 +13,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.graphics.Insets
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -90,6 +95,7 @@ class MainActivity :
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
+        respondEdgeToEdge()
         setupBottomSheetController()
         setUpBottomSheetBehaviorAction()
         setUpBottomSheetStateListener()
@@ -135,6 +141,16 @@ class MainActivity :
         binding.lifecycleOwner = this
         binding.sharedViewModel = sharedViewModel
         binding.handler = this
+    }
+
+    private fun respondEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.linearMainProfileImage) { view, insetsCompat ->
+            val systemBar: Insets = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updateLayoutParams<MarginLayoutParams> {
+                topMargin = systemBar.top
+            }
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun setupBottomSheetController() {
