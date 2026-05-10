@@ -54,3 +54,4 @@
 사진, 감정 캐릭터, 댓글을 더해서 그 순간을 생생하게 스타카토로 남겨보세요!
 
 <img src="https://github.com/user-attachments/assets/3565643f-6120-43b4-916e-e8ba93abc348">
+
