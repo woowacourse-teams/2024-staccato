@@ -26,12 +26,14 @@ import androidx.compose.ui.util.fastForEach
 const val DEFAULT_MIN_ZOOM_SCALE = 1f
 private const val DEFAULT_MAX_ZOOM_SCALE = 2f
 private const val SLOW_MOVEMENT_COEFFICIENT = 0.8f
+private const val DOUBLE_TAP_THRESHOLD_RATIO = 0.5f
 
 @Composable
 fun PinchToZoom(
     modifier: Modifier = Modifier,
     minScale: Float = DEFAULT_MIN_ZOOM_SCALE,
     maxScale: Float = DEFAULT_MAX_ZOOM_SCALE,
+    doubleTapThresholdRatio: Float = DOUBLE_TAP_THRESHOLD_RATIO,
     onScaleChange: ((scale: Float) -> Unit)? = null,
     onDrag: ((Offset) -> Boolean)? = null,
     onTap: ((Offset) -> Unit)? = null,
@@ -91,7 +93,8 @@ fun PinchToZoom(
                     detectTapGestures(
                         onTap = onTap,
                         onDoubleTap = { tapOffset ->
-                            if (scale == minScale) {
+                            val threshold = minScale + (maxScale - minScale) * doubleTapThresholdRatio
+                            if (scale < threshold) {
                                 scale = maxScale
                                 onScaleChange?.invoke(scale)
                                 val center = Offset(size.width / 2f, size.height / 2f)
