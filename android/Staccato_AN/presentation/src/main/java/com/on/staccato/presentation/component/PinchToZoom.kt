@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -43,12 +44,16 @@ fun PinchToZoom(
     var offset by remember { mutableStateOf(Offset.Zero) }
     var containerSize by remember { mutableStateOf(IntSize.Zero) }
 
+    val currentOnScaleChange by rememberUpdatedState(onScaleChange)
+    val currentOnDrag by rememberUpdatedState(onDrag)
+    val currentOnTap by rememberUpdatedState(onTap)
+
     Box(
         modifier =
             modifier
                 .fillMaxSize()
                 .onSizeChanged { containerSize = it }
-                .pointerInput(Unit) {
+                .pointerInput(minScale, maxScale) {
                     awaitEachGesture {
                         var isDragGesture = false
                         val touchSlop = viewConfiguration.touchSlop
@@ -62,7 +67,7 @@ fun PinchToZoom(
 
                                 val newScale = (scale * zoomChange).coerceIn(minScale, maxScale)
                                 scale = newScale
-                                onScaleChange?.invoke(scale)
+                                currentOnScaleChange?.invoke(scale)
                                 if (newScale > minScale) {
                                     offset += panChange * newScale
                                     offset = clampOffset(offset, newScale, containerSize)
@@ -82,7 +87,7 @@ fun PinchToZoom(
                                     if (isDragGesture) {
                                         offset += dragAmount * scale * SLOW_MOVEMENT_COEFFICIENT
                                         offset = clampOffset(offset, scale, containerSize)
-                                        val shouldConsume = onDrag?.invoke(dragAmount) ?: false
+                                        val shouldConsume = currentOnDrag?.invoke(dragAmount) ?: false
                                         if (shouldConsume) dragChange.consume()
                                     }
                                 }
@@ -91,7 +96,7 @@ fun PinchToZoom(
                     }
                 }.pointerInput(Unit) {
                     detectTapGestures(
-                        onTap = onTap,
+                        onTap = { currentOnTap?.invoke(it) },
                         onDoubleTap = { tapOffset ->
                             val threshold = minScale + (maxScale - minScale) * doubleTapThresholdRatio
                             if (scale < threshold) {
