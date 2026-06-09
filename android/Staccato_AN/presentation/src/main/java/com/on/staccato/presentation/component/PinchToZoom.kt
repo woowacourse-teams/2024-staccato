@@ -29,6 +29,19 @@ private const val DEFAULT_MAX_ZOOM_SCALE = 2f
 private const val SLOW_MOVEMENT_COEFFICIENT = 0.8f
 private const val DOUBLE_TAP_THRESHOLD_RATIO = 0.5f
 
+/**
+ * 핀치 줌 / 더블탭 줌 / 확대 상태에서의 드래그(팬)를 처리하는 컨테이너.
+ *
+ * @param minScale 최소 배율. 이 값에서는 팬이 비활성화되고 offset이 0으로 고정된다.
+ * @param maxScale 최대 배율.
+ * @param onScaleChange 배율이 바뀔 때마다 현재 scale로 호출된다(핀치/더블탭 모두).
+ * @param onDrag 한 손가락 드래그가 발생할 때마다 그 변위(dragAmount)로 호출된다.
+ *   **이미지 팬 자체는 내부에서 항상 수행되며**, 이 콜백의 반환값은 해당 포인터
+ *   이벤트를 *소비할지*만 결정한다.
+ *   - `true`  → 이벤트를 소비해 부모(예: Pager·스크롤)로 전파하지 않는다.
+ *   - `false` → 소비하지 않아 부모가 이어서 제스처를 처리할 수 있다.
+ * @param onTap 한 손가락 탭 시 탭 위치로 호출된다.
+ */
 @Composable
 fun PinchToZoom(
     modifier: Modifier = Modifier,
