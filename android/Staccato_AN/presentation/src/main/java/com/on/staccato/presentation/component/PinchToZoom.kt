@@ -36,7 +36,7 @@ fun PinchToZoom(
     maxScale: Float = DEFAULT_MAX_ZOOM_SCALE,
     doubleTapThresholdRatio: Float = DOUBLE_TAP_THRESHOLD_RATIO,
     onScaleChange: ((scale: Float) -> Unit)? = null,
-    onDrag: ((Offset) -> Boolean)? = null,
+    shouldConsumeDrag: ((Offset) -> Boolean)? = null,
     onTap: ((Offset) -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
@@ -45,7 +45,7 @@ fun PinchToZoom(
     var containerSize by remember { mutableStateOf(IntSize.Zero) }
 
     val currentOnScaleChange by rememberUpdatedState(onScaleChange)
-    val currentOnDrag by rememberUpdatedState(onDrag)
+    val currentOnDrag by rememberUpdatedState(shouldConsumeDrag)
     val currentOnTap by rememberUpdatedState(onTap)
 
     Box(

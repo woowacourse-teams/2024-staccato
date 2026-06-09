@@ -47,7 +47,7 @@ fun OriginalPhotoPager(
             onScaleChange = { scale ->
                 scrollable = (scale - DEFAULT_MIN_ZOOM_SCALE).absoluteValue < ZOOM_SCROLLABLE_TOLERANCE
             },
-            onDrag = { !scrollable },
+            shouldConsumeDrag = { !scrollable },
             onTap = { onTap() },
         ) {
             DefaultAsyncImage(
