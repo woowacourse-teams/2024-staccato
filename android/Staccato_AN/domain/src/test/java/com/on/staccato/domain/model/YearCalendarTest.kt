@@ -104,12 +104,11 @@ class YearCalendarTest {
     @Test
     fun `시작일과 종료일을 지정하지 않으면 현재 날짜를 기준으로 앞,뒤로 100년씩의 범위를 가진 YearCalendar가 생성된다`() {
         // given
-        val now = LocalDate.of(2025, 1, 1)
-        val expectedYearRange = (now.minusYears(100).year..now.plusYears(100).year).toList()
+        val today = LocalDate.now()
+        val expectedYearRange = (today.minusYears(100).year..today.plusYears(100).year).toList()
 
         // when
         val yearCalendar = YearCalendar.of()
-        println(yearCalendar.getAvailableYears())
 
         // then
         assertEquals(expectedYearRange, yearCalendar.getAvailableYears())
