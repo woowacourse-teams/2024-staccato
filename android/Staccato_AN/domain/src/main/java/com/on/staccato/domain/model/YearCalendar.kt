@@ -86,9 +86,10 @@ data class YearCalendar private constructor(private val yearToMonthCalender: Map
         fun of(
             periodStart: LocalDate? = null,
             periodEnd: LocalDate? = null,
+            today: LocalDate = LocalDate.now(),
         ): YearCalendar {
             if (periodStart != null && periodEnd != null) checkValid(periodStart, periodEnd)
-            val yearRange = createYearRange(periodStart, periodEnd)
+            val yearRange = createYearRange(periodStart, periodEnd, today)
             return YearCalendar(
                 yearRange.associateWith { year ->
                     of(year, periodStart, periodEnd)
@@ -109,11 +110,12 @@ data class YearCalendar private constructor(private val yearToMonthCalender: Map
         private fun createYearRange(
             periodStart: LocalDate?,
             periodEnd: LocalDate?,
+            today: LocalDate,
         ): List<Int> =
             if (periodStart != null && periodEnd != null) {
                 createYearsBetween(periodStart.year, periodEnd.year)
             } else {
-                createHundredOfYearsAroundCurrent(LocalDate.now())
+                createHundredOfYearsAroundCurrent(today)
             }
 
         private fun createYearsBetween(
