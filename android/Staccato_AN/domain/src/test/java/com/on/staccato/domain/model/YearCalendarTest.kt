@@ -108,7 +108,7 @@ class YearCalendarTest {
         val expectedYearRange = (today.minusYears(100).year..today.plusYears(100).year).toList()
 
         // when
-        val yearCalendar = YearCalendar.of()
+        val yearCalendar = YearCalendar.of(today = today)
 
         // then
         assertEquals(expectedYearRange, yearCalendar.getAvailableYears())
