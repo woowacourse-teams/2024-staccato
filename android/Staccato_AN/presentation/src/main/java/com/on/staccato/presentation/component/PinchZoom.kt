@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
 
+@Suppress("ktlint:standard:property-naming")
 @Immutable
 object PinchZoomDefaults {
     const val MinScale = 1f
@@ -79,20 +80,21 @@ fun PinchZoom(
     }
 
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .onSizeChanged { state.containerSize = it }
-            .pinchZoomGesture(
-                state = state,
-                shouldConsumeDrag = { currentShouldConsumeDrag?.invoke(it) ?: false },
-                onTap = { currentOnTap?.invoke(it) },
-            )
-            .graphicsLayer {
-                scaleX = state.scale
-                scaleY = state.scale
-                translationX = state.offset.x
-                translationY = state.offset.y
-            },
+        modifier =
+            modifier
+                .fillMaxSize()
+                .onSizeChanged { state.containerSize = it }
+                .pinchZoomGesture(
+                    state = state,
+                    shouldConsumeDrag = { currentShouldConsumeDrag?.invoke(it) ?: false },
+                    onTap = { currentOnTap?.invoke(it) },
+                )
+                .graphicsLayer {
+                    scaleX = state.scale
+                    scaleY = state.scale
+                    translationX = state.offset.x
+                    translationY = state.offset.y
+                },
     ) {
         content()
     }
@@ -107,24 +109,30 @@ class PinchZoomState(
         private set
     var offset by mutableStateOf(Offset.Zero)
         private set
+
     var containerSize by mutableStateOf(IntSize.Zero)
 
-    fun zoom(zoomChange: Float, panChange: Offset) {
+    fun zoom(
+        zoomChange: Float,
+        panChange: Offset,
+    ) {
         scale = (scale * zoomChange).coerceIn(minScale, maxScale)
-        offset = if (scale > minScale) {
-            clampOffset(offset + panChange * scale, scale, containerSize)
-        } else {
-            Offset.Zero
-        }
+        offset =
+            if (scale > minScale) {
+                clampOffset(offset + panChange * scale, scale, containerSize)
+            } else {
+                Offset.Zero
+            }
     }
 
     fun pan(dragAmount: Offset) {
         if (scale <= minScale) return
-        offset = clampOffset(
-            offset + dragAmount * scale * SLOW_MOVEMENT_COEFFICIENT,
-            scale,
-            containerSize
-        )
+        offset =
+            clampOffset(
+                offset + dragAmount * scale * SLOW_MOVEMENT_COEFFICIENT,
+                scale,
+                containerSize,
+            )
     }
 
     fun doubleTapZoom(tapOffset: Offset) {
@@ -144,35 +152,36 @@ class PinchZoomState(
 fun rememberPinchZoomState(
     minScale: Float = PinchZoomDefaults.MinScale,
     maxScale: Float = PinchZoomDefaults.MaxScale,
-): PinchZoomState =
-    remember(minScale, maxScale) { PinchZoomState(minScale, maxScale) }
+): PinchZoomState = remember(minScale, maxScale) { PinchZoomState(minScale, maxScale) }
 
 private fun Modifier.pinchZoomGesture(
     state: PinchZoomState,
     shouldConsumeDrag: (Offset) -> Boolean,
     onTap: (Offset) -> Unit,
-): Modifier = pointerInput(state.minScale, state.maxScale) {
-    val touchSlop = viewConfiguration.touchSlop
+): Modifier =
+    pointerInput(state.minScale, state.maxScale) {
+        val touchSlop = viewConfiguration.touchSlop
 
-    awaitEachGesture {
-        val firstDown = awaitFirstDown(requireUnconsumed = false)
+        awaitEachGesture {
+            val firstDown = awaitFirstDown(requireUnconsumed = false)
 
-        val firstUp = awaitPanZoomOrTap(state, shouldConsumeDrag, touchSlop, firstDown)
-            ?: return@awaitEachGesture
+            val firstUp =
+                awaitPanZoomOrTap(state, shouldConsumeDrag, touchSlop, firstDown)
+                    ?: return@awaitEachGesture
 
-        val secondDown = awaitSecondDown(firstUp)
-        if (secondDown == null) {
-            onTap(firstUp.position)
-            return@awaitEachGesture
-        }
+            val secondDown = awaitSecondDown(firstUp)
+            if (secondDown == null) {
+                onTap(firstUp.position)
+                return@awaitEachGesture
+            }
 
-        if (awaitTapUp(touchSlop, secondDown)) {
-            state.doubleTapZoom(secondDown.position)
-        } else {
-            onTap(firstUp.position)
+            if (awaitTapUp(touchSlop, secondDown)) {
+                state.doubleTapZoom(secondDown.position)
+            } else {
+                onTap(firstUp.position)
+            }
         }
     }
-}
 
 /** 첫 터치 시퀀스로, 팬/줌을 적용합니다. 팬(드래그)·줌이면 null을, 단순 탭이면 탭 업의 변화를 반환합니다. */
 private suspend fun AwaitPointerEventScope.awaitPanZoomOrTap(
@@ -213,16 +222,15 @@ private suspend fun AwaitPointerEventScope.awaitPanZoomOrTap(
 
 /** 두 번째 터치 시퀀스로, 더블탭의 두 번째 탭 다운을 대기합니다. 더블 탭 시간을 초과하면 null을 반환합니다.
  * (Compose detectTapGestures의 내부와 동일한 방식) */
-private suspend fun AwaitPointerEventScope.awaitSecondDown(
-    firstUp: PointerInputChange,
-): PointerInputChange? = withTimeoutOrNull(viewConfiguration.doubleTapTimeoutMillis) {
-    val minUptime = firstUp.uptimeMillis + viewConfiguration.doubleTapMinTimeMillis
-    var change: PointerInputChange
-    do {
-        change = awaitFirstDown()
-    } while (change.uptimeMillis < minUptime)
-    change
-}
+private suspend fun AwaitPointerEventScope.awaitSecondDown(firstUp: PointerInputChange): PointerInputChange? =
+    withTimeoutOrNull(viewConfiguration.doubleTapTimeoutMillis) {
+        val minUptime = firstUp.uptimeMillis + viewConfiguration.doubleTapMinTimeMillis
+        var change: PointerInputChange
+        do {
+            change = awaitFirstDown()
+        } while (change.uptimeMillis < minUptime)
+        change
+    }
 
 /** 두 번째 시퀀스가 slop 안에서 up 되면 true(=탭), slop을 넘으면 false를 반환합니다. */
 private suspend fun AwaitPointerEventScope.awaitTapUp(
