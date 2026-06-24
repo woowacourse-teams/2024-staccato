@@ -7,10 +7,15 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -147,6 +152,7 @@ class StaccatoUpdateActivity :
     override fun initStartView(savedInstanceState: Bundle?) {
         setupPermissionRequestLauncher()
         initBinding()
+        respondEdgeToEdge()
         initToolbar()
         initVisitedAtSelectionFragment()
         initAdapter()
@@ -216,6 +222,16 @@ class StaccatoUpdateActivity :
         binding.viewModel = viewModel
         binding.staccatoUpdateHandler = this
         binding.currentLocationHandler = this
+    }
+
+    private fun respondEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbarStaccatoUpdate) { view, insetsCompat ->
+            val systemBar: Insets = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updateLayoutParams<MarginLayoutParams> {
+                topMargin = systemBar.top
+            }
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initAdapter() {
