@@ -112,6 +112,9 @@ class PinchZoomState(
 
     var containerSize by mutableStateOf(IntSize.Zero)
 
+    val isZoomedIn: Boolean
+        get() = scale - minScale > MIN_SCALE_TOLERANCE
+
     fun zoom(
         zoomChange: Float,
         panChange: Offset,
@@ -136,7 +139,6 @@ class PinchZoomState(
     }
 
     fun doubleTapZoom(tapOffset: Offset) {
-        val isZoomedIn = scale - minScale > MIN_SCALE_TOLERANCE
         if (isZoomedIn) {
             scale = minScale
             offset = Offset.Zero
