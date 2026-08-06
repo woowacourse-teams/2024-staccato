@@ -38,7 +38,9 @@ object PinchZoomDefaults {
 }
 
 private const val SLOW_MOVEMENT_COEFFICIENT = 0.8f
-private const val MIN_SCALE_TOLERANCE = 0.01f
+
+/** 더블탭 토글 판단 시, 이 값 이하의 미세한 잔여 확대는 "확대되지 않은 상태"로 간주하기 위한 허용오차입니다. */
+internal const val MIN_SCALE_TOLERANCE = 0.01f
 
 /**
  * 핀치 줌 · 더블탭 줌 · 확대 상태에서의 드래그(팬)를 단일 Gesture Detector로 처리하는 컨테이너입니다.

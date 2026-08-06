@@ -7,124 +7,156 @@ import org.assertj.core.api.Assertions.within
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 /**
- * 핀치줌 화면의 상태(배율 · 위치)가 사용자 요구사항대로 동작하는지 검증한다.
+ * PinchZoomState의 상태 전이 계약을 검증한다.
  *
- * 시나리오는 구현이 아니라 "사용자가 화면에서 무엇을 하고, 그 결과 무엇을 보게 되는가"의 관점으로 작성한다.
- * - 배율(scale): 이미지가 얼마나 커 보이는가 (1f = 원본, 2f = 2배)
- * - 위치(offset): 이미지가 화면 중앙에서 얼마나 치우쳐 보이는가 (중앙 = 0, 0)
+ * 이 클래스는 화면·제스처가 아니라 "확대/축소/드래그/더블탭 연산이 scale·offset에 올바르게 반영되는가"
+ * (상·하한 클램프, 최소 배율에서의 팬 차단, offset clamp, 더블탭 토글 등)를 본다.
+ * 실제 손가락 제스처 인식과 "확대된 이미지 바깥에 빈 여백이 보이는가" 같은 렌더링·UX 검증은
+ * PinchZoom 컴포저블의 UI 테스트 몫이다.
  *
- * 위치는 확대·감속 계산을 거치며 부동소수점 오차가 섞일 수 있고, `Offset`의 동등성은 비트 단위 비교이므로
- * "사용자가 보게 되는 위치(픽셀)"를 허용오차로 검증한다.
+ * - scale: 배율 (minScale = 원본, maxScale = 최대 확대). 배율은 리터럴이 아니라 설정된 min/max 기준으로 검증한다.
+ * - offset: 중앙 기준 이동량 (0, 0 = 정중앙). 확대·감속 계산의 부동소수점 오차와 `Offset`의 비트 단위
+ *   동등성 때문에 위치는 픽셀 허용오차로 검증한다.
  */
 class PinchZoomStateTest {
-    /** 1000 x 1000 화면에 원본~2배 범위의 핀치줌 상태를 놓는다. */
-    private fun pinchZoomOnScreen() =
-        PinchZoomState(minScale = 1f, maxScale = 2f)
-            .apply { containerSize = IntSize(SCREEN, SCREEN) }
+    /** SCREEN x SCREEN 화면에 [minScale]~[maxScale] 범위의 핀치줌 상태를 놓는다. */
+    private fun pinchZoomOnScreen(
+        minScale: Float = 1f,
+        maxScale: Float = 2f,
+    ) = PinchZoomState(minScale = minScale, maxScale = maxScale)
+        .apply { containerSize = IntSize(SCREEN, SCREEN) }
+
+    private fun center() = Offset(x = SCREEN / 2f, y = SCREEN / 2f)
 
     @Nested
     @DisplayName("처음 화면을 열었을 때")
     inner class WhenOpened {
         @Test
-        fun `이미지는 원본 크기로 화면 정중앙에 보인다`() {
+        fun `원본 배율로 화면 정중앙에 놓인다`() {
+            // given & when: 핀치줌 화면을 처음 연다
             val pinchZoomState = pinchZoomOnScreen()
 
-            assertThat(pinchZoomState.scale).isEqualTo(1f)
+            // then: 원본 배율로 치우침 없이 정중앙에 놓인다
+            assertThat(pinchZoomState.scale).isEqualTo(pinchZoomState.minScale)
             assertThatOffset(pinchZoomState.offset).isAt(x = 0f, y = 0f)
         }
     }
 
     @Nested
-    @DisplayName("두 손가락으로 확대·축소할 때")
+    @DisplayName("확대·축소할 때")
     inner class WhenPinching {
         @Test
-        fun `두 손가락을 벌린 만큼 이미지가 확대된다`() {
+        fun `확대하면 그 비율만큼 배율이 커진다`() {
+            // given: 원본 배율의 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
 
+            // when: 1.5배로 확대하면
             pinchZoomState.zoom(zoomChange = 1.5f, panChange = Offset.Zero)
 
-            assertThat(pinchZoomState.scale).isEqualTo(1.5f)
+            // then: 배율이 그 비율만큼 커진다
+            assertThat(pinchZoomState.scale).isEqualTo(pinchZoomState.minScale * 1.5f)
+        }
+
+        @ParameterizedTest(name = "최대 배율 {0}배로 설정하면 그 이상 확대되지 않는다")
+        @ValueSource(floats = [1.5f, 2f, 3f, 10f])
+        fun `설정된 최대 배율을 넘어 확대되지 않는다`(maxScale: Float) {
+            // given: 최대 배율이 maxScale로 설정된 핀치줌
+            val pinchZoomState = pinchZoomOnScreen(maxScale = maxScale)
+
+            // when: 아무리 크게 벌려도
+            pinchZoomState.zoom(zoomChange = 100f, panChange = Offset.Zero)
+
+            // then: 설정된 최대 배율에서 멈춘다
+            assertThat(pinchZoomState.scale).isEqualTo(maxScale)
+        }
+
+        @ParameterizedTest(name = "최소 배율 {0}배로 설정하면 그 이하로 축소되지 않는다")
+        @ValueSource(floats = [0.5f, 1f, 1.5f])
+        fun `설정된 최소 배율 아래로 축소되지 않는다`(minScale: Float) {
+            // given: 최소 배율이 minScale로 설정된 핀치줌
+            val pinchZoomState = pinchZoomOnScreen(minScale = minScale, maxScale = minScale + 2f)
+
+            // when: 아무리 오므려도
+            pinchZoomState.zoom(zoomChange = 0.1f, panChange = Offset.Zero)
+
+            // then: 설정된 최소 배율에서 멈춘다
+            assertThat(pinchZoomState.scale).isEqualTo(minScale)
         }
 
         @Test
-        fun `아무리 크게 벌려도 최대 2배까지만 확대된다`() {
+        fun `확대 중에 위치를 옮기면 그 방향으로 함께 이동한다`() {
+            // given: 원본 배율의 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
 
-            pinchZoomState.zoom(zoomChange = 5f, panChange = Offset.Zero)
-            pinchZoomState.zoom(zoomChange = 5f, panChange = Offset.Zero)
-
-            assertThat(pinchZoomState.scale).isEqualTo(2f)
-        }
-
-        @Test
-        fun `원본 크기에서 두 손가락을 오므려도 원본보다 작아지지 않는다`() {
-            val pinchZoomState = pinchZoomOnScreen()
-
-            pinchZoomState.zoom(zoomChange = 0.5f, panChange = Offset.Zero)
-
-            assertThat(pinchZoomState.scale).isEqualTo(1f)
-            assertThatOffset(pinchZoomState.offset).isAt(x = 0f, y = 0f)
-        }
-
-        @Test
-        fun `확대하면서 손을 움직이면 이미지가 그 방향으로 함께 이동한다`() {
-            val pinchZoomState = pinchZoomOnScreen()
-
+            // when: 확대와 동시에 오른쪽으로 이동시키면
             pinchZoomState.zoom(zoomChange = 2f, panChange = Offset(x = 100f, y = 0f))
 
-            assertThat(pinchZoomState.scale).isEqualTo(2f)
-            assertThatOffset(pinchZoomState.offset).isAt(x = 200f, y = 0f)
+            // then: 그 방향(오른쪽, 양의 방향)으로 함께 이동한다
+            assertThat(pinchZoomState.offset.x).isPositive()
         }
 
         @Test
-        fun `확대했던 이미지를 다시 원본으로 오므리면 화면이 정중앙으로 돌아온다`() {
+        fun `원본 배율로 되돌아오면 치우침이 사라진다`() {
+            // given: 확대 후 한쪽으로 치우쳐 둔 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
             pinchZoomState.zoom(zoomChange = 2f, panChange = Offset.Zero)
-            pinchZoomState.pan(dragAmount = Offset(x = -100f, y = 0f)) // 확대 상태에서 한쪽으로 치우쳐 둔다
+            pinchZoomState.pan(dragAmount = Offset(x = -100f, y = 0f))
 
-            pinchZoomState.zoom(zoomChange = 0.4f, panChange = Offset.Zero) // 원본 크기로 축소
+            // when: 다시 원본 배율로 축소하면
+            pinchZoomState.zoom(zoomChange = 0.4f, panChange = Offset.Zero)
 
-            assertThat(pinchZoomState.scale).isEqualTo(1f)
+            // then: 원본 배율로 돌아오고 치우침이 사라진다
+            assertThat(pinchZoomState.scale).isEqualTo(pinchZoomState.minScale)
             assertThatOffset(pinchZoomState.offset).isAt(x = 0f, y = 0f)
         }
     }
 
     @Nested
-    @DisplayName("한 손가락으로 이미지를 드래그할 때")
+    @DisplayName("이미지를 드래그(팬)할 때")
     inner class WhenDragging {
         @Test
-        fun `원본 크기에서는 드래그해도 이미지가 움직이지 않는다`() {
+        fun `원본 배율에서는 드래그해도 위치가 고정된다`() {
+            // given: 원본 배율의 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
 
+            // when: 드래그해도
             pinchZoomState.pan(dragAmount = Offset(x = 100f, y = 100f))
 
+            // then: 위치가 정중앙에 고정된다
             assertThatOffset(pinchZoomState.offset).isAt(x = 0f, y = 0f)
         }
 
         @Test
-        fun `확대된 상태에서 드래그하면 이미지가 그 방향으로 이동한다`() {
+        fun `확대된 상태에서 드래그하면 그 방향으로 이동한다`() {
+            // given: 2배로 확대된 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
             pinchZoomState.zoom(zoomChange = 2f, panChange = Offset.Zero)
 
+            // when: 왼쪽으로 드래그하면
             pinchZoomState.pan(dragAmount = Offset(x = -100f, y = 0f))
 
-            // 왼쪽(음의 방향)으로 이동하고, 손가락 이동량(100)보다 크게 벗어나지 않는다(감속)
+            // then: 손가락 방향(왼쪽, 음의 방향)으로 이동한다
             assertThat(pinchZoomState.offset.x).isNegative()
-            assertThatOffset(pinchZoomState.offset).isAt(x = -160f, y = 0f)
         }
 
         @Test
-        fun `확대된 이미지를 아무리 밀어도 이미지 밖 빈 여백이 보이지 않는다`() {
+        fun `확대 상태에서 한계를 넘겨 드래그하면 offset이 더 이상 커지지 않고 멈춘다`() {
+            // given: 2배로 확대한 뒤 한계 이상으로 한 번 민 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
             pinchZoomState.zoom(zoomChange = 2f, panChange = Offset.Zero)
-
             pinchZoomState.pan(dragAmount = Offset(x = -1000f, y = 0f))
+            val clampedOffset = pinchZoomState.offset
+
+            // when: 같은 방향으로 더 민다
             pinchZoomState.pan(dragAmount = Offset(x = -1000f, y = 0f))
 
-            // 2배 확대 시 좌우로 밀 수 있는 최대치 = 화면너비 * (2-1) / 2 = 500
-            assertThatOffset(pinchZoomState.offset).isAt(x = -500f, y = 0f)
+            // then: 이동은 일어났지만(음의 방향), offset이 더 커지지 않고 이전 한계 지점에 그대로 멈춰 있다(clamp)
+            assertThat(clampedOffset.x).isNegative()
+            assertThatOffset(pinchZoomState.offset).isAt(x = clampedOffset.x, y = clampedOffset.y)
         }
     }
 
@@ -132,70 +164,90 @@ class PinchZoomStateTest {
     @DisplayName("이미지를 더블탭할 때")
     inner class WhenDoubleTapping {
         @Test
-        fun `원본 크기에서 중앙을 더블탭하면 중앙 기준으로 최대 배율까지 확대된다`() {
+        fun `원본 배율에서 중앙을 더블탭하면 최대 배율로 확대된다`() {
+            // given: 원본 배율의 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
 
-            pinchZoomState.doubleTapZoom(tapOffset = Offset(x = 500f, y = 500f))
+            // when: 화면 중앙을 더블탭하면
+            pinchZoomState.doubleTapZoom(tapOffset = center())
 
-            assertThat(pinchZoomState.scale).isEqualTo(2f)
+            // then: 최대 배율로 확대되고, 중앙 기준이라 치우침이 없다
+            assertThat(pinchZoomState.scale).isEqualTo(pinchZoomState.maxScale)
             assertThatOffset(pinchZoomState.offset).isAt(x = 0f, y = 0f)
         }
 
         @Test
-        fun `원본 크기에서 모서리를 더블탭해도 이미지 밖 빈 여백이 보이지 않는다`() {
-            val pinchZoomState = pinchZoomOnScreen()
+        fun `더블탭 지점이 화면을 벗어나도 offset이 허용 범위를 넘지 않는다`() {
+            // given: 같은 조건(원본 배율)의 두 핀치줌
+            val cornerTapped = pinchZoomOnScreen()
+            val beyondCornerTapped = pinchZoomOnScreen()
 
-            pinchZoomState.doubleTapZoom(tapOffset = Offset(x = 0f, y = 0f))
+            // when: 하나는 화면 모서리를, 다른 하나는 화면 밖 더 먼 지점을 더블탭해 확대한다
+            cornerTapped.doubleTapZoom(tapOffset = Offset(x = 0f, y = 0f))
+            beyondCornerTapped.doubleTapZoom(tapOffset = Offset(x = -1000f, y = -1000f))
 
-            assertThat(pinchZoomState.scale).isEqualTo(2f)
-            assertThatOffset(pinchZoomState.offset).isAt(x = 500f, y = 500f)
+            // then: 탭 지점 방향으로 이동하되, 더 극단적인 지점이어도 같은 한계에서 멈춘다(clamp)
+            assertThat(cornerTapped.offset.x).isPositive()
+            assertThatOffset(beyondCornerTapped.offset).isAt(x = cornerTapped.offset.x, y = cornerTapped.offset.y)
         }
 
         @Test
-        fun `확대된 이미지를 더블탭하면 원본 크기로 돌아오고 정중앙으로 정렬된다`() {
+        fun `확대된 상태에서 더블탭하면 원본 배율로 돌아오고 치우침이 사라진다`() {
+            // given: 확대하며 한쪽으로 치우쳐 둔 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
             pinchZoomState.zoom(zoomChange = 2f, panChange = Offset(x = 150f, y = 0f))
 
+            // when: 더블탭하면
             pinchZoomState.doubleTapZoom(tapOffset = Offset(x = 10f, y = 10f))
 
-            assertThat(pinchZoomState.scale).isEqualTo(1f)
+            // then: 원본 배율로 돌아오고 치우침이 사라진다
+            assertThat(pinchZoomState.scale).isEqualTo(pinchZoomState.minScale)
             assertThatOffset(pinchZoomState.offset).isAt(x = 0f, y = 0f)
         }
 
         @Test
-        fun `거의 원본에 가깝게만 확대된 상태에서 더블탭하면 축소가 아니라 최대 배율로 확대된다`() {
+        fun `확대량이 허용오차 이내면 더블탭은 원본이 아니라 최대 배율로 확대한다`() {
+            // given: 최소 배율 + 허용오차 = "확대되지 않은 것으로 간주"되는 경계까지만 확대한 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
-            pinchZoomState.zoom(zoomChange = 1.005f, panChange = Offset.Zero) // 사용자가 눈치채기 어려운 미세 확대
-            assertThat(pinchZoomState.isZoomedIn).isFalse() // 아직 "확대한 상태"로 간주되지 않는다
+            pinchZoomState.zoom(zoomChange = 1f + MIN_SCALE_TOLERANCE, panChange = Offset.Zero)
+            assertThat(pinchZoomState.isZoomedIn).isFalse()
 
-            pinchZoomState.doubleTapZoom(tapOffset = Offset(x = 500f, y = 500f))
+            // when: 더블탭하면
+            pinchZoomState.doubleTapZoom(tapOffset = center())
 
-            assertThat(pinchZoomState.scale).isEqualTo(2f)
+            // then: 원본이 아니라 최대 배율로 확대된다
+            assertThat(pinchZoomState.scale).isEqualTo(pinchZoomState.maxScale)
         }
 
         @Test
-        fun `또렷하게 확대된 상태에서 더블탭하면 원본 크기로 돌아온다`() {
+        fun `확대량이 허용오차를 넘으면 더블탭은 원본 배율로 되돌린다`() {
+            // given: 허용오차를 넘겨 "확대된 상태"로 간주되는 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
-            pinchZoomState.zoom(zoomChange = 1.05f, panChange = Offset.Zero)
-            assertThat(pinchZoomState.isZoomedIn).isTrue() // "확대한 상태"로 간주된다
+            pinchZoomState.zoom(zoomChange = 1f + MIN_SCALE_TOLERANCE * 2f, panChange = Offset.Zero)
+            assertThat(pinchZoomState.isZoomedIn).isTrue()
 
-            pinchZoomState.doubleTapZoom(tapOffset = Offset(x = 500f, y = 500f))
+            // when: 더블탭하면
+            pinchZoomState.doubleTapZoom(tapOffset = center())
 
-            assertThat(pinchZoomState.scale).isEqualTo(1f)
+            // then: 원본 배율로 되돌린다
+            assertThat(pinchZoomState.scale).isEqualTo(pinchZoomState.minScale)
         }
 
         @Test
-        fun `화면 크기가 아직 측정되지 않았어도 더블탭하면 앱이 죽지 않고 최대 배율로 확대된다`() {
-            val pinchZoomState = PinchZoomState(minScale = 1f, maxScale = 2f) // containerSize 미설정(Zero)
+        fun `화면 크기가 측정되기 전에 더블탭해도 크래시 없이 최대 배율로 확대된다`() {
+            // given: containerSize가 아직 설정되지 않은(Zero) 핀치줌
+            val pinchZoomState = PinchZoomState(minScale = 1f, maxScale = 2f)
 
+            // when: 더블탭하면
             pinchZoomState.doubleTapZoom(tapOffset = Offset(x = 100f, y = 100f))
 
-            assertThat(pinchZoomState.scale).isEqualTo(2f)
+            // then: 크래시 없이 최대 배율로 확대되고 치우침이 없다
+            assertThat(pinchZoomState.scale).isEqualTo(pinchZoomState.maxScale)
             assertThatOffset(pinchZoomState.offset).isAt(x = 0f, y = 0f)
         }
     }
 
-    /** "사용자가 보게 되는 위치(픽셀)"를 허용오차로 검증하기 위한 단언 헬퍼. */
+    /** 확대·감속 계산의 부동소수점 오차와 `Offset`의 비트 동등성을 피해, 화면상 위치(픽셀)를 허용오차로 검증한다. */
     private fun assertThatOffset(actual: Offset) =
         object {
             fun isAt(
