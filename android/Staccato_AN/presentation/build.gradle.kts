@@ -46,6 +46,13 @@ android {
     dataBinding {
         enable = true
     }
+
+    testOptions {
+        unitTests {
+            // Robolectric이 리소스 · 매니페스트에 접근할 수 있도록 한다.
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -62,6 +69,12 @@ dependencies {
 
     // AssertJ
     testImplementation(libs.assertj.core)
+
+    // Compose UI Test (Robolectric으로 JVM에서 실행)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
+    testImplementation(libs.robolectric)
 
     // Android LiveData Test
     testImplementation(libs.androidx.arch.core)
