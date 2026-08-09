@@ -5,21 +5,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.component.PinchZoom
-import com.on.staccato.presentation.component.PinchZoomDefaults
+import com.on.staccato.presentation.component.rememberPinchZoomState
 import com.on.staccato.theme.Black
-import kotlin.math.absoluteValue
-
-private const val ZOOM_SCROLLABLE_TOLERANCE = 0.05f
 
 @Composable
 fun OriginalPhotoPager(
@@ -33,7 +27,11 @@ fun OriginalPhotoPager(
             initialPage = initialPage,
             pageCount = { imageUrls.size },
         )
-    var scrollable by remember { mutableStateOf(true) }
+    val zoomState = rememberPinchZoomState()
+
+    // 확대된 상태에서는 스와이프가 막혀 한 번에 한 페이지만 다뤄지므로, 페이지 간 확대 상태를 공유해도 안전하다.
+    // 페이지를 넘기면 이전 사진의 확대를 초기화해, 각 사진을 원본 크기에서 시작한다.
+    LaunchedEffect(pagerState.currentPage) { zoomState.reset() }
 
     HorizontalPager(
         state = pagerState,
@@ -41,13 +39,13 @@ fun OriginalPhotoPager(
             modifier
                 .fillMaxSize()
                 .background(Black),
-        userScrollEnabled = scrollable,
+        // 확대 상태에서는 페이지 스와이프를 막아, 드래그가 이미지 이동(팬)으로만 쓰이게 한다.
+        userScrollEnabled = !zoomState.isZoomedIn,
     ) { page ->
         PinchZoom(
-            onScaleChange = { scale ->
-                scrollable = (scale - PinchZoomDefaults.MinScale).absoluteValue < ZOOM_SCROLLABLE_TOLERANCE
-            },
-            shouldConsumeDrag = { !scrollable },
+            state = zoomState,
+            // 확대 상태의 드래그는 소비해 부모 Pager로 전파하지 않는다.
+            shouldConsumeDrag = { zoomState.isZoomedIn },
             onTap = { onTap() },
         ) {
             DefaultAsyncImage(

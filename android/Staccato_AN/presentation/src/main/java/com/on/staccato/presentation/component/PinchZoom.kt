@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -16,7 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
@@ -50,9 +48,11 @@ internal const val MIN_SCALE_TOLERANCE = 0.01f
  *
  * 더블탭은 현재 배율에 따라 토글되며, 조금이라도 확대돼 있으면 최소 배율로 되돌리고, 최소 배율이면 최대 배율로 확대합니다.
  *
+ * 상태([PinchZoomState])를 내부에서 생성하는 간편 버전입니다. 배율 · 확대 여부를 상위에서 관찰하거나
+ * 프로그램적으로 제어(예: 페이지 전환 시 줌 리셋)해야 하면, 상태를 직접 소유하는 오버로드를 사용하세요.
+ *
  * @param minScale 최소 배율입니다. 이 배율에서는 팬이 적용되지 않고 offset이 0으로 고정됩니다. (기본 값 1f, 원본 배율)
  * @param maxScale 최대 배율입니다. (기본 값 2f, 2배율)
- * @param onScaleChange 배율이 바뀔 때마다 현재 scale로 호출됩니다. (핀치 · 더블탭 공통)
  * @param shouldConsumeDrag 한 손가락 드래그가 일어날 때마다 그 변위(dragAmount)로 호출됩니다.
  *   **팬은 확대 상태(최소 배율 초과)에서만 내부적으로 적용**되며, 이 콜백의 반환값은 ***해당
  *   드래그 이벤트를 소비할지*** 만 결정합니다.
@@ -66,20 +66,41 @@ fun PinchZoom(
     modifier: Modifier = Modifier,
     minScale: Float = PinchZoomDefaults.MinScale,
     maxScale: Float = PinchZoomDefaults.MaxScale,
-    onScaleChange: ((scale: Float) -> Unit)? = null,
     shouldConsumeDrag: ((dragAmount: Offset) -> Boolean)? = null,
     onTap: ((Offset) -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
-    val state = rememberPinchZoomState(minScale, maxScale)
+    PinchZoom(
+        state = rememberPinchZoomState(minScale, maxScale),
+        modifier = modifier,
+        shouldConsumeDrag = shouldConsumeDrag,
+        onTap = onTap,
+        content = content,
+    )
+}
 
+/**
+ * 상태([PinchZoomState])를 상위에서 소유(hoist)하는 버전입니다.
+ *
+ * `state.scale` · `state.isZoomedIn` · `state.offset`을 상위에서 관찰하거나 [PinchZoomState.reset] 등으로
+ * 프로그램적으로 제어할 수 있어, 부모(예: Pager)와 확대 상태를 공유해야 할 때 사용합니다.
+ *
+ * @param state 확대 · 이동 상태입니다. `rememberPinchZoomState()`로 만들어 상위에서 보관하세요.
+ * @param shouldConsumeDrag 한 손가락 드래그가 일어날 때마다 그 변위(dragAmount)로 호출됩니다.
+ *   반환값은 해당 드래그 이벤트를 소비(부모로 미전파)할지만 결정합니다.
+ * @param onTap 한 손가락 탭 시 탭 위치로 호출됩니다.
+ * @param content 확대 · 이동 변환이 적용될 콘텐츠입니다.
+ */
+@Composable
+fun PinchZoom(
+    state: PinchZoomState,
+    modifier: Modifier = Modifier,
+    shouldConsumeDrag: ((dragAmount: Offset) -> Boolean)? = null,
+    onTap: ((Offset) -> Unit)? = null,
+    content: @Composable () -> Unit,
+) {
     val currentShouldConsumeDrag by rememberUpdatedState(shouldConsumeDrag)
     val currentOnTap by rememberUpdatedState(onTap)
-    val currentOnScaleChange by rememberUpdatedState(onScaleChange)
-
-    LaunchedEffect(state) {
-        snapshotFlow { state.scale }.collect { currentOnScaleChange?.invoke(it) }
-    }
 
     Box(
         modifier =
@@ -149,6 +170,12 @@ class PinchZoomState(
             val center = Offset(containerSize.width / 2f, containerSize.height / 2f)
             offset = clampOffset((center - tapOffset) * scale, scale, containerSize)
         }
+    }
+
+    /** 배율과 위치를 초기 상태(최소 배율 · 정중앙)로 되돌립니다. 예: 페이지 전환 시 이전 사진의 확대 해제. */
+    fun reset() {
+        scale = minScale
+        offset = Offset.Zero
     }
 }
 
