@@ -43,9 +43,8 @@ fun OriginalPhotoPager(
         userScrollEnabled = !zoomState.isZoomedIn,
     ) { page ->
         PinchZoom(
+            // 확대 상태의 드래그는 PinchZoom이 기본으로 소비하므로(부모 Pager로 미전파) 별도 지정이 필요 없다.
             state = zoomState,
-            // 확대 상태의 드래그는 소비해 부모 Pager로 전파하지 않는다.
-            shouldConsumeDrag = { zoomState.isZoomedIn },
             onTap = { onTap() },
         ) {
             DefaultAsyncImage(

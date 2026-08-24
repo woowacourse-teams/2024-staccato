@@ -227,6 +227,64 @@ class PinchZoomGestureTest {
         composeRule.runOnIdle { assertThat(parentReceivedDrag).isTrue() }
     }
 
+    @Test
+    fun `override가 없으면 확대 상태의 드래그는 기본으로 소비되어 부모로 전파되지 않는다`() {
+        // given: shouldConsumeDrag를 지정하지 않은 채, 부모의 드래그 수신 여부를 기록한다
+        var parentReceivedDrag = false
+        lateinit var state: PinchZoomState
+        composeRule.setContent {
+            state = rememberPinchZoomState()
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectDragGestures { _, _ -> parentReceivedDrag = true }
+                    },
+            ) {
+                PinchZoom(state = state, modifier = Modifier.testTag(PINCH_ZOOM)) {
+                    Box(Modifier.fillMaxSize())
+                }
+            }
+        }
+
+        // when: 더블탭으로 확대한 뒤 드래그하면
+        composeRule.onNodeWithTag(PINCH_ZOOM).performTouchInput { doubleClick(center) }
+        composeRule.runOnIdle { assertThat(state.isZoomedIn).isTrue() }
+        composeRule.onNodeWithTag(PINCH_ZOOM).performTouchInput {
+            swipe(center, center + Offset(DRAG_DISTANCE, 0f))
+        }
+
+        // then: 기본 동작으로 소비되어 부모는 드래그를 받지 못한다
+        composeRule.runOnIdle { assertThat(parentReceivedDrag).isFalse() }
+    }
+
+    @Test
+    fun `override가 없으면 최소 배율의 드래그는 기본으로 소비되지 않아 부모로 전파된다`() {
+        // given: shouldConsumeDrag를 지정하지 않은, 최소 배율의 핀치줌과 부모
+        var parentReceivedDrag = false
+        composeRule.setContent {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectDragGestures { _, _ -> parentReceivedDrag = true }
+                    },
+            ) {
+                PinchZoom(state = rememberPinchZoomState(), modifier = Modifier.testTag(PINCH_ZOOM)) {
+                    Box(Modifier.fillMaxSize())
+                }
+            }
+        }
+
+        // when: 확대하지 않은 상태에서 드래그하면
+        composeRule.onNodeWithTag(PINCH_ZOOM).performTouchInput {
+            swipe(center, center + Offset(DRAG_DISTANCE, 0f))
+        }
+
+        // then: 팬할 것이 없어 소비하지 않으므로 부모가 드래그를 이어받는다
+        composeRule.runOnIdle { assertThat(parentReceivedDrag).isTrue() }
+    }
+
     /** hoisting한 상태를 주입한 PinchZoom을 렌더하고, 그 상태를 반환해 테스트에서 scale·offset을 관찰한다. */
     private fun setPinchZoom(
         onTap: ((Offset) -> Unit)? = null,
