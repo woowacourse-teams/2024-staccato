@@ -82,6 +82,70 @@ class PinchZoomGestureTest {
     }
 
     @Test
+    fun `두 번의 탭 간격이 더블탭 시간을 넘으면 더블탭이 아니라 각각 단일 탭으로 처리된다`() {
+        // given: 탭 횟수를 세는 핀치줌
+        var tapCount = 0
+        val state = setPinchZoom(onTap = { tapCount++ })
+
+        // when: 더블탭 인정 시간보다 길게 벌려 두 번 탭한다 (clock을 수동으로 전진)
+        composeRule.mainClock.autoAdvance = false
+        composeRule.onNodeWithTag(PINCH_ZOOM).performTouchInput { click(center) }
+        composeRule.mainClock.advanceTimeBy(DOUBLE_TAP_TIMEOUT)
+        composeRule.onNodeWithTag(PINCH_ZOOM).performTouchInput { click(center) }
+        composeRule.mainClock.advanceTimeBy(DOUBLE_TAP_TIMEOUT)
+        composeRule.mainClock.autoAdvance = true
+
+        // then: 확대되지 않고(더블탭 아님), 각각 단일 탭으로 두 번 처리된다
+        composeRule.runOnIdle {
+            assertThat(state.scale).isEqualTo(state.minScale)
+            assertThat(tapCount).isEqualTo(2)
+        }
+    }
+
+    @Test
+    fun `핀치로 시작한 제스처는 한 손가락만 남아도 탭으로 처리되지 않는다`() {
+        // given: 탭 콜백을 단 핀치줌
+        var tapped = false
+        val state = setPinchZoom(onTap = { tapped = true })
+
+        // when: 두 손가락으로 확대한 뒤, 한 손가락을 떼고 남은 손가락으로 드래그한다
+        composeRule.onNodeWithTag(PINCH_ZOOM).performTouchInput {
+            down(0, center - Offset(50f, 0f))
+            down(1, center + Offset(50f, 0f))
+            moveTo(0, center - Offset(250f, 0f)) // 벌려서 확대(핀치로 확정)
+            moveTo(1, center + Offset(250f, 0f))
+            up(1) // 한 손가락 떼기
+            moveTo(0, center - Offset(250f, 300f)) // 남은 손가락으로 드래그
+            up(0)
+        }
+
+        // then: 먼저 인식된 핀치로 고정되어, 확대는 유지되고 탭으로 처리되지 않는다
+        composeRule.runOnIdle {
+            assertThat(state.scale).isGreaterThan(state.minScale)
+            assertThat(tapped).isFalse()
+        }
+    }
+
+    @Test
+    fun `최소 배율에서 드래그하면 팬은 적용되지 않지만 shouldConsumeDrag는 호출된다`() {
+        // given: 소비 콜백 호출 여부를 기록하는, 최소 배율의 핀치줌
+        var consumeCalled = false
+        val state = setPinchZoom(shouldConsumeDrag = { consumeCalled = true; false })
+
+        // when: 확대하지 않은 상태에서 드래그하면
+        composeRule.onNodeWithTag(PINCH_ZOOM).performTouchInput {
+            swipe(center, center + Offset(DRAG_DISTANCE, 0f))
+        }
+
+        // then: 팬이 적용되지 않아 배율·위치는 그대로지만, 소비 여부를 정하는 콜백은 호출된다
+        composeRule.runOnIdle {
+            assertThat(state.scale).isEqualTo(state.minScale)
+            assertThat(state.offset).isEqualTo(Offset.Zero)
+            assertThat(consumeCalled).isTrue()
+        }
+    }
+
+    @Test
     fun `드래그로 시작한 제스처는 도중에 손가락을 추가해도 확대로 넘어가지 않는다`() {
         // given: 원본 배율의 핀치줌
         val state = setPinchZoom()
@@ -164,13 +228,17 @@ class PinchZoomGestureTest {
     }
 
     /** hoisting한 상태를 주입한 PinchZoom을 렌더하고, 그 상태를 반환해 테스트에서 scale·offset을 관찰한다. */
-    private fun setPinchZoom(onTap: ((Offset) -> Unit)? = null): PinchZoomState {
+    private fun setPinchZoom(
+        onTap: ((Offset) -> Unit)? = null,
+        shouldConsumeDrag: ((Offset) -> Boolean)? = null,
+    ): PinchZoomState {
         lateinit var state: PinchZoomState
         composeRule.setContent {
             state = rememberPinchZoomState()
             PinchZoom(
                 state = state,
                 modifier = Modifier.testTag(PINCH_ZOOM),
+                shouldConsumeDrag = shouldConsumeDrag,
                 onTap = onTap,
             ) {
                 Box(Modifier.fillMaxSize())
