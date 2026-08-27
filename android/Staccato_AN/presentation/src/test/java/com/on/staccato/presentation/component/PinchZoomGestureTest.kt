@@ -130,7 +130,13 @@ class PinchZoomGestureTest {
     fun `최소 배율에서 드래그하면 팬은 적용되지 않지만 shouldConsumeDrag는 호출된다`() {
         // given: 소비 콜백 호출 여부를 기록하는, 최소 배율의 핀치줌
         var consumeCalled = false
-        val state = setPinchZoom(shouldConsumeDrag = { consumeCalled = true; false })
+        val state =
+            setPinchZoom(
+                shouldConsumeDrag = {
+                    consumeCalled = true
+                    false
+                },
+            )
 
         // when: 확대하지 않은 상태에서 드래그하면
         composeRule.onNodeWithTag(PINCH_ZOOM).performTouchInput {
