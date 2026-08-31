@@ -39,30 +39,29 @@ object PinchZoomDefaults {
 
 private const val SLOW_MOVEMENT_COEFFICIENT = 0.8f
 
-/** 더블탭 토글 판단 시, 이 값 이하의 미세한 잔여 확대는 "확대되지 않은 상태"로 간주하기 위한 허용오차입니다. */
+/** 확대 여부를 판단하는 허용 오차입니다. 최소 배율과의 차이가 이 값보다 작으면 확대되지 않은 것으로 봅니다. */
 internal const val MIN_SCALE_TOLERANCE = 0.01f
 
 /**
- * 핀치 줌 · 더블탭 줌 · 확대 상태에서의 드래그(팬)를 단일 Gesture Detector로 처리하는 컨테이너입니다.
+ * 콘텐츠에 핀치 줌과 더블탭 줌, 확대 상태에서의 드래그(팬)를 더하는 컨테이너입니다.
  *
- * 탭 · 더블탭 · 드래그 · 핀치를 하나의 제스처 루프에서 분류하며,
- * 한 번의 연속 제스처 안에서는 먼저 인식된 동작으로 고정되어 팬과 줌이 섞이지 않습니다.
+ * 탭·드래그·핀치·더블탭을 하나의 제스처 루프에서 구분합니다. 한 번의 연속된 제스처는 처음 인식된 동작으로
+ * 고정되므로, 팬과 줌이 섞이지 않습니다.
  *
- * 더블탭은 현재 배율에 따라 토글되며, 조금이라도 확대돼 있으면 최소 배율로 되돌리고, 최소 배율이면 최대 배율로 확대합니다.
+ * 더블탭하면 배율이 토글됩니다. 조금이라도 확대돼 있으면 최소 배율로 되돌리고, 최소 배율이면 최대 배율로 확대합니다.
  *
- * 상태([PinchZoomState])를 내부에서 생성하는 간편 버전입니다. 배율 · 확대 여부를 상위에서 관찰하거나
- * 프로그램적으로 제어(예: 페이지 전환 시 줌 리셋)해야 하면, 상태를 직접 소유하는 오버로드를 사용하세요.
+ * 상태를 내부에서 만드는 간편한 오버로드입니다. 배율이나 확대 여부를 바깥에서 관찰하거나 직접 제어해야 하면
+ * (예: 페이지가 바뀔 때 줌 해제) [PinchZoomState]를 직접 받는 오버로드를 사용하세요.
  *
- * @param minScale 최소 배율입니다. 이 배율에서는 팬이 적용되지 않고 offset이 0으로 고정됩니다. (기본 값 1f, 원본 배율)
- * @param maxScale 최대 배율입니다. (기본 값 2f, 2배율)
- * @param shouldConsumeDrag (선택) 확대 상태의 한 손가락 드래그를 **소비할지**를 정하는 override입니다.
- *   기본값(`null`)이면 **팬이 실제로 적용되는 동안(최소 배율 초과) 자동으로 소비**하여 부모(예: Pager · 스크롤)로
- *   전파하지 않습니다. 확대 중이라도 경계에 닿으면 부모가 이어받게 하는 등, 소비 조건을 바꾸고 싶을 때만 override하세요.
- *   인자 `dragDirection`은 각 축의 부호(`-1f` / `0f` / `+1f`)로 **드래그 방향만** 나타냅니다(이동 크기는 담지 않음).
- *   - `true`  → 이벤트를 소비하여 부모로 전파하지 않습니다.
- *   - `false` → 소비하지 않아 부모가 이어서 제스처를 처리합니다.
- * @param onTap 한 손가락 탭 시 탭 위치로 호출됩니다.
- * @param content 확대 · 이동 변환이 적용될 콘텐츠입니다.
+ * @param minScale 최소 배율입니다. 이 배율에서는 팬이 동작하지 않고 위치가 가운데에 고정됩니다. (기본값 1f, 원본 크기)
+ * @param maxScale 최대 배율입니다. (기본값 2f)
+ * @param shouldConsumeDrag 확대 상태의 한 손가락 드래그를 소비할지 결정합니다. (선택)
+ *   지정하지 않으면 팬이 동작하는 동안(최소 배율보다 크게 확대된 상태) 드래그를 소비해 부모(Pager 등)로 넘기지 않습니다.
+ *   확대된 상태에서도 이미지 경계에 닿으면 부모가 스크롤을 이어받게 하는 등, 소비 조건을 바꾸고 싶을 때만 지정하세요.
+ *   `dragDirection`은 각 축의 부호(`-1f`, `0f`, `+1f`)로 드래그 방향만 알려줍니다. (이동 거리는 포함하지 않습니다.)
+ *   `true`면 드래그를 소비해 부모로 넘기지 않고, `false`면 부모가 이어서 처리합니다.
+ * @param onTap 한 손가락으로 탭하면 그 위치와 함께 호출됩니다.
+ * @param content 확대와 이동이 적용될 콘텐츠입니다.
  */
 @Composable
 fun PinchZoom(
@@ -83,17 +82,17 @@ fun PinchZoom(
 }
 
 /**
- * 상태([PinchZoomState])를 상위에서 소유(hoist)하는 버전입니다.
+ * 상태([PinchZoomState])를 바깥에서 소유(hoist)하는 오버로드입니다.
  *
- * `state.scale` · `state.isZoomedIn` · `state.offset`을 상위에서 관찰하거나 [PinchZoomState.reset] 등으로
- * 프로그램적으로 제어할 수 있어, 부모(예: Pager)와 확대 상태를 공유해야 할 때 사용합니다.
+ * 배율이나 확대 여부를 바깥에서 관찰하거나 [PinchZoomState.reset]으로 직접 제어할 수 있어,
+ * 부모(예: Pager)와 확대 상태를 공유해야 할 때 사용합니다.
  *
- * @param state 확대 · 이동 상태입니다. `rememberPinchZoomState()`로 만들어 상위에서 보관하세요.
- * @param shouldConsumeDrag (선택) 확대 상태의 한 손가락 드래그 소비 여부를 정하는 override입니다.
- *   기본값(`null`)이면 팬이 적용되는 동안 자동으로 소비합니다. 인자 `dragDirection`은 각 축의 부호로
- *   드래그 방향만 담아, 예컨대 "경계에 닿으면 부모(Pager)로 넘김" 같은 정책을 표현할 수 있습니다.
- * @param onTap 한 손가락 탭 시 탭 위치로 호출됩니다.
- * @param content 확대 · 이동 변환이 적용될 콘텐츠입니다.
+ * @param state 확대·이동 상태입니다. `rememberPinchZoomState()`로 만들어 바깥에서 보관하세요.
+ * @param shouldConsumeDrag 확대 상태의 한 손가락 드래그를 소비할지 결정합니다. (선택)
+ *   지정하지 않으면 팬이 동작하는 동안 드래그를 소비합니다. `dragDirection`은 각 축의 부호로 드래그 방향을 알려주므로,
+ *   "이미지가 경계에 닿았을 때만 부모가 페이지를 넘기게" 같은 정책을 표현할 수 있습니다.
+ * @param onTap 한 손가락으로 탭하면 그 위치와 함께 호출됩니다.
+ * @param content 확대와 이동이 적용될 콘텐츠입니다.
  */
 @Composable
 fun PinchZoom(
@@ -113,7 +112,6 @@ fun PinchZoom(
                 .onSizeChanged { state.containerSize = it }
                 .pinchZoomGesture(
                     state = state,
-                    // override가 없으면 팬이 적용되는 동안(isPanning) 소비하는 것이 기본 동작이다.
                     shouldConsumeDrag = { dragDirection, isPanning ->
                         currentShouldConsumeDrag?.invoke(dragDirection) ?: isPanning
                     },
@@ -130,20 +128,41 @@ fun PinchZoom(
     }
 }
 
+/**
+ * [PinchZoom]의 확대·이동 상태를 담는 홀더입니다.
+ *
+ * [rememberPinchZoomState]로 만들어 [PinchZoom]에 넘기면, 배율([scale])과 위치([offset]), 확대 여부([isZoomedIn])를
+ * 바깥에서 관찰하거나 [reset]으로 직접 제어할 수 있습니다. 예를 들어 Pager는 [isZoomedIn]을 보고 확대 중일 때
+ * 페이지 스와이프를 막을 수 있습니다.
+ *
+ * @param minScale 최소 배율입니다. (기본값 1f, 원본 크기)
+ * @param maxScale 최대 배율입니다. (기본값 2f)
+ */
 @Stable
 class PinchZoomState(
     val minScale: Float = PinchZoomDefaults.MinScale,
     val maxScale: Float = PinchZoomDefaults.MaxScale,
 ) {
+    /** 현재 배율입니다. 항상 [minScale]과 [maxScale] 사이입니다. */
     var scale by mutableFloatStateOf(minScale)
         private set
+
+    /** 콘텐츠가 중앙에서 이동한 위치입니다. 중앙에 있으면 [Offset.Zero]입니다. */
     var offset by mutableStateOf(Offset.Zero)
         private set
 
+    /** 콘텐츠 영역의 크기입니다. 팬·줌이 경계를 벗어나지 않도록 제한하는 데 쓰이며, 보통 [PinchZoom]이 측정해 채웁니다. */
     var containerSize by mutableStateOf(IntSize.Zero)
 
+    /** 확대되어 있는지 여부입니다. 배율이 최소 배율보다 (허용 오차를 넘어) 크면 true입니다. */
     val isZoomedIn: Boolean by derivedStateOf { scale - minScale > MIN_SCALE_TOLERANCE }
 
+    /**
+     * 핀치 제스처에 맞춰 배율과 위치를 갱신합니다.
+     *
+     * @param zoomChange 이전 배율에 곱해지는 배율 변화량입니다. 계산 결과 값은 [minScale]~[maxScale]로 제한됩니다.
+     * @param panChange 두 손가락이 함께 움직인 거리입니다.
+     */
     fun zoom(
         zoomChange: Float,
         panChange: Offset,
@@ -157,6 +176,11 @@ class PinchZoomState(
             }
     }
 
+    /**
+     * 확대된 상태에서 드래그한 만큼 위치를 옮깁니다. 최소 배율에서는 아무 일도 하지 않습니다.
+     *
+     * @param dragAmount 손가락이 움직인 거리입니다.
+     */
     fun pan(dragAmount: Offset) {
         if (scale <= minScale) return
         offset =
@@ -167,6 +191,11 @@ class PinchZoomState(
             )
     }
 
+    /**
+     * 더블탭으로 배율을 토글합니다. 확대되어 있으면 최소 배율로 되돌리고, 그렇지 않으면 최대 배율로 확대합니다.
+     *
+     * @param tapOffset 더블탭한 지점입니다. 확대할 때 이 지점이 화면 안에 남도록 위치를 맞춥니다.
+     */
     fun doubleTapZoom(tapOffset: Offset) {
         if (isZoomedIn) {
             scale = minScale
@@ -178,19 +207,48 @@ class PinchZoomState(
         }
     }
 
-    /** 배율과 위치를 초기 상태(최소 배율 · 정중앙)로 되돌립니다. 예: 페이지 전환 시 이전 사진의 확대 해제. */
+    /** 배율과 위치를 처음 상태(최소 배율, 정중앙)로 되돌립니다. 예를 들어 페이지가 바뀔 때 이전 사진의 확대를 풉니다. */
     fun reset() {
         scale = minScale
         offset = Offset.Zero
     }
 }
 
+/**
+ * 리컴포지션이 일어나도 유지되는 [PinchZoomState]를 만들어 반환합니다.
+ *
+ * 만든 상태를 [PinchZoom]에 넘기면, 배율이나 확대 여부를 바깥에서 관찰하거나 제어할 수 있습니다.
+ * [minScale]이나 [maxScale]이 바뀌면 상태를 새로 만듭니다.
+ *
+ * @param minScale 최소 배율입니다. (기본값 1f, 원본 크기)
+ * @param maxScale 최대 배율입니다. (기본값 2f)
+ */
 @Composable
 fun rememberPinchZoomState(
     minScale: Float = PinchZoomDefaults.MinScale,
     maxScale: Float = PinchZoomDefaults.MaxScale,
 ): PinchZoomState = remember(minScale, maxScale) { PinchZoomState(minScale, maxScale) }
 
+/**
+ * 지정한 요소의 터치 제스처(핀치 줌·팬·탭·더블탭)를 읽어 [state]를 갱신하는 Modifier입니다.
+ *
+ * 상태만 갱신할 뿐, 확대·이동을 화면에 그리지는 않습니다. 눈에 보이는 변환은 같은 [state]를 읽는
+ * `graphicsLayer`(배율·위치)와 함께 적용해야 하며, [PinchZoom]이 이 둘을 묶어 씁니다.
+ *
+ * 한 번의 제스처(첫 손가락이 내려와 모두 떨어질 때까지)를 다음 순서로 판정합니다.
+ * 1. [awaitPanZoomOrTap]으로 첫 시퀀스를 처리합니다. 두 손가락이면 줌, 한 손가락이 움직이면 팬이며 곧바로
+ *    [state]에 반영하고 제스처를 끝냅니다. 움직임이 없는 단순 탭이면 다음 단계로 넘어갑니다.
+ * 2. [awaitSecondDown]으로 더블탭 시간 안에 두 번째 탭이 오는지 기다립니다. 오지 않으면 [onTap]을 호출합니다.
+ * 3. 두 번째 탭이 오면 [awaitTapUp]으로 그것이 탭인지 확인해, 탭이면 [PinchZoomState.doubleTapZoom]을,
+ *    움직였다면 단순 탭으로 보고 [onTap]을 호출합니다.
+ *
+ * 배율 범위([PinchZoomState.minScale]·[PinchZoomState.maxScale])가 바뀌면 제스처 처리를 새로 시작합니다.
+ *
+ * @param state 제스처가 갱신할 확대·이동 상태입니다.
+ * @param shouldConsumeDrag 팬 드래그를 소비할지 결정합니다. 드래그 방향(dragDirection)과 현재 팬 중인지 여부(isPanning)를
+ *   받아 `true`를 반환하면 이벤트를 소비해 부모로 넘기지 않습니다.
+ * @param onTap 단순 탭으로 확정됐을 때 그 위치로 호출됩니다.
+ */
 private fun Modifier.pinchZoomGesture(
     state: PinchZoomState,
     shouldConsumeDrag: (dragDirection: Offset, isPanning: Boolean) -> Boolean,
@@ -220,7 +278,20 @@ private fun Modifier.pinchZoomGesture(
         }
     }
 
-/** 첫 터치 시퀀스로, 팬/줌을 적용합니다. 팬(드래그)·줌이면 null을, 단순 탭이면 탭 업의 변화를 반환합니다. */
+/**
+ * 첫 손가락이 내려온 뒤부터 모든 손가락이 떨어질 때까지의 터치 시퀀스를 처리합니다.
+ *
+ * 눌린 손가락 수로 동작을 구분합니다. 두 손가락이면 핀치(줌), 한 손가락이 [touchSlop]을 넘어 움직이면 드래그(팬)입니다.
+ * 한 번 줌이나 드래그로 확정되면 그 동작으로 고정되어, 시퀀스 도중 손가락 수가 바뀌어도 다른 동작으로 넘어가지 않습니다.
+ * (예: 드래그 중 손가락을 하나 더 올려도 줌으로 바뀌지 않습니다.)
+ *
+ * 줌이면 [PinchZoomState.zoom]으로 배율과 위치를 갱신하며 이벤트를 소비하고, 드래그면 확대된 상태에서만
+ * [PinchZoomState.pan]으로 위치를 옮긴 뒤 [shouldConsumeDrag] 결과에 따라 이벤트를 소비합니다.
+ *
+ * @param down 시퀀스를 시작한 첫 다운입니다. [touchSlop]을 넘었는지 재는 기준점으로 씁니다.
+ * @return 드래그나 줌으로 처리했으면 `null`, 움직임이 없는 단순 탭이면 손을 뗀 변화(up)를 반환합니다.
+ *   호출부는 이 값으로 탭·더블탭을 이어서 판정합니다.
+ */
 private suspend fun AwaitPointerEventScope.awaitPanZoomOrTap(
     state: PinchZoomState,
     shouldConsumeDrag: (dragDirection: Offset, isPanning: Boolean) -> Boolean,
@@ -260,8 +331,15 @@ private suspend fun AwaitPointerEventScope.awaitPanZoomOrTap(
     return if (isDrag || isZoom) null else upChange
 }
 
-/** 두 번째 터치 시퀀스로, 더블탭의 두 번째 탭 다운을 대기합니다. 더블 탭 시간을 초과하면 null을 반환합니다.
- * (Compose detectTapGestures의 내부와 동일한 방식) */
+/**
+ * 첫 탭이 끝난 뒤, 더블탭의 두 번째 탭이 내려오기를 기다립니다.
+ *
+ * 더블탭 제한 시간(`doubleTapTimeoutMillis`) 안에 새 다운이 오면 그 변화를, 시간을 넘기면 `null`을 반환합니다.
+ * 첫 탭 직후 최소 간격(`doubleTapMinTimeMillis`)보다 이르게 들어온 다운은 건너뛰어, 손가락이 튕기는 등의
+ * 오입력을 더블탭으로 오인하지 않습니다. (Compose detectTapGestures의 내부 구현과 같은 방식)
+ *
+ * @param firstUp 첫 탭에서 손을 뗀 변화입니다. 두 번째 다운이 유효한지 재는 시각 기준으로 씁니다.
+ */
 private suspend fun AwaitPointerEventScope.awaitSecondDown(firstUp: PointerInputChange): PointerInputChange? =
     withTimeoutOrNull(viewConfiguration.doubleTapTimeoutMillis) {
         val minUptime = firstUp.uptimeMillis + viewConfiguration.doubleTapMinTimeMillis
@@ -272,7 +350,15 @@ private suspend fun AwaitPointerEventScope.awaitSecondDown(firstUp: PointerInput
         change
     }
 
-/** 두 번째 시퀀스가 slop 안에서 up 되면 true(=탭), slop을 넘으면 false를 반환합니다. */
+/**
+ * 더블탭 후보인 두 번째 터치가 탭인지 드래그인지 가려냅니다.
+ *
+ * [down]과 같은 포인터를 추적하다가, [touchSlop] 안에서 손을 떼면 탭으로 보고 이벤트를 소비한 뒤 `true`를 반환합니다.
+ * 손가락이 [touchSlop]을 벗어나 움직이거나 추적하던 포인터가 사라지면, 탭이 아니라고 보고 `false`를 반환합니다.
+ *
+ * @param down 판정 대상인 두 번째 탭의 다운입니다. 이 포인터의 id로 추적하고, 이동 거리의 기준점으로 씁니다.
+ * @return 탭이면 `true`, 드래그면 `false`.
+ */
 private suspend fun AwaitPointerEventScope.awaitTapUp(
     touchSlop: Float,
     down: PointerInputChange,
@@ -289,6 +375,11 @@ private suspend fun AwaitPointerEventScope.awaitTapUp(
     return false
 }
 
+/**
+ * 확대된 콘텐츠 밖으로 빈 여백이 보이지 않도록 [offset]을 이동 가능한 범위로 제한합니다.
+ *
+ * 축마다 콘텐츠가 [size]보다 커진 양의 절반(`size * (scale - 1) / 2`)까지만 이동할 수 있습니다.
+ */
 private fun clampOffset(
     offset: Offset,
     scale: Float,
