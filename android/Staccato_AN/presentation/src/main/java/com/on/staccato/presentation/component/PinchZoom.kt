@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -141,8 +142,7 @@ class PinchZoomState(
 
     var containerSize by mutableStateOf(IntSize.Zero)
 
-    val isZoomedIn: Boolean
-        get() = scale - minScale > MIN_SCALE_TOLERANCE
+    val isZoomedIn: Boolean by derivedStateOf { scale - minScale > MIN_SCALE_TOLERANCE }
 
     fun zoom(
         zoomChange: Float,
