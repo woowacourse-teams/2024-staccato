@@ -29,8 +29,6 @@ fun OriginalPhotoPager(
         )
     val zoomState = rememberPinchZoomState()
 
-    // 확대된 상태에서는 스와이프가 막혀 한 번에 한 페이지만 다뤄지므로, 페이지 간 확대 상태를 공유해도 안전하다.
-    // 페이지를 넘기면 이전 사진의 확대를 초기화해, 각 사진을 원본 크기에서 시작한다.
     LaunchedEffect(pagerState.currentPage) { zoomState.reset() }
 
     HorizontalPager(
@@ -39,11 +37,9 @@ fun OriginalPhotoPager(
             modifier
                 .fillMaxSize()
                 .background(Black),
-        // 확대 상태에서는 페이지 스와이프를 막아, 드래그가 이미지 이동(팬)으로만 쓰이게 한다.
         userScrollEnabled = !zoomState.isZoomedIn,
     ) { page ->
         PinchZoom(
-            // 확대 상태의 드래그는 PinchZoom이 기본으로 소비하므로(부모 Pager로 미전파) 별도 지정이 필요 없다.
             state = zoomState,
             onTap = { onTap() },
         ) {
