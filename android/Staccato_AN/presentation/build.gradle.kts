@@ -49,7 +49,6 @@ android {
 
     testOptions {
         unitTests {
-            // Robolectric이 리소스 · 매니페스트에 접근할 수 있도록 한다.
             isIncludeAndroidResources = true
         }
     }
