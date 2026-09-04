@@ -242,7 +242,7 @@ fun rememberPinchZoomState(
  * 3. 두 번째 탭이 오면 [awaitTapUp]으로 그것이 탭인지 확인해, 탭이면 [PinchZoomState.doubleTapZoom]을,
  *    움직였다면 단순 탭으로 보고 [onTap]을 호출합니다.
  *
- * 배율 범위([PinchZoomState.minScale]·[PinchZoomState.maxScale])가 바뀌면 제스처 처리를 새로 시작합니다.
+ * [state]가 바뀌면 제스처 처리 코루틴을 새로 시작합니다.
  *
  * @param state 제스처가 갱신할 확대·이동 상태입니다.
  * @param shouldConsumeDrag 팬 드래그를 소비할지 결정합니다. 드래그 방향(dragDirection)과 현재 팬 중인지 여부(isPanning)를
@@ -254,7 +254,7 @@ private fun Modifier.pinchZoomGesture(
     shouldConsumeDrag: (dragDirection: Offset, isPanning: Boolean) -> Boolean,
     onTap: (Offset) -> Unit,
 ): Modifier =
-    pointerInput(state.minScale, state.maxScale) {
+    pointerInput(state) {
         val touchSlop = viewConfiguration.touchSlop
 
         awaitEachGesture {
