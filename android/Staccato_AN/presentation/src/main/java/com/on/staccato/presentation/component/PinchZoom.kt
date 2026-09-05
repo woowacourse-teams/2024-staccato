@@ -114,8 +114,8 @@ fun PinchZoom(
                 .onSizeChanged { state.containerSize = it }
                 .pinchZoomGesture(
                     state = state,
-                    shouldConsumeDrag = { dragDirection, isPanning ->
-                        currentShouldConsumeDrag?.invoke(dragDirection) ?: isPanning
+                    shouldConsumeDrag = { dragDirection ->
+                        currentShouldConsumeDrag?.invoke(dragDirection) ?: state.isZoomedIn
                     },
                     onTap = { currentOnTap?.invoke(it) },
                 )
@@ -251,13 +251,13 @@ fun rememberPinchZoomState(
  * [state]가 바뀌면 제스처 처리 코루틴을 새로 시작합니다.
  *
  * @param state 제스처가 갱신할 확대·이동 상태입니다.
- * @param shouldConsumeDrag 팬 드래그를 소비할지 결정합니다. 드래그 방향(dragDirection)과 현재 팬 중인지 여부(isPanning)를
- *   받아 `true`를 반환하면 이벤트를 소비해 부모로 넘기지 않습니다.
+ * @param shouldConsumeDrag 드래그 방향(dragDirection)을 받아 이 드래그를 소비할지 결정합니다.
+ *   `true`를 반환하면 이벤트를 소비해 부모로 넘기지 않습니다.
  * @param onTap 단순 탭으로 확정됐을 때 그 위치로 호출됩니다.
  */
 private fun Modifier.pinchZoomGesture(
     state: PinchZoomState,
-    shouldConsumeDrag: (dragDirection: Offset, isPanning: Boolean) -> Boolean,
+    shouldConsumeDrag: (dragDirection: Offset) -> Boolean,
     onTap: (Offset) -> Unit,
 ): Modifier =
     pointerInput(state) {
@@ -300,7 +300,7 @@ private fun Modifier.pinchZoomGesture(
  */
 private suspend fun AwaitPointerEventScope.awaitPanZoomOrTap(
     state: PinchZoomState,
-    shouldConsumeDrag: (dragDirection: Offset, isPanning: Boolean) -> Boolean,
+    shouldConsumeDrag: (dragDirection: Offset) -> Boolean,
     touchSlop: Float,
     down: PointerInputChange,
 ): PointerInputChange? {
@@ -324,10 +324,9 @@ private suspend fun AwaitPointerEventScope.awaitPanZoomOrTap(
                 }
                 if (isDrag) {
                     val dragChange = drag.positionChange()
-                    val isPanning = state.scale > state.minScale
-                    if (isPanning) state.pan(dragChange)
+                    state.pan(dragChange)
                     val dragDirection = Offset(dragChange.x.sign, dragChange.y.sign)
-                    if (shouldConsumeDrag(dragDirection, isPanning)) drag.consume()
+                    if (shouldConsumeDrag(dragDirection)) drag.consume()
                 }
             }
         }
