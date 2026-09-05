@@ -147,6 +147,11 @@ class PinchZoomState(
     val maxScale: Float = PinchZoomDefaults.MaxScale,
     private val zoomTolerance: Float = PinchZoomDefaults.ZoomTolerance,
 ) {
+    init {
+        require(maxScale > minScale) { "minScale은 maxScale보다 작아야 합니다." }
+        require(zoomTolerance >= 0f) { "zoomTolerance는 0 이상의 값이어야 합니다." }
+    }
+
     /** 현재 배율입니다. 항상 [minScale]과 [maxScale] 사이입니다. */
     var scale by mutableFloatStateOf(minScale)
         private set
@@ -173,7 +178,7 @@ class PinchZoomState(
     ) {
         scale = (scale * zoomChange).coerceIn(minScale, maxScale)
         offset =
-            if (scale > minScale) {
+            if (isZoomedIn) {
                 clampOffset(offset + panChange * scale, scale, containerSize)
             } else {
                 Offset.Zero
@@ -181,12 +186,12 @@ class PinchZoomState(
     }
 
     /**
-     * 확대된 상태에서 드래그한 만큼 위치를 옮깁니다. 최소 배율에서는 아무 일도 하지 않습니다.
+     * 확대된 상태에서 드래그한 만큼 위치를 옮깁니다. 확대되지 않은 상태에서는 아무 일도 하지 않습니다.
      *
      * @param dragAmount 손가락이 움직인 거리입니다.
      */
     fun pan(dragAmount: Offset) {
-        if (scale <= minScale) return
+        if (!isZoomedIn) return
         offset =
             clampOffset(
                 offset + dragAmount * scale * SLOW_MOVEMENT_COEFFICIENT,
