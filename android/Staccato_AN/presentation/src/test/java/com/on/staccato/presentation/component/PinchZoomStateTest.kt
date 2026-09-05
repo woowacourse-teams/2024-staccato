@@ -209,7 +209,7 @@ class PinchZoomStateTest {
         fun `확대량이 허용오차 이내면 더블탭은 원본이 아니라 최대 배율로 확대한다`() {
             // given: 최소 배율 + 허용오차 = "확대되지 않은 것으로 간주"되는 경계까지만 확대한 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
-            pinchZoomState.zoom(zoomChange = 1f + MIN_SCALE_TOLERANCE, panChange = Offset.Zero)
+            pinchZoomState.zoom(zoomChange = 1f + PinchZoomDefaults.ZoomTolerance, panChange = Offset.Zero)
             assertThat(pinchZoomState.isZoomedIn).isFalse()
 
             // when: 더블탭하면
@@ -223,7 +223,7 @@ class PinchZoomStateTest {
         fun `확대량이 허용오차를 넘으면 더블탭은 원본 배율로 되돌린다`() {
             // given: 허용오차를 넘겨 "확대된 상태"로 간주되는 핀치줌
             val pinchZoomState = pinchZoomOnScreen()
-            pinchZoomState.zoom(zoomChange = 1f + MIN_SCALE_TOLERANCE * 2f, panChange = Offset.Zero)
+            pinchZoomState.zoom(zoomChange = 1f + PinchZoomDefaults.ZoomTolerance * 2f, panChange = Offset.Zero)
             assertThat(pinchZoomState.isZoomedIn).isTrue()
 
             // when: 더블탭하면

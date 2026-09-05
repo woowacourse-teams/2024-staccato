@@ -35,12 +35,12 @@ import kotlin.math.sign
 object PinchZoomDefaults {
     const val MinScale = 1f
     const val MaxScale = 2f
+
+    /** 확대 여부를 판단하는 허용 오차입니다. 배율과 최소 배율의 차이가 이 값보다 작으면 확대되지 않은 것으로 봅니다. */
+    const val ZoomTolerance = 0.01f
 }
 
 private const val SLOW_MOVEMENT_COEFFICIENT = 0.8f
-
-/** 확대 여부를 판단하는 허용 오차입니다. 최소 배율과의 차이가 이 값보다 작으면 확대되지 않은 것으로 봅니다. */
-internal const val MIN_SCALE_TOLERANCE = 0.01f
 
 /**
  * 콘텐츠에 핀치 줌과 더블탭 줌, 확대 상태에서의 드래그(팬)를 더하는 컨테이너입니다.
@@ -55,6 +55,7 @@ internal const val MIN_SCALE_TOLERANCE = 0.01f
  *
  * @param minScale 최소 배율입니다. 이 배율에서는 팬이 동작하지 않고 위치가 가운데에 고정됩니다. (기본값 1f, 원본 크기)
  * @param maxScale 최대 배율입니다. (기본값 2f)
+ * @param zoomTolerance 확대로 간주할 최소 배율 차이입니다. 이 값 이하의 미세한 확대는 확대되지 않은 것으로 봅니다. (기본값 0.01f)
  * @param shouldConsumeDrag 확대 상태의 한 손가락 드래그를 소비할지 결정합니다. (선택)
  *   지정하지 않으면 팬이 동작하는 동안(최소 배율보다 크게 확대된 상태) 드래그를 소비해 부모(Pager 등)로 넘기지 않습니다.
  *   확대된 상태에서도 이미지 경계에 닿으면 부모가 스크롤을 이어받게 하는 등, 소비 조건을 바꾸고 싶을 때만 지정하세요.
@@ -68,12 +69,13 @@ fun PinchZoom(
     modifier: Modifier = Modifier,
     minScale: Float = PinchZoomDefaults.MinScale,
     maxScale: Float = PinchZoomDefaults.MaxScale,
+    zoomTolerance: Float = PinchZoomDefaults.ZoomTolerance,
     shouldConsumeDrag: ((dragDirection: Offset) -> Boolean)? = null,
     onTap: ((Offset) -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     PinchZoom(
-        state = rememberPinchZoomState(minScale, maxScale),
+        state = rememberPinchZoomState(minScale, maxScale, zoomTolerance),
         modifier = modifier,
         shouldConsumeDrag = shouldConsumeDrag,
         onTap = onTap,
@@ -137,11 +139,13 @@ fun PinchZoom(
  *
  * @param minScale 최소 배율입니다. (기본값 1f, 원본 크기)
  * @param maxScale 최대 배율입니다. (기본값 2f)
+ * @param zoomTolerance 확대로 간주할 최소 배율 차이입니다. 이 값 이하의 미세한 확대는 확대되지 않은 것으로 봅니다. (기본값 0.01f)
  */
 @Stable
 class PinchZoomState(
     val minScale: Float = PinchZoomDefaults.MinScale,
     val maxScale: Float = PinchZoomDefaults.MaxScale,
+    private val zoomTolerance: Float = PinchZoomDefaults.ZoomTolerance,
 ) {
     /** 현재 배율입니다. 항상 [minScale]과 [maxScale] 사이입니다. */
     var scale by mutableFloatStateOf(minScale)
@@ -154,8 +158,8 @@ class PinchZoomState(
     /** 콘텐츠 영역의 크기입니다. 팬·줌이 경계를 벗어나지 않도록 제한하는 데 쓰이며, 보통 [PinchZoom]이 측정해 채웁니다. */
     var containerSize by mutableStateOf(IntSize.Zero)
 
-    /** 확대되어 있는지 여부입니다. 배율이 최소 배율보다 (허용 오차를 넘어) 크면 true입니다. */
-    val isZoomedIn: Boolean by derivedStateOf { scale - minScale > MIN_SCALE_TOLERANCE }
+    /** 확대되어 있는지 여부입니다. 배율이 최소 배율보다 허용 오차(`zoomTolerance`)를 넘어 크면 true입니다. */
+    val isZoomedIn: Boolean by derivedStateOf { scale - minScale > zoomTolerance }
 
     /**
      * 핀치 제스처에 맞춰 배율과 위치를 갱신합니다.
@@ -218,16 +222,18 @@ class PinchZoomState(
  * 리컴포지션이 일어나도 유지되는 [PinchZoomState]를 만들어 반환합니다.
  *
  * 만든 상태를 [PinchZoom]에 넘기면, 배율이나 확대 여부를 바깥에서 관찰하거나 제어할 수 있습니다.
- * [minScale]이나 [maxScale]이 바뀌면 상태를 새로 만듭니다.
+ * [minScale], [maxScale], [zoomTolerance] 중 하나라도 바뀌면 상태를 새로 만듭니다.
  *
  * @param minScale 최소 배율입니다. (기본값 1f, 원본 크기)
  * @param maxScale 최대 배율입니다. (기본값 2f)
+ * @param zoomTolerance 확대로 간주할 최소 배율 차이입니다. (기본값 0.01f)
  */
 @Composable
 fun rememberPinchZoomState(
     minScale: Float = PinchZoomDefaults.MinScale,
     maxScale: Float = PinchZoomDefaults.MaxScale,
-): PinchZoomState = remember(minScale, maxScale) { PinchZoomState(minScale, maxScale) }
+    zoomTolerance: Float = PinchZoomDefaults.ZoomTolerance,
+): PinchZoomState = remember(minScale, maxScale, zoomTolerance) { PinchZoomState(minScale, maxScale, zoomTolerance) }
 
 /**
  * 지정한 요소의 터치 제스처(핀치 줌·팬·탭·더블탭)를 읽어 [state]를 갱신하는 Modifier입니다.
