@@ -24,7 +24,7 @@ fun OriginalPhotoScreen(viewModel: StaccatoViewModel = hiltViewModel()) {
             topBarTitle = staccatoTitle,
             topBarVisibility = topBarVisibility,
             onDismiss = { viewModel.changeOriginalPhotoIndex(OriginalPhotoIndex.unavailable) },
-            onTab = { topBarVisibility = !topBarVisibility },
+            onTap = { topBarVisibility = !topBarVisibility },
         )
     }
 }

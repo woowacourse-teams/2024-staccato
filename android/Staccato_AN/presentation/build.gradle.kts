@@ -46,6 +46,12 @@ android {
     dataBinding {
         enable = true
     }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -62,6 +68,12 @@ dependencies {
 
     // AssertJ
     testImplementation(libs.assertj.core)
+
+    // Compose UI Test (Robolectric으로 JVM에서 실행)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
+    testImplementation(libs.robolectric)
 
     // Android LiveData Test
     testImplementation(libs.androidx.arch.core)

@@ -5,21 +5,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.staccato.presentation.R
-import com.on.staccato.presentation.component.DEFAULT_MIN_ZOOM_SCALE
 import com.on.staccato.presentation.component.DefaultAsyncImage
-import com.on.staccato.presentation.component.PinchToZoom
+import com.on.staccato.presentation.component.PinchZoom
+import com.on.staccato.presentation.component.rememberPinchZoomState
 import com.on.staccato.theme.Black
-import kotlin.math.absoluteValue
-
-private const val ZOOM_SCROLLABLE_TOLERANCE = 0.05f
 
 @Composable
 fun OriginalPhotoPager(
@@ -33,7 +27,9 @@ fun OriginalPhotoPager(
             initialPage = initialPage,
             pageCount = { imageUrls.size },
         )
-    var scrollable by remember { mutableStateOf(true) }
+    val zoomState = rememberPinchZoomState()
+
+    LaunchedEffect(pagerState.currentPage) { zoomState.reset() }
 
     HorizontalPager(
         state = pagerState,
@@ -41,13 +37,10 @@ fun OriginalPhotoPager(
             modifier
                 .fillMaxSize()
                 .background(Black),
-        userScrollEnabled = scrollable,
+        userScrollEnabled = !zoomState.isZoomedIn,
     ) { page ->
-        PinchToZoom(
-            onScaleChange = { scale ->
-                scrollable = (scale - DEFAULT_MIN_ZOOM_SCALE).absoluteValue < ZOOM_SCROLLABLE_TOLERANCE
-            },
-            onDrag = { !scrollable },
+        PinchZoom(
+            state = zoomState,
             onTap = { onTap() },
         ) {
             DefaultAsyncImage(
