@@ -19,7 +19,7 @@ fun OriginalPhotoDialog(
     originalPhotoIndex: OriginalPhotoIndex,
     topBarVisibility: Boolean,
     onDismiss: () -> Unit,
-    onTab: () -> Unit,
+    onTap: () -> Unit,
 ) {
     Dialog(
         onDismissRequest = onDismiss,
@@ -34,7 +34,7 @@ fun OriginalPhotoDialog(
                 modifier = Modifier.padding(paddingValues),
                 imageUrls = imageUrls,
                 initialPage = originalPhotoIndex.initialPage,
-                onTap = onTab,
+                onTap = onTap,
             )
             OriginalPhotoTopBar(
                 isVisible = topBarVisibility,
@@ -56,7 +56,7 @@ fun OriginalPhotoDialogPreview() {
         originalPhotoIndex = OriginalPhotoIndex(0),
         topBarVisibility = topBarVisibility,
         onDismiss = {},
-        onTab = { topBarVisibility = !topBarVisibility },
+        onTap = { topBarVisibility = !topBarVisibility },
     )
 }
 
