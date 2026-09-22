@@ -149,6 +149,7 @@ class PinchZoomState(
 ) {
     init {
         require(maxScale > minScale) { "minScale은 maxScale보다 작아야 합니다." }
+        require(minScale > 0f) { "minScale은 0보다 큰 값이어야 합니다." }
         require(zoomTolerance >= 0f) { "zoomTolerance는 0 이상의 값이어야 합니다." }
     }
 
