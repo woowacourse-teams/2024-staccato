@@ -4,10 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
+import androidx.core.graphics.Insets
 import androidx.core.util.Pair
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.domain.UploadFile
@@ -45,6 +50,7 @@ class CategoryUpdateActivity :
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
+        respondEdgeToEdge()
         initColorSelectionResultListener()
         navigateToCategory()
         fetchCategory()
@@ -118,6 +124,16 @@ class CategoryUpdateActivity :
         binding.textInputCategoryUpdateTitle.clearFocus()
         binding.cvCategoryUpdatePeriodSet.setContent {
             PeriodActiveSwitch()
+        }
+    }
+
+    private fun respondEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbarCategoryUpdate) { view, insetsCompat ->
+            val systemBar: Insets = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updateLayoutParams<MarginLayoutParams> {
+                topMargin = systemBar.top
+            }
+            WindowInsetsCompat.CONSUMED
         }
     }
 

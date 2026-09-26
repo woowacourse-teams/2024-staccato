@@ -5,12 +5,17 @@ import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import android.os.Bundle
+import android.view.ViewGroup.MarginLayoutParams
 import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,6 +58,7 @@ class MyPageActivity :
         setContents()
         initToolbar()
         initBindings()
+        respondEdgeToEdge()
         finishOnBackPressed()
         loadMemberProfile()
         observeCopyingUuidCode()
@@ -132,6 +138,16 @@ class MyPageActivity :
         binding.myPageHandler = this
         binding.viewModel = myPageViewModel
         binding.memberProfileHandler = myPageViewModel
+    }
+
+    private fun respondEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbarMypage) { view, insetsCompat ->
+            val systemBar: Insets = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updateLayoutParams<MarginLayoutParams> {
+                topMargin = systemBar.top
+            }
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun finishOnBackPressed() {

@@ -3,8 +3,13 @@ package com.on.staccato.presentation.webview
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup.MarginLayoutParams
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import com.on.staccato.presentation.R
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.toolbar.CloseToolbarHandler
@@ -19,6 +24,7 @@ class WebViewActivity :
     private var url: String? = null
 
     override fun initStartView(savedInstanceState: Bundle?) {
+        respondEdgeToEdge()
         initBindings()
         getUrlFromIntent()
         setupWebView()
@@ -28,6 +34,16 @@ class WebViewActivity :
     private fun initBindings() {
         binding.toolbarTitle = intent.getStringExtra(EXTRA_TOOLBAR_TITLE)
         binding.toolbarHandler = this
+    }
+
+    private fun respondEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbarWebview.toolbarWebview) { view, insetsCompat ->
+            val systemBar: Insets = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updateLayoutParams<MarginLayoutParams> {
+                topMargin = systemBar.top
+            }
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun getUrlFromIntent() {
